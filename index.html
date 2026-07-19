@@ -29,7 +29,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./majalis-favicon-192.png?v=20260719-3">
 <link rel="apple-touch-icon" sizes="180x180" href="./majalis-apple-touch-icon.png?v=20260719-3">
 <meta name="msapplication-TileImage" content="./majalis-favicon-192.png?v=20260719-3">
-<link rel="preload" as="image" href="./majalis-logo.svg?v=20260720-2" fetchpriority="high">
+<link rel="preload" as="image" href="./majalis-logo.svg?v=20260720-3" fetchpriority="high">
 <link rel="preload" as="image" href="./naif-logo.svg?v=20260720-1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -299,7 +299,7 @@
       </div>
     </div>
     <div class="hero-copy hero-copy-majalis">
-      <div class="hero-logo-card"><img class="hero-title-image" src="./majalis-logo.svg?v=20260720-2" alt="مجالس | منظومة أعمال المجالس"></div>
+      <div class="hero-logo-card"><img class="hero-title-image" src="./majalis-logo.svg?v=20260720-3" alt="مجالس | منظومة أعمال المجالس"></div>
       <h1 class="sr-only">مجالس | منظومة أعمال المجالس</h1>
       <p>إعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع</p>
     </div>
@@ -456,7 +456,7 @@
   </div>
 </main>
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.6.0</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.6.1</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -475,7 +475,7 @@
 </div>
 <div id="printArea" aria-hidden="true"></div>
 <script>
-const logoSrc = './majalis-logo.svg?v=20260720-2';
+const logoSrc = './majalis-logo.svg?v=20260720-3';
 const entityOptions = [
   ['jscListed','شركة مساهمة مدرجة'],
   ['jscUnlisted','شركة مساهمة غير مدرجة'],
@@ -555,8 +555,8 @@ const STORAGE_KEY='majalis_tool_draft_v1_5';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.6.0';
-const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-2';
+const TOOL_VERSION='v1.6.1';
+const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const latinDigits=value=>String(value??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
@@ -567,7 +567,7 @@ const iconTrash='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"><
 function fillEntities(){ $('entityType').innerHTML=entityOptions.map(([v,l])=>`<option value="${v}">${l}</option>`).join(''); fillMeetings(); }
 function fillMeetings(){ const e=$('entityType').value; $('meetingType').innerHTML=meetingsByEntity[e].map(v=>`<option value="${v}">${meetingLabels[v]}</option>`).join(''); updateRule(); }
 function activeRule(){ const e=$('entityType').value,m=$('meetingType').value; return rules[e][m]; }
-function showStep(n){ currentStep=Number(n); document.querySelectorAll('.top-tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===currentStep)); document.querySelectorAll('.step-panel').forEach(p=>{const active=Number(p.dataset.panel)===currentStep;p.hidden=!active;p.classList.toggle('active',active)}); if(currentStep===4)renderAttendanceManager(); if(currentStep===5)renderDocuments(); if(autoSaveReady)saveWork(true); window.scrollTo({top:document.querySelector('.shell').offsetTop-5,behavior:'smooth'}); }
+function showStep(n,shouldScroll=true){ currentStep=Number(n); document.querySelectorAll('.top-tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===currentStep)); document.querySelectorAll('.step-panel').forEach(p=>{const active=Number(p.dataset.panel)===currentStep;p.hidden=!active;p.classList.toggle('active',active)}); if(currentStep===4)renderAttendanceManager(); if(currentStep===5)renderDocuments(); if(autoSaveReady)saveWork(true); if(shouldScroll)window.scrollTo({top:document.querySelector('.shell').offsetTop-5,behavior:'smooth'}); }
 function updateRule(){ const r=activeRule(); if(!r)return; $('noticeText').textContent=r.notice; $('quorumText').textContent=r.quorum; $('frequencyText').textContent=r.frequency; $('legalNote').textContent=r.note; $('referenceText').textContent=r.reference; $('secretaryLabel').textContent=r.secretaryLabel; $('secretaryName').required=false; $('secretaryName').setAttribute('aria-required','false'); $('secretaryStatus').textContent=r.secretary==='required'?`${r.secretaryLabel} متطلب نظامي لهذا الاجتماع`:`${r.secretaryLabel} اختياري حسب الوثيقة المنظمة`; $('secretaryRequirement').textContent=r.secretary==='required'?'متطلب نظامي':'اختياري'; $('secretaryRequirement').className=r.secretary==='required'?'required-tag':'optional-tag'; $('secretaryHint').textContent=r.secretary==='required'?r.note:'يظهر في الوثائق عند إدخال الاسم.'; $('secretaryRule').className='rule '+(r.secretary==='required'?'warn':''); if(r.waiver){ $('waiverBox').hidden=false; $('waiverLabel').textContent=r.waiver==='allCapital'?'يحضر شركاء يمثلون جميع رأس مال الشركة':'تمثل في الاجتماع جميع الأسهم التي لها حقوق تصويت'; $('waiverHintText').textContent=r.waiver==='allCapital'?'فعّل هذا الخيار عند حضور شركاء يمثلون كامل رأس مال الشركة':''; $('waiverHint').hidden=r.waiver!=='allCapital'; }else{ $('waiverBox').hidden=true; $('fullRights').checked=false; } updateDateStatus(); renderDocuments(); }
 const dateEditSource={invite:'gregorian',meeting:'gregorian'};
 function setCalendar(kind){
@@ -676,7 +676,7 @@ function collectFormValues(){const data={};document.querySelectorAll('input[id],
 function applyFormValues(data){Object.entries(data||{}).forEach(([id,val])=>{const el=$(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val??''})}
 function saveWork(){if(!autoSaveReady)return;const payload={version:TOOL_VERSION,currentStep,calendar,attendees,agendaItems,entityLogoSrc,fields:collectFormValues()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload))}catch(err){console.error(err)}}
 function scheduleAutoSave(){if(!autoSaveReady)return;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(saveWork,500)}
-function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();setCalendar(payload.calendar||'gregorian');updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
+function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();setCalendar(payload.calendar||'gregorian');updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
 function resetAll(){if(!confirm('سيتم مسح البيانات الحالية والبدء من جديد.'))return;[STORAGE_KEY,...LEGACY_STORAGE_KEYS].forEach(key=>localStorage.removeItem(key));window.location.reload();}
 document.addEventListener('click',e=>{if(e.target.closest('#resetAll'))resetAll();const step=e.target.closest('[data-step]');if(step)showStep(step.dataset.step);const go=e.target.closest('[data-go]');if(go)showStep(go.dataset.go);const cal=e.target.closest('[data-calendar]');if(cal)setCalendar(cal.dataset.calendar);if(e.target.id==='addAttendee'){attendees.push({id:Date.now(),name:'',role:'عضو',attendance:'pending',countsQuorum:true});renderAttendees()}if(e.target.id==='addAgenda'){agendaItems.push({id:Date.now(),title:'',purpose:'مناقشة',discussion:'',decision:'',owner:'',dueCalendar:'gregorian',dueDay:'',dueMonth:'',dueYear:'',vote:'لم يجر تصويت'});renderAgenda()}const ra=e.target.closest('[data-remove-attendee]');if(ra){attendees=attendees.filter(x=>x.id!==Number(ra.dataset.removeAttendee));renderAttendees()}const rg=e.target.closest('[data-remove-agenda]');if(rg){agendaItems=agendaItems.filter(x=>x.id!==Number(rg.dataset.removeAgenda));renderAgenda()}const up=e.target.closest('[data-up]');if(up)moveAgenda(Number(up.dataset.up),-1);const down=e.target.closest('[data-down]');if(down)moveAgenda(Number(down.dataset.down),1);const tab=e.target.closest('[data-doc]');if(tab){document.querySelectorAll('.doc-tab').forEach(x=>x.classList.toggle('active',x===tab));document.querySelectorAll('.document').forEach(x=>x.classList.toggle('active',x.id==='doc'+tab.dataset.doc[0].toUpperCase()+tab.dataset.doc.slice(1)))}if(e.target.id==='removeEntityLogo'){entityLogoSrc='';$('entityLogoInput').value='';renderLogoPreview();renderDocuments()}if(e.target.id==='printCurrent')printDocuments('current');if(e.target.id==='printPackage')printDocuments('all')});
 document.addEventListener('input',e=>{if(e.target.classList.contains('latin-number')){const max=e.target.maxLength>0?e.target.maxLength:0;const value=digitsOnly(e.target.value,max);if(e.target.value!==value)e.target.value=value}if(e.target.id==='meetingMinute'||e.target.id==='endMinute'){let n=Number(e.target.value||0);if(n>59)e.target.value='59'}if(e.target.id==='entityType'){fillMeetings();return}if(e.target.id==='meetingType'){updateRule();return}if(e.target.id==='fullRights'){updateDateStatus();renderDocuments();return}if(e.target.classList.contains('date-part')){if(calendar==='both'){const match=e.target.id.match(/^(invite|meeting)(G|H)/);if(match){const source=match[2]==='H'?'hijri':'gregorian';dateEditSource[match[1]]=source;syncDatePair(match[1],source);}}updateDatePreviews();updateDateStatus();return}if(e.target.classList.contains('attendee-input')){const card=e.target.closest('.item'),item=attendees.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.value;renderAttendanceManager();renderDocuments();return}if(e.target.classList.contains('agenda-input')){const card=e.target.closest('.item'),item=agendaItems.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.value;renderDocuments();return}if(e.target.classList.contains('live'))renderDocuments()});
