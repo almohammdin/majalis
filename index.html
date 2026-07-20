@@ -288,6 +288,21 @@
 .derived-count{background:#F1F4F7;color:#334155;font-weight:700;cursor:default}
 @media(max-width:680px){.attendance-management-head{align-items:flex-start;flex-direction:column}.attendance-row{grid-template-columns:1fr}.attendance-management-head .btn{width:100%}}
 </style>
+
+<style id="doc-signature-blocks">
+.doc-table td.sign-cell{vertical-align:bottom}
+.sign-pad{display:block;height:30px;border-bottom:1px solid var(--line)}
+.invite-signature{margin-top:22px}
+.invite-signature .signature-row{display:flex;align-items:flex-end;gap:10px;margin-top:14px;max-width:260px}
+.invite-signature .signature-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.invite-signature .signature-row .sign-pad{flex:1}
+@media print{
+  #printArea .sign-pad{height:9mm!important;border-bottom:.3mm solid #B9C2CC!important}
+  #printArea .invite-signature{margin-top:6mm!important}
+  #printArea .invite-signature .signature-row{margin-top:4mm!important;max-width:65mm!important}
+  #printArea .invite-signature .signature-label{font-size:8.5pt!important}
+}
+</style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
 window.scrollTo(0,0);
@@ -372,6 +387,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
             </div>
             <div class="field w6"><label>وقت الاجتماع <span class="required-tag">أساسي</span></label><div class="time-fields"><select class="control live time-part" id="meetingHour"><option value="">الساعة</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><input class="control live time-part latin-number" id="meetingMinute" type="text" lang="en" dir="ltr" maxlength="2" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="الدقائق"><select class="control live time-part" id="meetingPeriod"><option value="صباحا">صباحا</option><option value="مساء">مساء</option></select></div><div class="hint">الدقائق تبدأ بقيمة 0 ويمكن تعديلها حتى 59.</div></div>
             <div class="field w6"><label>المكان أو رابط الاتصال <span class="required-tag">أساسي</span></label><input class="control live" id="location" placeholder="المقر أو منصة الاتصال"></div>
+            <div class="field w6"><label>اسم مُرسل الدعوة <span class="optional-tag">اختياري</span></label><input class="control live" id="inviteSenderName" placeholder="الاسم والصفة"><div class="info-help compact"><span class="info-mark">i</span><span>يظهر الاسم مع مكان للتوقيع في نهاية وثيقة الدعوة</span></div></div>
           </div>
         </div>
 
@@ -654,12 +670,16 @@ function footer(){return `<div class="doc-footer"><div class="doc-footer-brand">
 function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule(); if(!r)return; const d=dateInfo(),entity=esc($('entityName').value||'الجهة'),meeting=esc(meetingLabels[$('meetingType').value]),title=esc($('meetingTitle').value||meetingLabels[$('meetingType').value]),chairRaw=($('chairName')?.value||'').trim(),chair=esc(chairRaw||'غير مدخل'),secretary=esc(($('secretaryName')?.value||'').trim()),full=$('fullRights').checked;
  const agendaRows=agendaItems.length?agendaItems.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.title||'بند دون عنوان')}</td><td>${esc(x.purpose)}</td></tr>`).join(''):'<tr><td colspan="3">لم تدرج بنود بعد</td></tr>';
  const attendeeRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td>${esc(x.name||'غير مدخل')}</td><td>${esc(x.role||'غير مدخل')}</td><td>${esc(attendanceLabels[x.attendance]||attendanceLabels.pending)}</td></tr>`}).join(''):'<tr><td colspan="4">لم يضف المشاركون بعد</td></tr>';
+ const signatureRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td>${esc(x.name||'غير مدخل')}</td><td>${esc(x.role||'غير مدخل')}</td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'<tr><td colspan="4">لم يضف المشاركون بعد</td></tr>';
  const minutesRows=agendaItems.length?agendaItems.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${esc(x.title||'بند دون عنوان')}</strong><div>${esc(x.discussion||'لم تسجل خلاصة المناقشة')}</div></td><td>${esc(x.decision||'لم يسجل قرار')}</td><td>${esc(x.vote)}</td></tr>`).join(''):'<tr><td colspan="4">لم تدرج بنود بعد</td></tr>';
  const decisions=agendaItems.filter(x=>x.decision||x.owner||x.dueDay||x.dueMonth||x.dueYear);
  const decisionRows=decisions.length?decisions.map((x,i)=>{const due=agendaDueDate(x);return `<tr><td>${i+1}</td><td>${esc(x.decision||'غير مدخل')}</td><td>${esc(x.owner||'غير مدخل')}</td><td>${esc(formatDateFor(due,x.dueCalendar))}</td><td>قيد المتابعة</td></tr>`}).join(''):'<tr><td colspan="5">لم تسجل قرارات أو تكليفات بعد</td></tr>';
  const secretaryLine=secretary?`<p><strong>${esc(r.secretaryLabel)}:</strong> ${secretary}</p>`:(r.secretary==='required'?`<p><strong>${esc(r.secretaryLabel)}:</strong> يستكمل الاسم عند إعداد المحضر.</p>`:'');
  const waiverLine=full&&r.waiver?'<p><strong>إثبات اكتمال التمثيل:</strong> حضر أو مثل في الاجتماع كامل الحقوق التي يقرر النظام اكتمالها لعقد الاجتماع دون مراعاة إجراءات الدعوة ومدتها.</p>':'';
  const chairInvitationLine=chairRaw?`<p><strong>رئيس الاجتماع:</strong> ${chair}</p>`:'';
+ const inviteSenderRaw=($('inviteSenderName')?.value||'').trim();
+ const inviteSender=esc(inviteSenderRaw||'غير مدخل');
+ const inviteSenderLine=`<div class="invite-signature"><p><strong>مرسل الدعوة:</strong> ${inviteSender}</p><div class="signature-row"><span class="signature-label">التوقيع</span><span class="sign-pad"></span></div></div>`;
  const endTime=formatEndTime();
  const endLine=endTime?`<p><strong>وقت انتهاء الاجتماع:</strong> ${esc(endTime)}</p>`:'';
  const minutesStatus=$('minutesStatus')?.value||'preparing';
@@ -669,9 +689,9 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  const approvalCalendar=$('approvalCalendar')?.value||'gregorian';
  const approver=esc(($('minutesApprover')?.value||'').trim()||'غير مدخل');
  const approvalLine=minutesStatus==='approved'?`<p><strong>جهة أو شخص اعتماد المحضر:</strong> ${approver}</p><p><strong>تاريخ اعتماد المحضر:</strong> ${esc(formatDateFor(approvalDate,approvalCalendar))}</p>`:'';
- $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p><p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}<p><strong>تاريخ توجيه الدعوة:</strong> ${esc(d.invite)}</p><h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table><p>وتقبلوا خالص التقدير.</p>${chairInvitationLine}</div>`+footer();
+ $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p><p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}<p><strong>تاريخ توجيه الدعوة:</strong> ${esc(d.invite)}</p><h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table><p>وتقبلوا خالص التقدير.</p>${chairInvitationLine}${inviteSenderLine}</div>`+footer();
  $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
- $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p><p><strong>رئيس الاجتماع:</strong> ${chair}</p>${secretaryLine}<p><strong>حالة النصاب:</strong> ${esc($('quorumStatus')?.options[$('quorumStatus').selectedIndex].text||'لم يحدد بعد')}</p>${waiverLine}<h3>الحضور</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th></tr></thead><tbody>${attendeeRows}</tbody></table><h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${endLine}${approvalLine}</div>`+footer();
+ $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p><p><strong>رئيس الاجتماع:</strong> ${chair}</p>${secretaryLine}<p><strong>حالة النصاب:</strong> ${esc($('quorumStatus')?.options[$('quorumStatus').selectedIndex].text||'لم يحدد بعد')}</p>${waiverLine}<h3>الحضور</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th></tr></thead><tbody>${attendeeRows}</tbody></table><h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${endLine}${approvalLine}<h3>توقيعات المشاركين</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr></thead><tbody>${signatureRows}</tbody></table></div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>الترتيب</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer(); }
 function activeDocument(){return document.querySelector('.document.active')||$('docInvitation')}
 function buildPrintArea(mode='current'){renderDocuments();const docs=mode==='all'?Array.from(document.querySelectorAll('.document')):[activeDocument()];const pages=docs.map(doc=>`<article class="print-document">${doc.innerHTML}</article>`).join('');$('printArea').innerHTML=`${pages}<div class="print-fixed-footer"><div class="print-footer-brand"><img src="${MAJALIS_LOGO}" alt="مجالس" class="print-footer-logo"><div><strong>${esc(TOOL_NAME)}</strong><a href="${TOOL_LINK}">${TOOL_LINK}</a></div></div><span class="print-version">${TOOL_VERSION}</span></div>`;}
