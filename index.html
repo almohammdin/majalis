@@ -73,7 +73,11 @@
   #printArea .meta-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;border:1px solid #DDE3EA!important;border-radius:3mm!important;overflow:hidden!important;margin:4mm 0!important;break-inside:avoid;page-break-inside:avoid}
   #printArea .meta-row{display:flex!important;gap:2mm!important;padding:2.2mm 2.5mm!important;border-bottom:1px solid #E8ECF0!important}.print-document .meta-row span{color:#677386!important;min-width:27mm!important}.print-document .meta-row strong{color:#263241!important}
   #printArea .doc-table{width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;margin:4mm 0!important;font-size:8.7pt!important}.print-document .doc-table thead{display:table-header-group!important;break-after:avoid-page!important;page-break-after:avoid!important}.print-document .doc-table tbody{display:table-row-group!important}.print-document .doc-table tr{break-inside:avoid;page-break-inside:avoid}.print-document .doc-table th,.print-document .doc-table td{border:1px solid #CDD4DD!important;padding:2.2mm!important;text-align:right!important;vertical-align:top!important;color:#18202A!important;overflow-wrap:anywhere!important}.print-document .doc-table th{background:#F0F3F6!important;color:#0B1A2B!important;font-weight:700!important}
-  #printArea .doc-footer{display:flex!important;position:static!important;align-items:center!important;justify-content:space-between!important;gap:8mm!important;border-top:1px solid #DDE3EA!important;margin-top:8mm!important;padding-top:3mm!important;font-size:7.5pt!important;color:#6F7A89!important;background:#fff!important;break-inside:avoid!important;page-break-inside:avoid!important}
+  #printArea .print-page-frame{width:100%!important;border-collapse:collapse!important;table-layout:auto!important}
+  #printArea .print-page-frame>tbody>tr>td,#printArea .print-page-frame>tfoot>tr>td{padding:0!important;border:none!important;background:transparent!important}
+  #printArea .print-page-frame>tbody>tr{break-inside:auto!important;page-break-inside:auto!important}
+  #printArea .print-page-frame tfoot{display:table-footer-group!important}
+  #printArea .doc-footer{display:flex!important;position:static!important;align-items:center!important;justify-content:space-between!important;gap:8mm!important;border-top:1px solid #DDE3EA!important;padding-top:2.5mm!important;padding-bottom:2.5mm!important;font-size:7.5pt!important;color:#6F7A89!important;background:#fff!important}
   #printArea .doc-footer a{color:#415065!important;text-decoration:none!important;direction:ltr!important}
   #printArea .doc-footer-version{direction:ltr!important}
 }
@@ -192,19 +196,19 @@
   gap:9px;
   min-width:0;
 }
-.doc-footer-brand>div>div{
+.doc-footer-brand>div{
   display:flex;
   flex-direction:column;
   justify-content:center;
   min-width:0;
   line-height:1.35;
 }
-.doc-footer-brand strong strong{
+.doc-footer-brand strong{
   color:#344255;
   font-weight:700;
   white-space:nowrap;
 }
-.doc-footer-brand a a{
+.doc-footer-brand a{
   color:#667386;
   font-size:.92em;
   white-space:nowrap;
@@ -678,7 +682,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${chairLine}${secretaryLine}${quorumStatusLine}${waiverLine}<h3>الحضور</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th></tr></thead><tbody>${attendeeRows}</tbody></table><h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${endLine}${approvalLine}<h3>توقيعات المشاركين</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr></thead><tbody>${signatureRows}</tbody></table></div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>الترتيب</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer(); }
 function activeDocument(){return document.querySelector('.document.active')||$('docInvitation')}
-function buildPrintArea(mode='current'){renderDocuments();const docs=mode==='all'?Array.from(document.querySelectorAll('.document')):[activeDocument()];const pages=docs.map(doc=>`<article class="print-document">${doc.innerHTML}</article>`).join('');$('printArea').innerHTML=pages;}
+function buildPrintArea(mode='current'){renderDocuments();const docs=mode==='all'?Array.from(document.querySelectorAll('.document')):[activeDocument()];const pages=docs.map(doc=>{const clone=doc.cloneNode(true);const footerEl=clone.querySelector('.doc-footer');const footerHTML=footerEl?footerEl.outerHTML:'';if(footerEl)footerEl.remove();const bodyHTML=clone.innerHTML;return `<article class="print-document"><table class="print-page-frame"><tfoot><tr><td>${footerHTML}</td></tr></tfoot><tbody><tr><td>${bodyHTML}</td></tr></tbody></table></article>`;}).join('');$('printArea').innerHTML=pages;}
 function printDocuments(mode){
  printMode=mode;
  buildPrintArea(mode);
