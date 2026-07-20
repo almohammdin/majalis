@@ -53,7 +53,7 @@
 .doc-footer a{color:inherit;text-decoration:none;direction:ltr}
 .footer{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}.footer .version{font-size:9px;color:#9AA2AD;direction:ltr}.footer .privacy-note{flex-basis:100%;font-size:9px;color:#929BA7;font-weight:400}
 #printArea{display:none}
-@page{size:A4 portrait;margin:12mm 12mm 25mm}
+@page{size:A4 portrait;margin:12mm 12mm 16mm}
 @media print{
   html,body{background:#fff!important;color:#18202A!important;margin:0!important;padding:0!important;direction:rtl;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body>*:not(#printArea){display:none!important}
@@ -69,13 +69,13 @@
   #printArea .doc-org strong{display:block!important;font-size:11pt!important;color:#0B1A2B!important}.print-document .doc-org span{font-size:8pt!important;color:#677386!important}
   #printArea .doc-title{text-align:center!important;margin:6mm 0 5mm!important;break-after:avoid;page-break-after:avoid}
   #printArea .doc-title small{color:#927423!important;font-size:8.5pt!important;font-weight:700!important}.print-document .doc-title h2{font-size:17pt!important;line-height:1.35!important;color:#0B1A2B!important;margin:1mm 0!important}.print-document .doc-title p{font-size:9.5pt!important;margin:0!important;color:#465266!important}
-  #printArea .doc-body{font-size:9.5pt!important;line-height:1.75!important;color:#18202A!important;padding-bottom:5mm!important}.print-document .doc-body h3{font-size:11pt!important;color:#0B1A2B!important;margin:5mm 0 2mm!important;break-after:avoid;page-break-after:avoid}.print-document .doc-body p{margin:0 0 2.2mm!important}
+  #printArea .doc-body{font-size:9.5pt!important;line-height:1.75!important;color:#18202A!important;padding-bottom:9mm!important}.print-document .doc-body h3{font-size:11pt!important;color:#0B1A2B!important;margin:5mm 0 2mm!important;break-after:avoid;page-break-after:avoid}.print-document .doc-body p{margin:0 0 2.2mm!important}
   #printArea .meta-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;border:1px solid #DDE3EA!important;border-radius:3mm!important;overflow:hidden!important;margin:4mm 0!important;break-inside:avoid;page-break-inside:avoid}
   #printArea .meta-row{display:flex!important;gap:2mm!important;padding:2.2mm 2.5mm!important;border-bottom:1px solid #E8ECF0!important}.print-document .meta-row span{color:#677386!important;min-width:27mm!important}.print-document .meta-row strong{color:#263241!important}
-  #printArea .doc-table{width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;margin:4mm 0!important;font-size:8.7pt!important}.print-document .doc-table thead{display:table-header-group!important}.print-document .doc-table tbody{display:table-row-group!important}.print-document .doc-table tr{break-inside:avoid;page-break-inside:avoid}.print-document .doc-table th,.print-document .doc-table td{border:1px solid #CDD4DD!important;padding:2.2mm!important;text-align:right!important;vertical-align:top!important;color:#18202A!important;overflow-wrap:anywhere!important}.print-document .doc-table th{background:#F0F3F6!important;color:#0B1A2B!important;font-weight:700!important}
-  #printArea .doc-footer{display:none!important}
-  #printArea .print-fixed-footer{position:fixed!important;right:0!important;left:0!important;bottom:0!important;border-top:1px solid #DDE3EA!important;padding-top:2mm!important;display:flex!important;align-items:center!important;justify-content:space-between!important;font-size:7.5pt!important;color:#6F7A89!important;background:#fff!important}
-  #printArea .print-fixed-footer a{color:#415065!important;text-decoration:none!important;direction:ltr!important}.print-fixed-footer .print-version{direction:ltr!important}
+  #printArea .doc-table{width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;margin:4mm 0!important;font-size:8.7pt!important}.print-document .doc-table thead{display:table-header-group!important;break-after:avoid-page!important;page-break-after:avoid!important}.print-document .doc-table tbody{display:table-row-group!important}.print-document .doc-table tr{break-inside:avoid;page-break-inside:avoid}.print-document .doc-table th,.print-document .doc-table td{border:1px solid #CDD4DD!important;padding:2.2mm!important;text-align:right!important;vertical-align:top!important;color:#18202A!important;overflow-wrap:anywhere!important}.print-document .doc-table th{background:#F0F3F6!important;color:#0B1A2B!important;font-weight:700!important}
+  #printArea .doc-footer{display:flex!important;position:static!important;align-items:center!important;justify-content:space-between!important;gap:8mm!important;border-top:1px solid #DDE3EA!important;margin-top:8mm!important;padding-top:3mm!important;font-size:7.5pt!important;color:#6F7A89!important;background:#fff!important;break-inside:avoid!important;page-break-inside:avoid!important}
+  #printArea .doc-footer a{color:#415065!important;text-decoration:none!important;direction:ltr!important}
+  #printArea .doc-footer-version{direction:ltr!important}
 }
 @media(max-width:680px){.logo-upload-box{align-items:flex-start;flex-direction:column}.entity-logo-preview{width:100%;height:94px;flex-basis:auto}.time-fields{grid-template-columns:1fr 1fr 1fr}.print-toolbar{align-items:flex-start;flex-direction:column}}
 
@@ -111,13 +111,9 @@
 .doc-footer{align-items:center;gap:12px}
 .doc-footer .tool-name-group,.doc-footer a{display:inline-flex;align-items:center;gap:7px}
 .tool-footer-logo{width:27px;height:auto;display:block;object-fit:contain}
-.print-fixed-footer{justify-content:space-between}
-.print-footer-link{display:flex;align-items:center;gap:6px}
-.print-footer-logo{width:50px;height:auto;display:block;object-fit:contain}
 .footer{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
 .footer .tool-label{color:#516172;font-weight:600}
 @media(max-width:680px){.global-actions{justify-content:stretch}.global-actions .btn,.global-actions .autosave-status{flex:1 1 100%;justify-content:center}.hero-logo-card{width:min(100%,330px);padding:13px 17px 11px}.hero-title-image{max-width:275px}}
-@media print{#printArea .print-fixed-footer{display:flex!important;align-items:center!important;justify-content:space-between!important}#printArea .print-footer-link{display:flex!important;align-items:center!important;gap:6px!important}#printArea .print-footer-logo{width:43px!important;height:auto!important}}
 </style>
 
 
@@ -190,30 +186,30 @@
   box-shadow:inset 0 -3px 0 var(--gold);
 }
 .management-tab.active .management-icon{background:var(--gold);color:var(--navy)}
-.doc-footer-brand,.print-footer-brand{
+.doc-footer-brand{
   display:flex;
   align-items:center;
   gap:9px;
   min-width:0;
 }
-.doc-footer-brand>div,.print-footer-brand>div{
+.doc-footer-brand>div>div{
   display:flex;
   flex-direction:column;
   justify-content:center;
   min-width:0;
   line-height:1.35;
 }
-.doc-footer-brand strong,.print-footer-brand strong{
+.doc-footer-brand strong strong{
   color:#344255;
   font-weight:700;
   white-space:nowrap;
 }
-.doc-footer-brand a,.print-footer-brand a{
+.doc-footer-brand a a{
   color:#667386;
   font-size:.92em;
   white-space:nowrap;
 }
-.doc-footer-version,.print-version{margin-inline-start:auto;white-space:nowrap}
+.doc-footer-version{margin-inline-start:auto;white-space:nowrap}
 @media(max-width:680px){
   .suite-badge-wrap{margin:-12px auto 7px}
   .suite-badge{font-size:10px;padding:5px 10px}
@@ -233,41 +229,25 @@
     break-inside:auto!important;
     page-break-inside:auto!important;
   }
-  #printArea .doc-table thead{display:table-header-group!important}
+  #printArea .doc-table thead{display:table-header-group!important;break-after:avoid-page!important;page-break-after:avoid!important}
   #printArea .doc-table tbody{display:table-row-group!important}
   #printArea .doc-table tr{
     break-inside:avoid-page!important;
     page-break-inside:avoid!important;
   }
-  #printArea .print-fixed-footer{
-    min-height:13mm!important;
-    padding:2mm 0 1mm!important;
-    gap:8mm!important;
-    line-height:1.25!important;
-  }
-  #printArea .print-footer-brand{
-    gap:2.5mm!important;
-    max-width:82%!important;
-  }
-  #printArea .print-footer-logo{
-    width:48px!important;
+  #printArea .tool-footer-logo{
+    width:11mm!important;
     max-height:11mm!important;
     object-fit:contain!important;
   }
-  #printArea .print-footer-brand strong{
-    display:block!important;
+  #printArea .doc-footer-brand strong{
     font-size:7.7pt!important;
-    color:#344255!important;
   }
-  #printArea .print-footer-brand a{
-    display:block!important;
-    margin-top:.4mm!important;
+  #printArea .doc-footer-brand a{
     font-size:6.9pt!important;
-    color:#667386!important;
   }
-  #printArea .print-version{
+  #printArea .doc-footer-version{
     font-size:7pt!important;
-    align-self:center!important;
   }
 }
 </style>
@@ -698,8 +678,25 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${chairLine}${secretaryLine}${quorumStatusLine}${waiverLine}<h3>الحضور</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th></tr></thead><tbody>${attendeeRows}</tbody></table><h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${endLine}${approvalLine}<h3>توقيعات المشاركين</h3><table class="doc-table"><thead><tr><th>الترتيب</th><th>الاسم</th><th>الصفة</th><th>التوقيع</th></tr></thead><tbody>${signatureRows}</tbody></table></div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>الترتيب</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer(); }
 function activeDocument(){return document.querySelector('.document.active')||$('docInvitation')}
-function buildPrintArea(mode='current'){renderDocuments();const docs=mode==='all'?Array.from(document.querySelectorAll('.document')):[activeDocument()];const pages=docs.map(doc=>`<article class="print-document">${doc.innerHTML}</article>`).join('');$('printArea').innerHTML=`${pages}<div class="print-fixed-footer"><div class="print-footer-brand"><img src="${MAJALIS_LOGO}" alt="مجالس" class="print-footer-logo"><div><strong>${esc(TOOL_NAME)}</strong><a href="${TOOL_LINK}">${TOOL_LINK}</a></div></div><span class="print-version">${TOOL_VERSION}</span></div>`;}
-function printDocuments(mode){printMode=mode;buildPrintArea(mode);const original=document.title;const org=($('entityName').value||'الجهة').trim().replace(/\s+/g,'_');document.title=`majalis_${org}_${mode==='all'?'package':'document'}`;window.print();setTimeout(()=>{document.title=original},1200)}
+function buildPrintArea(mode='current'){renderDocuments();const docs=mode==='all'?Array.from(document.querySelectorAll('.document')):[activeDocument()];const pages=docs.map(doc=>`<article class="print-document">${doc.innerHTML}</article>`).join('');$('printArea').innerHTML=pages;}
+function printDocuments(mode){
+ printMode=mode;
+ buildPrintArea(mode);
+ const org=($('entityName').value||'الجهة').trim().replace(/\s+/g,'_');
+ const printTitle=`majalis_${org}_${mode==='all'?'package':'document'}`;
+ const styles=Array.from(document.querySelectorAll('style')).map(s=>s.textContent).join('\n');
+ const content=$('printArea').innerHTML;
+ const printWin=window.open('','_blank','width=900,height=1000');
+ if(!printWin){window.print();return;}
+ printWin.document.open();
+ printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>${styles}</style></head><body><div id="printArea">${content}</div></body></html>`);
+ printWin.document.close();
+ let printed=false;
+ const doPrint=()=>{if(printed)return;printed=true;printWin.focus();printWin.print();};
+ printWin.addEventListener('load',()=>setTimeout(doPrint,250));
+ setTimeout(doPrint,2500);
+ printWin.addEventListener('afterprint',()=>printWin.close());
+}
 
 function collectFormValues(){const data={};document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el=>{if(el.id==='entityLogoInput')return;data[el.id]=el.type==='checkbox'?el.checked:el.value});return data}
 function applyFormValues(data){Object.entries(data||{}).forEach(([id,val])=>{const el=$(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val??''})}
