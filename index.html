@@ -213,6 +213,7 @@
 .doc-table td.sign-cell{vertical-align:bottom}
 .sign-pad{display:block;height:30px;border-bottom:1px solid var(--line)}
 .invite-signature{margin-top:22px}
+.invite-signature-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:520px}.invite-signature-details div{display:flex;align-items:flex-end;gap:10px}.invite-signature-details span{font-size:12px;color:var(--muted);white-space:nowrap}.invite-signature-details strong{flex:1;min-height:30px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink);font-weight:600}
 .invite-signature .signature-row{display:flex;align-items:flex-end;gap:10px;margin-top:14px;max-width:260px}
 .invite-signature .signature-label{font-size:12px;color:var(--muted);white-space:nowrap}
 .invite-signature .signature-row .sign-pad{flex:1}
@@ -244,7 +245,7 @@
 .attendance-sheet-table .attendance-role{color:var(--muted);font-size:10px;margin-top:1px}
 .attendance-sheet-table .sign-pad{height:18px}
 .document-empty-note{padding:18px;border:1px dashed #BCC6D2;border-radius:10px;background:#FAFBFC;color:var(--muted);text-align:center}
-@media(max-width:680px){.document-option-grid,.ballot-person,.attendance-person-card,.signature-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.document-option-grid,.ballot-person,.attendance-person-card,.signature-grid,.invite-signature-details{grid-template-columns:1fr}}
 </style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
@@ -330,7 +331,8 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
             </div>
             <div class="field w6"><label>وقت الاجتماع <span class="required-tag">أساسي</span></label><div class="time-fields"><select class="control live time-part" id="meetingHour"><option value="">الساعة</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><input class="control live time-part latin-number" id="meetingMinute" type="text" lang="en" dir="ltr" maxlength="2" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="الدقائق"><select class="control live time-part" id="meetingPeriod"><option value="صباحا">صباحا</option><option value="مساء">مساء</option></select></div><div class="hint">الدقائق تبدأ بقيمة 0 ويمكن تعديلها حتى 59.</div></div>
             <div class="field w6"><label>المكان أو رابط الاتصال <span class="required-tag">أساسي</span></label><input class="control live" id="location" placeholder="المقر أو منصة الاتصال"></div>
-            <div class="field w6"><label>اسم مُرسل الدعوة <span class="optional-tag">اختياري</span></label><input class="control live" id="inviteSenderName" placeholder="الاسم والصفة"><div class="info-help compact"><span class="info-mark">i</span><span>يظهر الاسم مع مكان للتوقيع في نهاية وثيقة الدعوة</span></div></div>
+            <div class="field w6"><label>الداعي <span class="optional-tag">اختياري</span></label><input class="control live" id="inviteSenderName" placeholder="الاسم الكامل"><div class="info-help compact"><span class="info-mark">i</span><span>تظهر بيانات الداعي في نهاية وثيقة الدعوة بصيغة الاسم والمنصب والتوقيع دون إظهار مسمى الداعي داخل الوثيقة</span></div></div>
+            <div class="field w6"><label>المنصب <span class="optional-tag">اختياري</span></label><input class="control live" id="inviteSenderPosition" placeholder="المنصب أو الصفة"></div>
           </div>
         </div>
 
@@ -455,7 +457,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
   </div>
 </main>
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.5</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.6</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -553,7 +555,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_7';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.7.5';
+const TOOL_VERSION='v1.7.6';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -665,7 +667,8 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  const waiverLine=full&&r.waiver?'<p><strong>إثبات اكتمال التمثيل:</strong> حضر أو مثل في الاجتماع كامل الحقوق التي يقرر النظام اكتمالها لعقد الاجتماع دون مراعاة إجراءات الدعوة ومدتها.</p>':'';
  const chairLine=chairRaw?`<p><strong>رئيس الاجتماع:</strong> ${chair}</p>`:'';
  const inviteSenderRaw=($('inviteSenderName')?.value||'').trim();
- const inviteSenderLine=inviteSenderRaw?`<div class="invite-signature"><p><strong>مرسل الدعوة:</strong> ${esc(inviteSenderRaw)}</p><div class="signature-row"><span class="signature-label">التوقيع</span><span class="sign-pad"></span></div></div>`:'';
+ const inviteSenderPositionRaw=($('inviteSenderPosition')?.value||'').trim();
+ const inviteSenderLine=(inviteSenderRaw||inviteSenderPositionRaw)?`<div class="invite-signature"><div class="invite-signature-details"><div><span>الاسم</span><strong>${esc(inviteSenderRaw)||'____________________________'}</strong></div><div><span>المنصب</span><strong>${esc(inviteSenderPositionRaw)||'____________________________'}</strong></div></div><div class="signature-row"><span class="signature-label">التوقيع</span><span class="sign-pad"></span></div></div>`:'';
  const quorumStatusValue=$('quorumStatus')?.value||'pending';
  const quorumStatusLine=quorumStatusValue!=='pending'?`<p><strong>حالة النصاب:</strong> ${esc($('quorumStatus').options[$('quorumStatus').selectedIndex].text)}</p>`:'';
  const endTime=formatEndTime();
@@ -691,7 +694,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  const includeParticipantNames=attendanceEnabled&&!!$('minutesParticipantNames')?.checked;
  const includeParticipantSignatures=includeParticipantNames&&!!$('minutesParticipantSignatures')?.checked;
  const minutesAttendanceSection=includeParticipantNames?`<h3>الحضور</h3><table class="doc-table"><thead><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th>${includeParticipantSignatures?'<th>التوقيع</th>':''}</tr></thead><tbody>${includeParticipantSignatures?attendeeRowsWithSignature:attendeeRows}</tbody></table>`:'';
- $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationClosingLine}${chairLine}${inviteSenderLine}</div>`+footer();
+ $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationClosingLine}${inviteSenderLine}</div>`+footer();
  $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
  $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}${approvalLine}</div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer();
@@ -809,6 +812,7 @@ function printStylesheet(){
 .doc-table td.sign-cell{vertical-align:bottom}
 .sign-pad{display:block;height:9mm;border-bottom:.3mm solid #B9C2CC}
 .invite-signature{margin-top:6mm}
+.invite-signature-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6mm;max-width:135mm}.invite-signature-details div{display:flex;align-items:flex-end;gap:3mm}.invite-signature-details span{font-size:8.5pt;color:#7B8492;white-space:nowrap}.invite-signature-details strong{flex:1;min-height:8mm;border-bottom:.25mm solid #DDE3EA;font-size:9.5pt;color:#18202A;font-weight:600}
 .invite-signature .signature-row{display:flex;align-items:flex-end;gap:10px;margin-top:4mm;max-width:65mm}
 .invite-signature .signature-label{font-size:8.5pt;color:#7B8492;white-space:nowrap}
 .invite-signature .signature-row .sign-pad{flex:1}
