@@ -455,7 +455,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
   </div>
 </main>
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.4</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.5</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -553,7 +553,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_7';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.7.4';
+const TOOL_VERSION='v1.7.5';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -730,14 +730,14 @@ function extractPrintSections(docEl){
 }
 function paginateIntoPages(doc,targetDoc){
  targetDoc=targetDoc||document;
- const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=15*MM,SAFETY=18;
+ const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=15*MM,PAGE_NUMBER_RESERVE=34,SAFETY=18;
  const contentW=210*MM-PAD_SIDE*2,availH0=PAGE_H-PAD_TOP-PAD_BOTTOM;
  let stage=targetDoc.getElementById('pagStage');
  if(!stage){stage=targetDoc.createElement('div');stage.id='pagStage';targetDoc.body.appendChild(stage);}
  stage.setAttribute('style',`position:fixed;left:-99999px;top:0;width:${contentW}px;visibility:hidden;`);
  function measure(html){stage.innerHTML='';const box=targetDoc.createElement('div');box.innerHTML=html;stage.appendChild(box);return stage.offsetHeight;}
  const headerH=measure(doc.headerHtml),footerH=measure(doc.footerHtml);
- const avail0=Math.max(availH0-headerH-footerH-SAFETY,150);
+ const avail0=Math.max(availH0-headerH-footerH-PAGE_NUMBER_RESERVE-SAFETY,150);
  const pages=[];let current=[],avail=avail0;
  function newPage(){if(current.length)pages.push(current);current=[];avail=avail0;}
  doc.sections.forEach(sec=>{
@@ -771,9 +771,10 @@ function paginateIntoPages(doc,targetDoc){
  newPage();
  stage.remove();
  const totalPages=pages.length;
+ const pageNumberBottom=PAD_BOTTOM+footerH+8;
  return pages.map((blocks,index)=>{
-  const pageNumber=totalPages>1?`<div class="print-page-number" aria-label="الصفحة ${index+1} من ${totalPages}">${index+1} / ${totalPages}</div>`:'';
-  return `<section class="print-page">${doc.headerHtml}${blocks.join('')}${doc.footerHtml}${pageNumber}</section>`;
+  const pageNumber=totalPages>1?`<div class="print-page-number" style="bottom:${pageNumberBottom}px" aria-label="الصفحة ${index+1} من ${totalPages}">${index+1} / ${totalPages}</div>`:'';
+  return `<section class="print-page">${doc.headerHtml}${blocks.join('')}${pageNumber}${doc.footerHtml}</section>`;
  }).join('');
 }
 function printStylesheet(){
@@ -838,7 +839,7 @@ function printStylesheet(){
 .doc-footer-brand a{color:#667386;font-size:6.9pt;white-space:nowrap}
 .tool-footer-logo{width:11mm;max-height:11mm;object-fit:contain;display:block}
 .doc-footer-version{margin-inline-start:auto;white-space:nowrap;direction:ltr;font-size:7pt}
-.print-page-number{position:absolute;left:50%;bottom:4.5mm;transform:translateX(-50%);z-index:3;min-width:22mm;padding:1mm 3mm;border:1px solid #D7DEE6;border-radius:999px;background:#fff;color:#344255;font-family:Arial,Tahoma,sans-serif;font-size:8pt;font-weight:700;line-height:1.2;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:.15mm}
+.print-page-number{position:absolute;left:50%;transform:translateX(-50%);z-index:3;min-width:22mm;padding:1mm 3mm;border:1px solid #D7DEE6;border-radius:999px;background:#fff;color:#344255;font-family:Arial,Tahoma,sans-serif;font-size:8pt;font-weight:700;line-height:1.2;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:.15mm}
 @media print{.print-page{margin:0}}`;
 }
 function printDocuments(mode){
