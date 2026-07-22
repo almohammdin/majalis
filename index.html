@@ -234,15 +234,13 @@
 .ballot-person div,.attendance-person-card div{display:flex;gap:7px;font-size:12px}.ballot-person span,.attendance-person-card span{color:var(--muted);min-width:80px}.ballot-person strong,.attendance-person-card strong{color:var(--navy)}
 .vote-choice{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.choice-box{width:17px;height:17px;border:1px solid #7C8795;display:inline-block;vertical-align:middle}
 .signature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:24px}.signature-field{font-size:12px;color:var(--muted)}.signature-field .sign-pad{margin-top:20px}
-.attendance-methods{display:flex;flex-wrap:wrap;gap:18px;margin:18px 0;font-size:12px}
 .single-signature-grid{grid-template-columns:1fr}
 .individual-document-page{break-before:page;page-break-before:always;padding-top:1px}
 .individual-document-page:first-child{break-before:auto;page-break-before:auto}
 .attendance-sheet-table{table-layout:fixed}
 .attendance-sheet-table th,.attendance-sheet-table td{padding:5px 6px;font-size:11px;line-height:1.35}
 .attendance-sheet-table th:nth-child(1),.attendance-sheet-table td:nth-child(1){width:38px;text-align:center}
-.attendance-sheet-table th:nth-child(3),.attendance-sheet-table td:nth-child(3){width:105px}
-.attendance-sheet-table th:nth-child(4),.attendance-sheet-table td:nth-child(4){width:150px}
+.attendance-sheet-table th:nth-child(3),.attendance-sheet-table td:nth-child(3){width:150px}
 .attendance-sheet-table .attendance-role{color:var(--muted);font-size:10px;margin-top:1px}
 .attendance-sheet-table .sign-pad{height:18px}
 .document-empty-note{padding:18px;border:1px dashed #BCC6D2;border-radius:10px;background:#FAFBFC;color:var(--muted);text-align:center}
@@ -457,7 +455,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
   </div>
 </main>
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.1</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.4</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -555,7 +553,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_7';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.7.1';
+const TOOL_VERSION='v1.7.4';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -650,14 +648,14 @@ function footer(){return `<div class="doc-footer"><div class="doc-footer-brand">
 function setOptionalDocumentVisibility(docName,enabled){const tab=document.querySelector(`[data-doc="${docName}"]`),doc=$('doc'+docName[0].toUpperCase()+docName.slice(1));if(tab)tab.hidden=!enabled;if(doc)doc.hidden=!enabled;if(!enabled&&doc?.classList.contains('active')){document.querySelector('[data-doc="invitation"]')?.click();}}
 function syncDocumentOptionVisibility(){const attendanceEnabled=!!$('enableAttendanceSheet')?.checked,votingEnabled=!!$('enableVotingCard')?.checked;if($('attendanceDocumentOptions'))$('attendanceDocumentOptions').hidden=!attendanceEnabled;if($('votingDocumentOptions'))$('votingDocumentOptions').hidden=!votingEnabled;setOptionalDocumentVisibility('attendance',attendanceEnabled);setOptionalDocumentVisibility('voting',votingEnabled);}
 function ballotParticipantCard(person,index,items){const p=person?normalizeParticipant(person):null;const name=p?.name||'';const role=p?.role||'';const participantMeta=`<div class="ballot-person"><div><span>اسم المصوت</span><strong>${esc(name)||'____________________________'}</strong></div><div><span>الصفة</span><strong>${esc(role)||'____________________________'}</strong></div></div>`;const rows=items.length?items.map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.title||'')}</td><td><span class="vote-choice"><span class="choice-box"></span> موافق</span></td><td><span class="vote-choice"><span class="choice-box"></span> غير موافق</span></td><td><span class="vote-choice"><span class="choice-box"></span> ممتنع</span></td></tr>`).join(''):`<tr><td>1</td><td></td><td><span class="choice-box"></span></td><td><span class="choice-box"></span></td><td><span class="choice-box"></span></td></tr>`;return `<section class="ballot-card individual-attendance-sheet">${participantMeta}<table class="doc-table"><thead><tr><th>م</th><th>البند محل التصويت</th><th>موافق</th><th>غير موافق</th><th>ممتنع</th></tr></thead><tbody>${rows}</tbody></table><div class="signature-grid"><div class="signature-field">عدد أو نسبة الأصوات<span class="sign-pad"></span></div><div class="signature-field">توقيع المصوت<span class="sign-pad"></span></div></div></section>`}
-function individualAttendanceCard(person,index){const p=person?normalizeParticipant(person):{name:'',role:'',attendance:'pending'};return `<section class="individual-attendance-sheet"><div class="attendance-person-card"><div><span>اسم المشارك</span><strong>${esc(p.name)||'____________________________'}</strong></div><div><span>الصفة</span><strong>${esc(p.role)||'____________________________'}</strong></div></div><div class="attendance-methods"><span class="vote-choice"><span class="choice-box"></span> حضوري</span><span class="vote-choice"><span class="choice-box"></span> عن بعد</span></div><div class="signature-grid single-signature-grid"><div class="signature-field">التوقيع<span class="sign-pad"></span></div></div></section>`}
+function individualAttendanceCard(person,index){const p=person?normalizeParticipant(person):{name:'',role:'',attendance:'pending'};return `<section class="individual-attendance-sheet"><div class="attendance-person-card"><div><span>اسم المشارك</span><strong>${esc(p.name)||'____________________________'}</strong></div><div><span>الصفة</span><strong>${esc(p.role)||'____________________________'}</strong></div></div><div class="signature-grid single-signature-grid"><div class="signature-field">التوقيع<span class="sign-pad"></span></div></div></section>`}
 function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule(); if(!r)return; syncDocumentOptionVisibility(); const d=dateInfo(),entity=esc($('entityName').value||'الجهة'),meeting=esc(meetingLabels[$('meetingType').value]),title=esc($('meetingTitle').value||meetingLabels[$('meetingType').value]),chairRaw=($('chairName')?.value||'').trim(),chair=esc(chairRaw),secretary=esc(($('secretaryName')?.value||'').trim()),full=$('fullRights').checked;
  const aobInAgenda=$('aobInAgenda')?.checked;
  const agendaTableItems=aobInAgenda?[...agendaItems,{title:'ما يستجد من أعمال',purpose:''}]:agendaItems;
  const agendaRows=agendaTableItems.length?agendaTableItems.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.title||'')}</td><td>${esc(x.purpose)}</td></tr>`).join(''):'';
  const attendeeRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td>${esc(x.name||'')}</td><td>${esc(x.role||'')}</td><td>${esc(attendanceLabels[x.attendance]||attendanceLabels.pending)}</td></tr>`}).join(''):'';
  const attendeeRowsWithSignature=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td>${esc(x.name||'')}</td><td>${esc(x.role||'')}</td><td>${esc(attendanceLabels[x.attendance]||attendanceLabels.pending)}</td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'';
- const attendanceSheetRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td><strong>${esc(x.name||'')}</strong><div class="attendance-role">${esc(x.role||'')}</div></td><td>${esc(attendanceLabels[x.attendance]||attendanceLabels.pending)}</td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'';
+ const attendanceSheetRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td><strong>${esc(x.name||'')}</strong><div class="attendance-role">${esc(x.role||'')}</div></td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'';
  const aobRaw=($('aobContent')?.value||'').trim();
  const minutesAgendaItems=aobRaw?[...agendaItems,{title:'ما يستجد من أعمال',discussion:aobRaw,decision:'',vote:''}]:agendaItems;
  const minutesRows=minutesAgendaItems.length?minutesAgendaItems.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${esc(x.title||'')}</strong><div>${esc(x.discussion||'')}</div></td><td>${esc(x.decision||'')}</td><td>${x.vote&&x.vote!=='لم يجر تصويت'?esc(x.vote):''}</td></tr>`).join(''):'';
@@ -699,7 +697,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer();
  if($('docAttendance')){
   const attendanceMode=$('attendanceSheetMode')?.value||'combined';
-  const combinedAttendance=attendees.length?`<table class="doc-table attendance-sheet-table"><thead><tr><th>م</th><th>الاسم والصفة</th><th>طريقة الحضور</th><th>التوقيع</th></tr></thead><tbody>${attendanceSheetRows}</tbody></table>`:'<div class="document-empty-note">أضف المشاركين لإعداد كشف الحضور.</div>';
+  const combinedAttendance=attendees.length?`<table class="doc-table attendance-sheet-table"><thead><tr><th>م</th><th>الاسم والصفة</th><th>التوقيع</th></tr></thead><tbody>${attendanceSheetRows}</tbody></table>`:'<div class="document-empty-note">أضف المشاركين لإعداد كشف الحضور.</div>';
   const individualAttendance=(attendees.length?attendees:[null]).map((person,i)=>`<section class="individual-document-page">${commonMeta()}${individualAttendanceCard(person,i)}</section>`).join('');
   $('docAttendance').innerHTML=commonHeader('كشف الحضور',attendanceMode==='individual'?'':'كشف موحد')+`<div class="doc-body">${attendanceMode==='individual'?individualAttendance:commonMeta()+combinedAttendance}</div>`+footer();
  }
@@ -732,7 +730,7 @@ function extractPrintSections(docEl){
 }
 function paginateIntoPages(doc,targetDoc){
  targetDoc=targetDoc||document;
- const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=10*MM,SAFETY=18;
+ const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=15*MM,SAFETY=18;
  const contentW=210*MM-PAD_SIDE*2,availH0=PAGE_H-PAD_TOP-PAD_BOTTOM;
  let stage=targetDoc.getElementById('pagStage');
  if(!stage){stage=targetDoc.createElement('div');stage.id='pagStage';targetDoc.body.appendChild(stage);}
@@ -772,13 +770,17 @@ function paginateIntoPages(doc,targetDoc){
  });
  newPage();
  stage.remove();
- return pages.map(blocks=>`<section class="print-page">${doc.headerHtml}${blocks.join('')}${doc.footerHtml}</section>`).join('');
+ const totalPages=pages.length;
+ return pages.map((blocks,index)=>{
+  const pageNumber=totalPages>1?`<div class="print-page-number" aria-label="الصفحة ${index+1} من ${totalPages}">${index+1} / ${totalPages}</div>`:'';
+  return `<section class="print-page">${doc.headerHtml}${blocks.join('')}${doc.footerHtml}${pageNumber}</section>`;
+ }).join('');
 }
 function printStylesheet(){
  return `@page{size:A4 portrait;margin:0}
 *{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}body{font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;color:#18202A;direction:rtl}
 #printArea{width:100%}
-.print-page{width:210mm;height:297mm;padding:12mm 12mm 10mm;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#fff;break-after:page;page-break-after:always;position:relative}
+.print-page{width:210mm;height:297mm;padding:12mm 12mm 15mm;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#fff;break-after:page;page-break-after:always;position:relative}
 .print-page:last-of-type{break-after:auto;page-break-after:auto}
 @media screen{.print-page{margin:0 auto 6mm;box-shadow:0 2px 14px rgba(0,0,0,.16)}body{background:#DDE2E7;padding:10mm 0}}
 .doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10mm;border-bottom:1px solid #DDE3EA;padding-bottom:4mm;margin-bottom:5mm;flex-shrink:0}
@@ -815,14 +817,12 @@ function printStylesheet(){
 .ballot-person div,.attendance-person-card div{display:flex;gap:2mm;font-size:8.5pt}.ballot-person span,.attendance-person-card span{color:#677386;min-width:22mm}.ballot-person strong,.attendance-person-card strong{color:#0B1A2B}
 .vote-choice{display:inline-flex;align-items:center;gap:1.5mm;white-space:nowrap}.choice-box{width:4.5mm;height:4.5mm;border:.3mm solid #7C8795;display:inline-block;vertical-align:middle}
 .signature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7mm;margin-top:7mm}.signature-field{font-size:8.5pt;color:#677386}.signature-field .sign-pad{margin-top:6mm}
-.attendance-methods{display:flex;flex-wrap:wrap;gap:7mm;margin:6mm 0;font-size:8.5pt}
 .single-signature-grid{grid-template-columns:1fr}
 .individual-document-page{width:100%;break-inside:avoid;page-break-inside:avoid}
 .attendance-sheet-table{table-layout:fixed;font-size:7.8pt;margin:2.5mm 0}
 .attendance-sheet-table th,.attendance-sheet-table td{padding:1.2mm 1.5mm;line-height:1.25;vertical-align:middle}
 .attendance-sheet-table th:nth-child(1),.attendance-sheet-table td:nth-child(1){width:9mm;text-align:center}
-.attendance-sheet-table th:nth-child(3),.attendance-sheet-table td:nth-child(3){width:27mm}
-.attendance-sheet-table th:nth-child(4),.attendance-sheet-table td:nth-child(4){width:38mm}
+.attendance-sheet-table th:nth-child(3),.attendance-sheet-table td:nth-child(3){width:38mm}
 .attendance-sheet-table .attendance-role{color:#677386;font-size:7pt;margin-top:.4mm}
 .attendance-sheet-table .sign-pad{height:4mm}
 .document-empty-note{padding:5mm;border:1px dashed #BCC6D2;border-radius:2.5mm;background:#FAFBFC;color:#677386;text-align:center}
@@ -838,6 +838,7 @@ function printStylesheet(){
 .doc-footer-brand a{color:#667386;font-size:6.9pt;white-space:nowrap}
 .tool-footer-logo{width:11mm;max-height:11mm;object-fit:contain;display:block}
 .doc-footer-version{margin-inline-start:auto;white-space:nowrap;direction:ltr;font-size:7pt}
+.print-page-number{position:absolute;left:50%;bottom:4.5mm;transform:translateX(-50%);z-index:3;min-width:22mm;padding:1mm 3mm;border:1px solid #D7DEE6;border-radius:999px;background:#fff;color:#344255;font-family:Arial,Tahoma,sans-serif;font-size:8pt;font-weight:700;line-height:1.2;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:.15mm}
 @media print{.print-page{margin:0}}`;
 }
 function printDocuments(mode){
