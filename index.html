@@ -701,7 +701,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
   const attendanceMode=$('attendanceSheetMode')?.value||'combined';
   const combinedAttendance=attendees.length?`<table class="doc-table attendance-sheet-table"><thead><tr><th>م</th><th>الاسم والصفة</th><th>طريقة الحضور</th><th>التوقيع</th></tr></thead><tbody>${attendanceSheetRows}</tbody></table>`:'<div class="document-empty-note">أضف المشاركين لإعداد كشف الحضور.</div>';
   const individualAttendance=(attendees.length?attendees:[null]).map((person,i)=>`<section class="individual-document-page">${commonMeta()}${individualAttendanceCard(person,i)}</section>`).join('');
-  $('docAttendance').innerHTML=commonHeader('كشف الحضور',attendanceMode==='individual'?'صفحة A4 مستقلة لكل مشارك':'كشف موحد')+`<div class="doc-body">${attendanceMode==='individual'?individualAttendance:commonMeta()+combinedAttendance}</div>`+footer();
+  $('docAttendance').innerHTML=commonHeader('كشف الحضور',attendanceMode==='individual'?'':'كشف موحد')+`<div class="doc-body">${attendanceMode==='individual'?individualAttendance:commonMeta()+combinedAttendance}</div>`+footer();
  }
  if($('docVoting')){
   const ballotItems=agendaItems.filter(x=>x.includeInBallot);
