@@ -289,6 +289,13 @@
  .participant-item .participant-delete{grid-column:3;grid-row:1}
 }
 @media(max-width:680px){.officer-source-grid{grid-template-columns:1fr}.participants-add-bottom .btn{width:100%}}
+/* محضر أكثر كثافة ووضوحا في المعاينة والطباعة */
+.minutes-doc-body{line-height:1.55}
+.minutes-doc-body>p{margin:0 0 8px}
+.minutes-doc-body>.free-paragraph{margin:10px 0;line-height:1.7}
+.minutes-doc-body>h3{margin:15px 0 8px}
+.minutes-doc-body>.meta-grid{margin:11px 0}
+.minutes-doc-body>.doc-table{margin:10px 0}
 </style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
@@ -635,7 +642,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.8.3</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.8.4</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -733,7 +740,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_7';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.8.3';
+const TOOL_VERSION='v1.8.4';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -889,11 +896,6 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  const minutesStatus=$('minutesStatus')?.value||'preparing';
  const minutesStatusLabel=minutesStatusLabels[minutesStatus]||minutesStatusLabels.preparing;
  const minutesStatusClass=minutesStatus==='approved'?'good':(minutesStatus==='review'?'warn':'warn');
- const approvalDate=getApprovalDate();
- const approvalCalendar=$('approvalCalendar')?.value||'gregorian';
- const approverRaw=($('minutesApprover')?.value||'').trim();
- const approvalDateText=formatDateFor(approvalDate,approvalCalendar);
- const approvalLine=minutesStatus==='approved'?(approverRaw?`<p><strong>جهة أو شخص اعتماد المحضر:</strong> ${esc(approverRaw)}</p>`:'')+(approvalDateText!=='غير مدخل'?`<p><strong>تاريخ اعتماد المحضر:</strong> ${esc(approvalDateText)}</p>`:''):'';
  const inviteDateLine=d.invite!=='غير مدخل'?`<p><strong>تاريخ توجيه الدعوة:</strong> ${esc(d.invite)}</p>`:'';
  const attendanceEnabled=!!$('enableAttendanceSheet')?.checked;
  const includeParticipantNames=attendanceEnabled&&!!$('minutesParticipantNames')?.checked;
@@ -901,7 +903,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; const r=activeRule();
  const minutesAttendanceSection=includeParticipantNames?`<h3>الحضور</h3><table class="doc-table"><thead><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th>${includeParticipantSignatures?'<th>التوقيع</th>':''}</tr></thead><tbody>${includeParticipantSignatures?attendeeRowsWithSignature:attendeeRows}</tbody></table>`:'';
  $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationClosingLine}${inviteSenderLine}</div>`+footer();
  $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
- $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}${approvalLine}</div>`+footer();
+ $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body minutes-doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}</div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer();
  if($('docAttendance')){
   const attendanceMode=$('attendanceSheetMode')?.value||'combined';
@@ -925,6 +927,7 @@ function extractPrintSections(docEl){
  const headEl=docEl.querySelector('.doc-head'),titleEl=docEl.querySelector('.doc-title'),bodyEl=docEl.querySelector('.doc-body'),footerEl=docEl.querySelector('.doc-footer');
  const headerHtml=(headEl?headEl.outerHTML:'')+(titleEl?titleEl.outerHTML:'');
  const footerHtml=footerEl?footerEl.outerHTML:'';
+ const bodyClass=bodyEl?.className||'doc-body';
  const sections=[];
  if(bodyEl)Array.from(bodyEl.children).forEach(child=>{
   if(child.tagName==='TABLE'){
@@ -934,7 +937,7 @@ function extractPrintSections(docEl){
    sections.push({type:'atomic',html:child.outerHTML,forcePage:child.classList.contains('individual-document-page')});
   }
  });
- return {headerHtml,footerHtml,sections};
+ return {headerHtml,footerHtml,bodyClass,sections};
 }
 function paginateIntoPages(doc,targetDoc){
  targetDoc=targetDoc||document;
@@ -943,9 +946,10 @@ function paginateIntoPages(doc,targetDoc){
  let stage=targetDoc.getElementById('pagStage');
  if(!stage){stage=targetDoc.createElement('div');stage.id='pagStage';targetDoc.body.appendChild(stage);}
  stage.setAttribute('style',`position:fixed;left:-99999px;top:0;width:${contentW}px;visibility:hidden;contain:layout style;`);
- function measure(html){
+ function measure(html,bodyContent=false){
   stage.innerHTML='';
   const box=targetDoc.createElement('div');
+  box.className=bodyContent?(doc.bodyClass||'doc-body'):'';
   box.setAttribute('style','display:flow-root;width:100%;padding:.1px 0;');
   box.innerHTML=html;
   stage.appendChild(box);
@@ -957,7 +961,7 @@ function paginateIntoPages(doc,targetDoc){
  function newPage(){if(current.length)pages.push(current);current=[];avail=avail0;}
  doc.sections.forEach(sec=>{
   if(sec.type==='atomic'){
-   const h=measure(sec.html);
+   const h=measure(sec.html,true);
    if(sec.forcePage){
     if(current.length)newPage();
     current.push(sec.html);avail-=h;
@@ -968,14 +972,14 @@ function paginateIntoPages(doc,targetDoc){
    }
   }else{
    const emptyHtml=`<table class="${sec.cls}">${sec.thead}<tbody></tbody></table>`;
-   const emptyH=measure(emptyHtml);
+   const emptyH=measure(emptyHtml,true);
    if(current.length&&emptyH>avail)newPage();
    avail-=emptyH;
    let buf=[];
    const flush=()=>{if(buf.length){current.push(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`);buf=[];}};
    sec.rows.forEach(rowHtml=>{
-    const before=buf.length?measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`):emptyH;
-    const after=measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')+rowHtml}</tbody></table>`);
+    const before=buf.length?measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`,true):emptyH;
+    const after=measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')+rowHtml}</tbody></table>`,true);
     const rowH=after-before;
     if(rowH>avail){
      if(buf.length){flush();newPage();avail-=emptyH;}
@@ -992,7 +996,7 @@ function paginateIntoPages(doc,targetDoc){
  const pageNumberBottom=PAD_BOTTOM+footerH+8;
  return pages.map((blocks,index)=>{
   const pageNumber=totalPages>1?`<div class="print-page-number" style="bottom:${pageNumberBottom}px" aria-label="الصفحة ${index+1} من ${totalPages}">${index+1} / ${totalPages}</div>`:'';
-  return `<section class="print-page">${doc.headerHtml}${blocks.join('')}${pageNumber}${doc.footerHtml}</section>`;
+  return `<section class="print-page">${doc.headerHtml}<div class="${doc.bodyClass||'doc-body'} print-page-body">${blocks.join('')}</div>${pageNumber}${doc.footerHtml}</section>`;
  }).join('');
 }
 function printStylesheet(){
@@ -1014,9 +1018,18 @@ function printStylesheet(){
 .doc-title small{color:#927423;font-size:8.5pt;font-weight:700}
 .doc-title h2{font-size:17pt;line-height:1.35;color:#0B1A2B;margin:1mm 0}
 .doc-title p{font-size:9.5pt;margin:0;color:#465266}
+.print-page-body{display:flow-root;flex:0 0 auto;width:100%}
 .doc-body{font-size:9.5pt;line-height:1.75;color:#18202A}
 .doc-body h3{font-size:11pt;color:#0B1A2B;margin:5mm 0 2mm}
 .doc-body p{margin:0 0 2.2mm}
+.minutes-doc-body{line-height:1.5}
+.minutes-doc-body>p{margin:0 0 1.1mm}
+.minutes-doc-body>.free-paragraph{margin:1.5mm 0;line-height:1.65}
+.minutes-doc-body>h3{margin:3mm 0 1.4mm}
+.minutes-doc-body>.meta-grid{margin:2.5mm 0}
+.minutes-doc-body>.meta-grid .meta-row{padding:1.5mm 2mm}
+.minutes-doc-body>.doc-table{margin:2.5mm 0}
+.minutes-doc-body>.doc-table th,.minutes-doc-body>.doc-table td{padding:1.6mm 1.8mm}
 .meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #DDE3EA;border-radius:3mm;overflow:hidden;margin:4mm 0}
 .meta-row{display:flex;gap:2mm;padding:2.2mm 2.5mm;border-bottom:1px solid #E8ECF0}
 .meta-row span{color:#677386;min-width:27mm}
@@ -1335,7 +1348,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.8.3',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.8.4',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
