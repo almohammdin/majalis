@@ -247,6 +247,16 @@
 .document-empty-note{padding:18px;border:1px dashed #BCC6D2;border-radius:10px;background:#FAFBFC;color:var(--muted);text-align:center}
 @media(max-width:680px){.document-option-grid,.ballot-person,.attendance-person-card,.signature-grid,.invite-signature-details{grid-template-columns:1fr}}
 </style>
+
+<style id="majalis-admin-v180">
+.admin-entry-button{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(234,213,141,.42);border-radius:11px;background:rgba(255,255,255,.08);color:#fff;padding:8px 12px;font-size:12px;font-weight:700;backdrop-filter:blur(8px);transition:.18s}.admin-entry-button:hover{background:rgba(255,255,255,.14);border-color:var(--gold2)}.admin-entry-icon{width:22px;height:22px;border-radius:7px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-size:14px}.admin-entry-button.signed-in{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.admin-cloud-bar[hidden]{display:none!important}.admin-cloud-bar{max-width:1240px;margin:7px auto 12px;padding:12px 15px;border:1px solid #D7C27A;border-radius:16px;background:#FFFDF7;box-shadow:0 10px 25px rgba(11,26,43,.08);display:grid;grid-template-columns:minmax(230px,1fr) auto;gap:12px 18px;align-items:center}.admin-cloud-context{display:flex;align-items:center;gap:11px;min-width:0}.admin-cloud-context>div{display:flex;flex-direction:column;min-width:0}.admin-cloud-context strong{color:var(--navy);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.admin-cloud-context span:not(.admin-cloud-badge){color:var(--muted);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.admin-cloud-badge{flex:0 0 auto;border-radius:999px;background:var(--navy);color:#fff;padding:5px 9px;font-size:10px;font-weight:700}.admin-cloud-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.admin-cloud-actions .btn{min-height:36px;padding:7px 10px;font-size:11px}.admin-logout{background:#FFF4F4;color:#8E3434;border-color:#ECCACA}.admin-save-status{grid-column:1/-1;border-top:1px dashed #DED4B4;padding-top:7px;color:#6F7988;font-size:10px}.admin-save-status.dirty{color:#9A6816}.admin-save-status.success{color:var(--green)}.admin-save-status.error{color:var(--red)}
+.professional-promo{max-width:1204px;margin:0 auto 28px;padding:19px 21px;border:1px solid rgba(201,168,76,.40);border-radius:18px;background:linear-gradient(135deg,#FFFFFF,#FBF8ED);box-shadow:0 10px 25px rgba(11,26,43,.06);display:flex;align-items:center;justify-content:space-between;gap:22px;position:relative;overflow:hidden}.professional-promo:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(201,168,76,.10);left:-90px;bottom:-135px}.professional-promo-copy{position:relative;z-index:1}.professional-promo-kicker{display:block;color:#8A6A17;font-size:10px;font-weight:700;margin-bottom:2px}.professional-promo h2{margin:0;color:var(--navy);font-size:18px}.professional-promo p{margin:3px 0 10px;color:var(--muted);font-size:11.5px;max-width:760px}.professional-features{display:flex;flex-wrap:wrap;gap:6px}.professional-features span{border:1px solid #E2D5A9;border-radius:999px;background:#fff;color:#495668;padding:4px 8px;font-size:9.5px}.professional-whatsapp{position:relative;z-index:1;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 16px;border-radius:11px;background:var(--navy);color:#fff;text-decoration:none;font-size:12px;font-weight:700;box-shadow:0 8px 18px rgba(11,26,43,.16)}.professional-whatsapp:hover{background:var(--navy2)}
+.admin-modal{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:18px}.admin-modal[hidden]{display:none!important}.admin-modal-backdrop{position:absolute;inset:0;background:rgba(4,12,22,.68);backdrop-filter:blur(5px)}.admin-dialog{position:relative;z-index:1;width:min(100%,470px);max-height:calc(100vh - 36px);overflow:auto;border:1px solid rgba(201,168,76,.35);border-radius:20px;background:#fff;box-shadow:0 28px 70px rgba(0,0,0,.28);padding:28px}.admin-dialog-close{position:absolute;top:12px;left:12px;width:35px;height:35px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#526072;font-size:22px;line-height:1}.admin-dialog-mark{width:50px;height:50px;border-radius:15px;background:linear-gradient(145deg,var(--navy),var(--navy2));color:var(--gold2);display:grid;place-items:center;font-size:22px;font-weight:700;margin-bottom:14px}.admin-dialog h2{margin:0;color:var(--navy);font-size:22px}.admin-dialog>p{margin:5px 0 18px;color:var(--muted);font-size:12px}.admin-login-form{display:grid;gap:12px}.admin-login-form label{display:grid;gap:5px;color:#3D4856;font-size:11px;font-weight:700}.admin-login-form .btn{width:100%;margin-top:2px}.admin-text-button{border:0;background:transparent;color:#315F92;font-size:11px;text-decoration:underline}.admin-form-message{min-height:20px;margin-top:10px;color:var(--red);font-size:11px}.admin-workspace-modal{place-items:stretch}.admin-workspace-dialog{width:min(100%,1180px);height:min(850px,calc(100vh - 36px));max-height:none;padding:0;overflow:hidden;display:flex;flex-direction:column}.admin-workspace-head{padding:18px 22px;background:linear-gradient(145deg,#07111D,var(--navy) 58%,#173754);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px}.admin-workspace-head span{display:block;color:var(--gold2);font-size:10px;font-weight:700}.admin-workspace-head h2{color:#fff;font-size:20px}.admin-workspace-head .admin-dialog-close{position:static;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.25);color:#fff}.admin-workspace-grid{display:grid;grid-template-columns:360px minmax(0,1fr);min-height:0;flex:1}.admin-org-panel,.admin-meeting-panel{padding:18px;overflow:auto}.admin-org-panel{border-left:1px solid var(--line);background:#F8F9FB}.admin-panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.admin-panel-title>div{display:flex;flex-direction:column}.admin-panel-title strong{color:var(--navy);font-size:15px}.admin-panel-title span{color:var(--muted);font-size:10px}.admin-panel-title .btn{min-height:36px;padding:7px 10px;font-size:11px}.admin-search-box{margin-bottom:12px}.admin-search-box .control{min-height:40px;font-size:11px}.admin-meeting-filters{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:8px}.admin-list{display:grid;gap:9px}.admin-empty{border:1px dashed #C4CCD6;border-radius:12px;background:#fff;color:var(--muted);padding:24px;text-align:center;font-size:11px}.admin-org-card,.admin-meeting-card{border:1px solid var(--line);border-radius:13px;background:#fff;padding:12px;transition:.16s}.admin-org-card:hover,.admin-meeting-card:hover{border-color:#C7B26C;box-shadow:0 7px 16px rgba(11,26,43,.07)}.admin-org-card.active{border-color:var(--gold);box-shadow:inset 4px 0 0 var(--gold)}.admin-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.admin-card-head strong{display:block;color:var(--navy);font-size:12.5px}.admin-card-head span{display:block;color:var(--muted);font-size:9.5px;margin-top:1px}.admin-card-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}.admin-mini-button{border:1px solid var(--line);border-radius:8px;background:#fff;color:#435064;padding:5px 8px;font-size:9.5px;font-weight:700}.admin-mini-button.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.admin-meeting-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.admin-meeting-meta span{border-radius:999px;background:#F1F4F7;color:#526072;padding:3px 7px;font-size:9px}.admin-meeting-status.approved{background:#E8F7EF;color:#25704F}.admin-meeting-status.review{background:#FFF3D6;color:#8A6112}.admin-small-dialog{width:min(100%,500px)}.admin-toast{position:fixed;z-index:12000;bottom:22px;left:50%;transform:translateX(-50%);max-width:min(90vw,520px);border-radius:12px;background:#0B1A2B;color:#fff;padding:10px 15px;box-shadow:0 12px 28px rgba(0,0,0,.22);font-size:11px;text-align:center}.admin-toast.error{background:#8F3030}.admin-toast.success{background:#1F694A}
+@media(max-width:900px){.admin-cloud-bar{grid-template-columns:1fr}.admin-cloud-actions{justify-content:flex-start}.admin-workspace-grid{grid-template-columns:1fr}.admin-org-panel{border-left:0;border-bottom:1px solid var(--line);max-height:42vh}.professional-promo{margin-inline:18px}}
+@media(max-width:680px){.identity{gap:10px}.admin-entry-button{padding:7px 9px}.admin-entry-button span:last-child{display:none}.admin-cloud-bar{margin:7px 14px 10px;padding:12px}.admin-cloud-actions .btn{flex:1 1 45%}.professional-promo{align-items:stretch;flex-direction:column;margin-inline:14px;padding:17px}.professional-whatsapp{width:100%}.admin-modal{padding:8px}.admin-dialog{padding:22px 18px}.admin-workspace-dialog{height:calc(100vh - 16px)}.admin-workspace-head{padding:15px 17px}.admin-org-panel,.admin-meeting-panel{padding:14px}.admin-meeting-filters{grid-template-columns:1fr}}
+@media print{.admin-entry-button,.admin-cloud-bar,.professional-promo,.admin-modal,.admin-toast{display:none!important}}
+</style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
 window.scrollTo(0,0);
@@ -262,6 +272,10 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
         <img src="./naif-logo.svg?v=20260720-1" alt="نايف المحمدي">
         <div class="brand-text"><span>مستشار الحوكمة وتطوير الأعمال</span></div>
       </div>
+      <button class="admin-entry-button" id="adminAccessButton" type="button" aria-haspopup="dialog">
+        <span class="admin-entry-icon" aria-hidden="true">⌾</span>
+        <span id="adminAccessLabel">دخول الإدارة</span>
+      </button>
     </div>
     <div class="hero-copy hero-copy-majalis">
       <div class="hero-logo-card"><img class="hero-title-image" src="./majalis-logo.svg?v=20260720-3" alt="مجالس | منظومة أعمال المجالس"></div>
@@ -273,6 +287,23 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="suite-badge-wrap" aria-label="هوية الأداة">
   <div class="suite-badge">منظومة أعمال المجالس <span class="suite-divider">|</span> أداة مجالس</div>
 </div>
+<section class="admin-cloud-bar" id="adminCloudBar" hidden aria-label="إدارة الجهات والاجتماعات">
+  <div class="admin-cloud-context">
+    <span class="admin-cloud-badge">الوضع الإداري</span>
+    <div>
+      <strong id="adminCurrentOrg">اختر جهة من لوحة الإدارة</strong>
+      <span id="adminCurrentMeeting">لا يوجد اجتماع محفوظ حاليا</span>
+    </div>
+  </div>
+  <div class="admin-cloud-actions">
+    <button class="btn soft" id="openAdminDashboard" type="button">الجهات والأرشيف</button>
+    <button class="btn soft" id="newAdminMeeting" type="button">اجتماع جديد</button>
+    <button class="btn soft" id="saveOrganizationSettings" type="button">حفظ إعدادات الجهة</button>
+    <button class="btn primary" id="saveAdminMeeting" type="button">حفظ الاجتماع</button>
+    <button class="btn admin-logout" id="adminLogoutButton" type="button">تسجيل الخروج</button>
+  </div>
+  <div class="admin-save-status" id="adminSaveStatus">متصل بقاعدة البيانات</div>
+</section>
 <main class="shell">
   <div class="workspace">
     <section class="main-card">
@@ -456,8 +487,87 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
     </aside>
   </div>
 </main>
+<section class="professional-promo" aria-label="النسخة الاحترافية من مجالس">
+  <div class="professional-promo-copy">
+    <span class="professional-promo-kicker">للشركات والجمعيات والجهات</span>
+    <h2>النسخة الاحترافية من مجالس</h2>
+    <p>بيئة خاصة تحفظ بيانات الجهة والمشاركين، وتنظم الاجتماعات والمحاضر في أرشيف قابل للرجوع وإعادة التصدير.</p>
+    <div class="professional-features" aria-label="مزايا النسخة الاحترافية">
+      <span>حساب خاص وآمن</span>
+      <span>حفظ عدة جهات</span>
+      <span>أرشيف الاجتماعات والمحاضر</span>
+      <span>استدعاء المشاركين والإعدادات</span>
+      <span>فتح الوثائق وإعادة تصديرها</span>
+    </div>
+  </div>
+  <a class="professional-whatsapp" href="https://wa.me/966506350457?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D9%85%D8%B9%D8%B1%D9%81%D8%A9%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%A7%D9%84%D9%86%D8%B3%D8%AE%D8%A9%20%D8%A7%D9%84%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%81%D9%8A%D8%A9%20%D9%85%D9%86%20%D8%A3%D8%AF%D8%A7%D8%A9%20%D9%85%D8%AC%D8%A7%D9%84%D8%B3." target="_blank" rel="noopener noreferrer">تواصل عبر واتساب</a>
+</section>
+
+<!-- نوافذ الإدارة الخاصة بحساب نايف -->
+<div class="admin-modal" id="adminLoginModal" hidden>
+  <div class="admin-modal-backdrop" data-close-admin-modal="login"></div>
+  <section class="admin-dialog admin-login-dialog" role="dialog" aria-modal="true" aria-labelledby="adminLoginTitle">
+    <button class="admin-dialog-close" type="button" data-close-admin-modal="login" aria-label="إغلاق">×</button>
+    <div class="admin-dialog-mark">م</div>
+    <h2 id="adminLoginTitle">دخول إدارة مجالس</h2>
+    <p>الدخول مخصص لحساب الإدارة المعتمد. تبقى النسخة العامة متاحة للجميع.</p>
+    <form id="adminLoginForm" class="admin-login-form">
+      <label>البريد الإلكتروني<input class="control" id="adminEmail" type="email" autocomplete="username" required placeholder="البريد المسجل في Firebase"></label>
+      <label>كلمة المرور<input class="control" id="adminPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور"></label>
+      <button class="btn primary" id="adminLoginSubmit" type="submit">تسجيل الدخول</button>
+      <button class="admin-text-button" id="adminResetPassword" type="button">إرسال رابط إعادة تعيين كلمة المرور</button>
+    </form>
+    <div class="admin-form-message" id="adminLoginMessage" role="status"></div>
+  </section>
+</div>
+
+<div class="admin-modal admin-workspace-modal" id="adminWorkspaceModal" hidden>
+  <div class="admin-modal-backdrop" data-close-admin-modal="workspace"></div>
+  <section class="admin-dialog admin-workspace-dialog" role="dialog" aria-modal="true" aria-labelledby="adminWorkspaceTitle">
+    <header class="admin-workspace-head">
+      <div><span>الإدارة السحابية</span><h2 id="adminWorkspaceTitle">الجهات وأرشيف الاجتماعات</h2></div>
+      <button class="admin-dialog-close" type="button" data-close-admin-modal="workspace" aria-label="إغلاق">×</button>
+    </header>
+    <div class="admin-workspace-grid">
+      <aside class="admin-org-panel">
+        <div class="admin-panel-title"><div><strong>الجهات</strong><span>الشركات والجمعيات المحفوظة</span></div><button class="btn primary" id="showCreateOrganization" type="button">إضافة جهة</button></div>
+        <div class="admin-search-box"><input class="control" id="adminOrganizationSearch" placeholder="ابحث باسم الجهة"></div>
+        <div class="admin-list" id="adminOrganizationsList"><div class="admin-empty">جاري تحميل الجهات...</div></div>
+      </aside>
+      <main class="admin-meeting-panel">
+        <div class="admin-panel-title">
+          <div><strong id="adminArchiveTitle">أرشيف الاجتماعات</strong><span id="adminArchiveSubtitle">اختر جهة لعرض اجتماعاتها</span></div>
+          <button class="btn soft" id="adminNewMeetingFromDashboard" type="button" disabled>اجتماع جديد</button>
+        </div>
+        <div class="admin-search-box admin-meeting-filters">
+          <input class="control" id="adminMeetingSearch" placeholder="ابحث بالرقم أو العنوان أو التاريخ">
+          <select class="control" id="adminMeetingStatusFilter"><option value="">جميع الحالات</option><option value="preparing">تحت الإعداد</option><option value="review">جاهز للمراجعة</option><option value="approved">معتمد</option></select>
+        </div>
+        <div class="admin-list admin-meetings-list" id="adminMeetingsList"><div class="admin-empty">اختر جهة من القائمة.</div></div>
+      </main>
+    </div>
+  </section>
+</div>
+
+<div class="admin-modal" id="organizationCreateModal" hidden>
+  <div class="admin-modal-backdrop" data-close-admin-modal="organization"></div>
+  <section class="admin-dialog admin-small-dialog" role="dialog" aria-modal="true" aria-labelledby="organizationCreateTitle">
+    <button class="admin-dialog-close" type="button" data-close-admin-modal="organization" aria-label="إغلاق">×</button>
+    <h2 id="organizationCreateTitle">إضافة جهة جديدة</h2>
+    <p>أنشئ ملفا مستقلا للجهة، ثم احفظ بياناتها ومشاركيها واجتماعاتها.</p>
+    <form id="organizationCreateForm" class="admin-login-form">
+      <label>اسم الجهة<input class="control" id="newOrganizationName" required placeholder="اسم الشركة أو الجمعية"></label>
+      <label>نوع الجهة<select class="control" id="newOrganizationType" required></select></label>
+      <button class="btn primary" type="submit">إنشاء الجهة وفتحها</button>
+    </form>
+    <div class="admin-form-message" id="organizationCreateMessage" role="status"></div>
+  </section>
+</div>
+
+<div class="admin-toast" id="adminToast" hidden role="status"></div>
+
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.7.7</span><span class="privacy-note">تُحفظ البيانات على جهاز المستخدم فقط، دون تخزينها لدى الأداة.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.8.0</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -555,7 +665,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_7';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.7.7';
+const TOOL_VERSION='v1.8.0';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -889,11 +999,77 @@ function printDocuments(mode){
  printWin.addEventListener('afterprint',()=>printWin.close());
 }
 
-function collectFormValues(){const data={};document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el=>{if(el.id==='entityLogoInput')return;data[el.id]=el.type==='checkbox'?el.checked:el.value});return data}
+function collectFormValues(){const data={};document.querySelectorAll('.main-card input[id], .main-card select[id], .main-card textarea[id], .review-card input[id], .review-card select[id], .review-card textarea[id]').forEach(el=>{if(el.id==='entityLogoInput')return;data[el.id]=el.type==='checkbox'?el.checked:el.value});return data}
 function applyFormValues(data){Object.entries(data||{}).forEach(([id,val])=>{const el=$(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val??''})}
 function saveWork(){if(!autoSaveReady)return;const payload={version:TOOL_VERSION,currentStep,calendar,attendees,agendaItems,entityLogoSrc,fields:collectFormValues()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload))}catch(err){console.error(err)}}
 function scheduleAutoSave(){if(!autoSaveReady)return;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(saveWork,500)}
 function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();setCalendar(payload.calendar||'gregorian');updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
+
+const ORGANIZATION_DEFAULT_FIELD_IDS=[
+  'entityName','entityType','meetingType','meetingMode','location','inviteSenderName','inviteSenderPosition',
+  'invitationIntro','invitationClosing','chairName','secretaryName','approvalCalendar',
+  'enableAttendanceSheet','attendanceSheetMode','minutesParticipantNames','minutesParticipantSignatures',
+  'enableVotingCard','votingCardMode'
+];
+function clonePlain(value){return JSON.parse(JSON.stringify(value??null))}
+function captureMajalisSnapshot(){return {version:TOOL_VERSION,currentStep,calendar,attendees:clonePlain(attendees)||[],agendaItems:clonePlain(agendaItems)||[],entityLogoSrc,fields:collectFormValues()}}
+function applyMajalisSnapshot(payload,options={}){
+  if(!payload||typeof payload!=='object')return false;
+  const wasReady=autoSaveReady;autoSaveReady=false;
+  try{
+    if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}
+    if(payload.fields?.meetingType&&Array.from($('meetingType').options).some(o=>o.value===payload.fields.meetingType))$('meetingType').value=payload.fields.meetingType;
+    applyFormValues(payload.fields||{});
+    attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];
+    agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];
+    entityLogoSrc=options.entityLogoSrc??payload.entityLogoSrc??'';
+    renderLogoPreview();renderAttendees();renderAgenda();
+    setCalendar(payload.calendar||'gregorian');updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();
+    showStep(Number(options.step||payload.currentStep||1),false);
+    return true;
+  }finally{autoSaveReady=wasReady;if(wasReady)saveWork()}
+}
+function captureOrganizationSettings(){
+  const all=collectFormValues(),fields={};
+  ORGANIZATION_DEFAULT_FIELD_IDS.forEach(id=>{if(Object.prototype.hasOwnProperty.call(all,id))fields[id]=all[id]});
+  return {version:TOOL_VERSION,calendar,entityLogoSrc,fields,attendees:attendees.map(p=>({...clonePlain(normalizeParticipant(p)),attendance:'pending'}))};
+}
+function resetFormControls(){
+  document.querySelectorAll('.main-card input[id],.main-card select[id],.main-card textarea[id],.review-card input[id],.review-card select[id],.review-card textarea[id]').forEach(el=>{
+    if(el.id==='entityLogoInput')return;
+    if(el.type==='checkbox')el.checked=false;
+    else if(el.tagName==='SELECT')el.selectedIndex=0;
+    else el.value='';
+  });
+  $('meetingMinute').value='0';$('endMinute').value='0';$('quorumStatus').value='pending';$('minutesStatus').value='preparing';
+}
+function startNewMeetingFromOrganization(settings){
+  const wasReady=autoSaveReady;autoSaveReady=false;
+  try{
+    resetFormControls();fillEntities();
+    const fields=settings?.fields||{};
+    if(fields.entityType){$('entityType').value=fields.entityType;fillMeetings()}
+    if(fields.meetingType&&Array.from($('meetingType').options).some(o=>o.value===fields.meetingType))$('meetingType').value=fields.meetingType;
+    applyFormValues(fields);
+    $('meetingNo').value='';$('meetingYear').value=String(new Date().getFullYear());$('meetingTitle').value='';
+    ['inviteGDay','inviteGMonth','inviteGYear','inviteHDay','inviteHMonth','inviteHYear','meetingGDay','meetingGMonth','meetingGYear','meetingHDay','meetingHMonth','meetingHYear','endHour','minutesApprover','approvalDay','approvalMonth','approvalYear','aobContent','minutesIntro','closingNote'].forEach(id=>{if($(id))$(id).value=''});
+    $('meetingHour').value='';$('meetingMinute').value='0';$('endMinute').value='0';$('fullRights').checked=false;$('quorumStatus').value='pending';$('minutesStatus').value='preparing';
+    attendees=Array.isArray(settings?.attendees)?settings.attendees.map(p=>({...normalizeParticipant(p),attendance:'pending'})):[];
+    agendaItems=[];entityLogoSrc=settings?.entityLogoSrc||'';
+    renderLogoPreview();renderAttendees();renderAgenda();setCalendar(settings?.calendar||'gregorian');updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();showStep(1,false);
+  }finally{autoSaveReady=wasReady;if(wasReady)saveWork()}
+}
+function cloudMeetingMetadata(){
+  const d=getDate('meeting');
+  return {
+    entityName:($('entityName').value||'').trim(),entityType:$('entityType').value,meetingType:$('meetingType').value,
+    meetingTypeLabel:meetingLabels[$('meetingType').value]||'',meetingNumber:($('meetingNo').value||'').trim(),
+    meetingYear:($('meetingYear').value||'').trim(),meetingTitle:($('meetingTitle').value||'').trim(),
+    meetingDateSort:d?`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`:'',
+    meetingDateDisplay:d?formatDate(d):'',status:$('minutesStatus').value||'preparing'
+  };
+}
+window.MajalisApp={captureSnapshot:captureMajalisSnapshot,applySnapshot:applyMajalisSnapshot,captureOrganizationSettings,startNewMeetingFromOrganization,cloudMeetingMetadata,getEntityOptions:()=>clonePlain(entityOptions),getMeetingLabels:()=>clonePlain(meetingLabels),setEntityLogo:value=>{entityLogoSrc=value||'';renderLogoPreview();renderDocuments();scheduleAutoSave()},getEntityLogo:()=>entityLogoSrc};
 document.addEventListener('click',e=>{const step=e.target.closest('[data-step]');if(step)showStep(step.dataset.step);const go=e.target.closest('[data-go]');if(go)showStep(go.dataset.go);const cal=e.target.closest('[data-calendar]');if(cal)setCalendar(cal.dataset.calendar);if(e.target.id==='addAttendee'){attendees.push({id:Date.now(),name:'',role:'عضو',attendance:'pending',countsQuorum:true});renderAttendees()}if(e.target.id==='addAgenda'){agendaItems.push({id:Date.now(),title:'',purpose:'مناقشة',discussion:'',decision:'',owner:'',dueCalendar:'gregorian',dueDay:'',dueMonth:'',dueYear:'',vote:'لم يجر تصويت',includeInBallot:false});renderAgenda()}const ra=e.target.closest('[data-remove-attendee]');if(ra){attendees=attendees.filter(x=>x.id!==Number(ra.dataset.removeAttendee));renderAttendees()}const rg=e.target.closest('[data-remove-agenda]');if(rg){agendaItems=agendaItems.filter(x=>x.id!==Number(rg.dataset.removeAgenda));renderAgenda()}const up=e.target.closest('[data-up]');if(up)moveAgenda(Number(up.dataset.up),-1);const down=e.target.closest('[data-down]');if(down)moveAgenda(Number(down.dataset.down),1);const tab=e.target.closest('[data-doc]');if(tab&&!tab.hidden){document.querySelectorAll('.doc-tab').forEach(x=>x.classList.toggle('active',x===tab));document.querySelectorAll('.document').forEach(x=>x.classList.toggle('active',x.id==='doc'+tab.dataset.doc[0].toUpperCase()+tab.dataset.doc.slice(1)))}if(e.target.id==='removeEntityLogo'){entityLogoSrc='';$('entityLogoInput').value='';renderLogoPreview();renderDocuments()}if(e.target.id==='printCurrent')printDocuments('current');if(e.target.id==='printPackage')printDocuments('all')});
 document.addEventListener('input',e=>{if(e.target.classList.contains('latin-number')){const max=e.target.maxLength>0?e.target.maxLength:0;const value=digitsOnly(e.target.value,max);if(e.target.value!==value)e.target.value=value}if(e.target.id==='meetingMinute'||e.target.id==='endMinute'){let n=Number(e.target.value||0);if(n>59)e.target.value='59'}if(e.target.id==='entityType'){fillMeetings();return}if(e.target.id==='meetingType'){updateRule();return}if(e.target.id==='fullRights'){updateDateStatus();renderDocuments();return}if(e.target.classList.contains('date-part')){if(calendar==='both'){const match=e.target.id.match(/^(invite|meeting)(G|H)/);if(match){const source=match[2]==='H'?'hijri':'gregorian';dateEditSource[match[1]]=source;syncDatePair(match[1],source);}}updateDatePreviews();updateDateStatus();return}if(e.target.classList.contains('attendee-input')){const card=e.target.closest('.item'),item=attendees.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.value;renderAttendanceManager();renderDocuments();return}if(e.target.classList.contains('agenda-input')){const card=e.target.closest('.item'),item=agendaItems.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.type==='checkbox'?e.target.checked:e.target.value;renderDocuments();return}if(e.target.classList.contains('live'))renderDocuments()});
 document.addEventListener('change',e=>{if(e.target.id==='entityLogoInput'){handleLogoFile(e.target.files?.[0]);return}if(e.target.id==='entityType')fillMeetings();else if(e.target.id==='meetingType')updateRule();else if(e.target.id==='fullRights'){updateDateStatus();renderDocuments()}else if(e.target.classList.contains('date-part')){if(calendar==='both'){const match=e.target.id.match(/^(invite|meeting)(G|H)/);if(match){const source=match[2]==='H'?'hijri':'gregorian';dateEditSource[match[1]]=source;syncDatePair(match[1],source);}}updateDatePreviews();updateDateStatus()}else if(e.target.classList.contains('attendee-quorum')){const card=e.target.closest('.item'),item=attendees.find(x=>x.id===Number(card.dataset.id));if(item)item.countsQuorum=e.target.checked;renderAttendees()}else if(e.target.classList.contains('attendance-input')){const row=e.target.closest('[data-attendance-id]'),item=attendees.find(x=>x.id===Number(row.dataset.attendanceId));if(item)item.attendance=e.target.value;syncAttendanceCounts();renderDocuments()}else if(e.target.classList.contains('agenda-input')){const card=e.target.closest('.item'),item=agendaItems.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.type==='checkbox'?e.target.checked:e.target.value;renderDocuments()}else if(e.target.id==='minutesParticipantSignatures'){if(e.target.checked)$('minutesParticipantNames').checked=true;syncDocumentOptionVisibility();renderDocuments()}else if(e.target.id==='minutesParticipantNames'){if(!e.target.checked)$('minutesParticipantSignatures').checked=false;syncDocumentOptionVisibility();renderDocuments()}else if(['enableAttendanceSheet','enableVotingCard'].includes(e.target.id)){syncDocumentOptionVisibility();renderDocuments()}else if(e.target.classList.contains('live'))renderDocuments()});
@@ -902,6 +1078,122 @@ document.addEventListener('change',scheduleAutoSave);
 document.addEventListener('click',e=>{if(e.target.closest('[data-calendar],#addAttendee,#addAgenda,[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))scheduleAutoSave()});
 fillEntities();if(!restoreWork(true)){renderLogoPreview();renderAttendees();renderAgenda();renderAttendanceManager();updateRule();syncDocumentOptionVisibility();renderDocuments();}else{syncDocumentOptionVisibility();renderDocuments();}autoSaveReady=true;saveWork(true);window.scrollTo({top:0,left:0,behavior:'auto'});
 
+</script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
+import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
+
+const firebaseConfig={
+  apiKey:'AIzaSyCHefMzpFRZi6TQHMt7NTkqMAzPFQB3_6U',
+  authDomain:'majalis-admin.firebaseapp.com',
+  projectId:'majalis-admin',
+  storageBucket:'majalis-admin.firebasestorage.app',
+  messagingSenderId:'7816691347',
+  appId:'1:7816691347:web:fdee56d2bc246ae262d766',
+  measurementId:'G-GT45S5QZSN'
+};
+const NAIF_UID='KvM4dx24l0VNRC2ueBgOL9tanlW2';
+const firebaseApp=initializeApp(firebaseConfig);
+const auth=getAuth(firebaseApp);
+const db=getFirestore(firebaseApp);
+await setPersistence(auth,browserLocalPersistence).catch(console.error);
+
+const A=id=>document.getElementById(id);
+const adminState={user:null,organizations:[],meetings:[],currentOrganization:null,currentMeetingId:null,currentMeetingLabel:'',dirty:false};
+const entityLabels=Object.fromEntries(window.MajalisApp.getEntityOptions());
+const statusLabels={preparing:'تحت الإعداد',review:'جاهز للمراجعة',approved:'معتمد'};
+let toastTimer=null;
+
+function escapeAdmin(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function syncAdminBodyLock(){document.body.style.overflow=Array.from(document.querySelectorAll('.admin-modal')).some(el=>!el.hidden)?'hidden':''}
+function modal(id,show=true){const el=A(id);if(!el)return;el.hidden=!show;syncAdminBodyLock()}
+function closeModal(name){if(name==='login')modal('adminLoginModal',false);if(name==='workspace')modal('adminWorkspaceModal',false);if(name==='organization')modal('organizationCreateModal',false)}
+function toast(message,type='success'){const el=A('adminToast');clearTimeout(toastTimer);el.textContent=message;el.className=`admin-toast ${type}`;el.hidden=false;toastTimer=setTimeout(()=>el.hidden=true,3200)}
+function setAdminStatus(message,kind=''){const el=A('adminSaveStatus');el.textContent=message;el.className=`admin-save-status ${kind}`.trim()}
+function markAdminDirty(){if(!adminState.user||!adminState.currentOrganization)return;adminState.dirty=true;setAdminStatus('توجد تعديلات داخل الاجتماع لم تحفظ سحابيا','dirty')}
+function setLoginMessage(message='',ok=false){const el=A('adminLoginMessage');el.textContent=message;el.style.color=ok?'#237A55':'#AD3F3F'}
+function dateFromTimestamp(value){try{return value?.toDate?value.toDate():value?new Date(value):null}catch{return null}}
+function formatAdminDate(value){const d=dateFromTimestamp(value);return d&&!Number.isNaN(d.getTime())?new Intl.DateTimeFormat('ar-SA-u-nu-latn',{year:'numeric',month:'short',day:'numeric'}).format(d):''}
+function cleanForFirestore(value){return JSON.parse(JSON.stringify(value??null))}
+async function compressLogo(dataUrl){
+  if(!dataUrl||!dataUrl.startsWith('data:'))return dataUrl||'';
+  if(dataUrl.length<350000)return dataUrl;
+  if(dataUrl.startsWith('data:image/svg+xml')){if(dataUrl.length>700000)throw new Error('حجم الشعار كبير للحفظ السحابي. استخدم نسخة SVG أخف أو صورة PNG أصغر.');return dataUrl}
+  return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>{try{const scale=Math.min(1,900/img.width,360/img.height);const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.82))}catch(err){reject(err)}};img.onerror=()=>reject(new Error('تعذر تجهيز الشعار للحفظ السحابي.'));img.src=dataUrl});
+}
+function updateAdminBar(){
+  const signed=!!adminState.user;A('adminCloudBar').hidden=!signed;A('adminAccessButton').classList.toggle('signed-in',signed);A('adminAccessLabel').textContent=signed?'لوحة الإدارة':'دخول الإدارة';
+  const org=adminState.currentOrganization;A('adminCurrentOrg').textContent=org?.name||'اختر جهة من لوحة الإدارة';A('adminCurrentMeeting').textContent=adminState.currentMeetingLabel||'لا يوجد اجتماع محفوظ حاليا';
+  A('newAdminMeeting').disabled=!org;A('saveOrganizationSettings').disabled=!org;A('saveAdminMeeting').disabled=!org;A('adminNewMeetingFromDashboard').disabled=!org;
+}
+function renderOrganizationOptions(){A('newOrganizationType').innerHTML=window.MajalisApp.getEntityOptions().map(([v,l])=>`<option value="${escapeAdmin(v)}">${escapeAdmin(l)}</option>`).join('')}
+function filteredOrganizations(){const q=(A('adminOrganizationSearch').value||'').trim().toLowerCase();return adminState.organizations.filter(o=>!q||`${o.name} ${entityLabels[o.type]||''}`.toLowerCase().includes(q))}
+function renderOrganizations(){
+  const list=A('adminOrganizationsList'),items=filteredOrganizations();
+  if(!items.length){list.innerHTML='<div class="admin-empty">لا توجد جهات مطابقة. أضف أول جهة للبدء.</div>';return}
+  list.innerHTML=items.map(o=>`<article class="admin-org-card ${adminState.currentOrganization?.id===o.id?'active':''}" data-org-card="${escapeAdmin(o.id)}"><div class="admin-card-head"><div><strong>${escapeAdmin(o.name||'جهة بلا اسم')}</strong><span>${escapeAdmin(entityLabels[o.type]||'جهة')}</span></div><span>${escapeAdmin(formatAdminDate(o.updatedAt))}</span></div><div class="admin-card-actions"><button class="admin-mini-button primary" data-open-org="${escapeAdmin(o.id)}" type="button">فتح الجهة</button><button class="admin-mini-button" data-org-archive="${escapeAdmin(o.id)}" type="button">عرض الأرشيف</button></div></article>`).join('');
+}
+function filteredMeetings(){const q=(A('adminMeetingSearch').value||'').trim().toLowerCase(),status=A('adminMeetingStatusFilter').value;return adminState.meetings.filter(m=>(!status||m.status===status)&&(!q||`${m.meetingNumber} ${m.meetingYear} ${m.meetingTitle} ${m.meetingDateDisplay} ${m.meetingTypeLabel}`.toLowerCase().includes(q)))}
+function renderMeetings(){
+  const list=A('adminMeetingsList');if(!adminState.currentOrganization){list.innerHTML='<div class="admin-empty">اختر جهة من القائمة.</div>';return}
+  const items=filteredMeetings();if(!items.length){list.innerHTML='<div class="admin-empty">لا توجد اجتماعات محفوظة لهذه الجهة.</div>';return}
+  list.innerHTML=items.map(m=>{const status=m.status||'preparing';const no=[m.meetingNumber,m.meetingYear].filter(Boolean).join(' / ')||'دون رقم';return `<article class="admin-meeting-card"><div class="admin-card-head"><div><strong>${escapeAdmin(m.meetingTitle||m.meetingTypeLabel||'اجتماع')}</strong><span>${escapeAdmin(no)}</span></div><span>${escapeAdmin(formatAdminDate(m.updatedAt))}</span></div><div class="admin-meeting-meta"><span>${escapeAdmin(m.meetingDateDisplay||'تاريخ غير محدد')}</span><span>${escapeAdmin(m.meetingTypeLabel||'')}</span><span class="admin-meeting-status ${escapeAdmin(status)}">${escapeAdmin(statusLabels[status]||status)}</span></div><div class="admin-card-actions"><button class="admin-mini-button primary" data-open-meeting="${escapeAdmin(m.id)}" type="button">فتح الاجتماع</button><button class="admin-mini-button" data-copy-meeting="${escapeAdmin(m.id)}" type="button">نسخ لاجتماع جديد</button></div></article>`}).join('');
+}
+async function loadOrganizations(){
+  A('adminOrganizationsList').innerHTML='<div class="admin-empty">جاري تحميل الجهات...</div>';
+  const snap=await getDocs(collection(db,'organizations'));adminState.organizations=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(dateFromTimestamp(b.updatedAt)?.getTime()||0)-(dateFromTimestamp(a.updatedAt)?.getTime()||0));renderOrganizations();
+}
+async function loadMeetings(orgId){
+  adminState.meetings=[];A('adminMeetingsList').innerHTML='<div class="admin-empty">جاري تحميل الأرشيف...</div>';
+  const snap=await getDocs(collection(db,'organizations',orgId,'meetings'));adminState.meetings=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(dateFromTimestamp(b.updatedAt)?.getTime()||0)-(dateFromTimestamp(a.updatedAt)?.getTime()||0));renderMeetings();
+}
+async function selectOrganization(orgId,{close=true,startNew=false}={}){
+  let org=adminState.organizations.find(o=>o.id===orgId);if(!org){const snap=await getDoc(doc(db,'organizations',orgId));if(!snap.exists())throw new Error('تعذر العثور على الجهة.');org={id:snap.id,...snap.data()}}
+  adminState.currentOrganization=org;adminState.currentMeetingId=null;adminState.currentMeetingLabel='اجتماع جديد — لم يحفظ بعد';adminState.dirty=false;
+  const settings=cleanForFirestore(org.settings||{});settings.entityLogoSrc=org.logoData||settings.entityLogoSrc||'';window.MajalisApp.startNewMeetingFromOrganization(settings);updateAdminBar();setAdminStatus('تم فتح الجهة. ابدأ الاجتماع أو افتح سجلا من الأرشيف.','success');
+  A('adminArchiveTitle').textContent=`أرشيف ${org.name||'الجهة'}`;A('adminArchiveSubtitle').textContent=entityLabels[org.type]||'الجهة';renderOrganizations();await loadMeetings(org.id);if(close&&!startNew)modal('adminWorkspaceModal',false);
+}
+async function saveOrganization(){
+  const org=adminState.currentOrganization;if(!org){toast('اختر جهة أو أنشئ جهة أولا.','error');return}
+  setAdminStatus('جاري حفظ إعدادات الجهة...');
+  try{const settings=window.MajalisApp.captureOrganizationSettings();const logoData=await compressLogo(settings.entityLogoSrc||'');settings.entityLogoSrc='';const name=(settings.fields.entityName||org.name||'').trim();const type=settings.fields.entityType||org.type;await setDoc(doc(db,'organizations',org.id),{ownerUid:NAIF_UID,name,type,logoData,settings:cleanForFirestore(settings),updatedAt:serverTimestamp()},{merge:true});org.name=name;org.type=type;org.logoData=logoData;org.settings=settings;adminState.dirty=false;setAdminStatus('تم حفظ إعدادات الجهة والمشاركين.','success');toast('تم حفظ إعدادات الجهة.');await loadOrganizations();updateAdminBar()}catch(err){console.error(err);setAdminStatus('تعذر حفظ إعدادات الجهة.','error');toast(err.message||'تعذر الحفظ.','error')}
+}
+async function saveMeeting(){
+  const org=adminState.currentOrganization;if(!org){toast('اختر جهة أو أنشئ جهة أولا.','error');return}
+  setAdminStatus('جاري حفظ الاجتماع في الأرشيف...');
+  try{const snapshot=window.MajalisApp.captureSnapshot();snapshot.entityLogoSrc='';const meta=window.MajalisApp.cloudMeetingMetadata();let ref;if(adminState.currentMeetingId)ref=doc(db,'organizations',org.id,'meetings',adminState.currentMeetingId);else ref=doc(collection(db,'organizations',org.id,'meetings'));const payload={...cleanForFirestore(meta),ownerUid:NAIF_UID,organizationId:org.id,snapshot:cleanForFirestore(snapshot),updatedAt:serverTimestamp()};if(!adminState.currentMeetingId)payload.createdAt=serverTimestamp();await setDoc(ref,payload,{merge:true});adminState.currentMeetingId=ref.id;adminState.currentMeetingLabel=`${meta.meetingTitle||meta.meetingTypeLabel||'اجتماع'}${meta.meetingNumber?` — رقم ${meta.meetingNumber}`:''}`;adminState.dirty=false;setAdminStatus('تم حفظ الاجتماع في الأرشيف السحابي.','success');toast('تم حفظ الاجتماع بنجاح.');updateAdminBar();await loadMeetings(org.id)}catch(err){console.error(err);setAdminStatus('تعذر حفظ الاجتماع. راجع الاتصال وحجم البيانات.','error');toast(err.message||'تعذر حفظ الاجتماع.','error')}
+}
+async function openMeeting(meetingId){
+  const org=adminState.currentOrganization;if(!org)return;setAdminStatus('جاري فتح الاجتماع...');
+  try{let meeting=adminState.meetings.find(m=>m.id===meetingId);if(!meeting){const snap=await getDoc(doc(db,'organizations',org.id,'meetings',meetingId));if(!snap.exists())throw new Error('الاجتماع غير موجود.');meeting={id:snap.id,...snap.data()}}window.MajalisApp.applySnapshot(meeting.snapshot||{},{entityLogoSrc:org.logoData||'',step:1});adminState.currentMeetingId=meeting.id;adminState.currentMeetingLabel=`${meeting.meetingTitle||meeting.meetingTypeLabel||'اجتماع'}${meeting.meetingNumber?` — رقم ${meeting.meetingNumber}`:''}`;adminState.dirty=false;updateAdminBar();setAdminStatus('تم فتح الاجتماع من الأرشيف.','success');modal('adminWorkspaceModal',false);toast('تم فتح الاجتماع المحفوظ.')}catch(err){console.error(err);toast(err.message||'تعذر فتح الاجتماع.','error')}
+}
+async function copyMeeting(meetingId){
+  const org=adminState.currentOrganization;if(!org)return;const meeting=adminState.meetings.find(m=>m.id===meetingId);if(!meeting)return;
+  const snap=cleanForFirestore(meeting.snapshot||{}),fields=snap.fields||{};const settings={calendar:snap.calendar||org.settings?.calendar||'gregorian',entityLogoSrc:org.logoData||'',attendees:(snap.attendees||[]).map(p=>({...p,attendance:'pending'})),fields:{...(org.settings?.fields||{}),entityName:fields.entityName||org.name,entityType:fields.entityType||org.type,meetingType:fields.meetingType,meetingMode:fields.meetingMode,location:fields.location,inviteSenderName:fields.inviteSenderName,inviteSenderPosition:fields.inviteSenderPosition,invitationIntro:fields.invitationIntro,invitationClosing:fields.invitationClosing,chairName:fields.chairName,secretaryName:fields.secretaryName,enableAttendanceSheet:fields.enableAttendanceSheet,attendanceSheetMode:fields.attendanceSheetMode,minutesParticipantNames:fields.minutesParticipantNames,minutesParticipantSignatures:fields.minutesParticipantSignatures,enableVotingCard:fields.enableVotingCard,votingCardMode:fields.votingCardMode}};window.MajalisApp.startNewMeetingFromOrganization(settings);adminState.currentMeetingId=null;adminState.currentMeetingLabel='نسخة جديدة — لم تحفظ بعد';adminState.dirty=true;updateAdminBar();setAdminStatus('تم إنشاء اجتماع جديد من إعدادات السجل السابق.','dirty');modal('adminWorkspaceModal',false);toast('تم إنشاء نسخة جديدة دون المساس بالسجل السابق.')}
+function startNewMeeting(){const org=adminState.currentOrganization;if(!org){toast('اختر جهة أولا.','error');return}if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد بدء اجتماع جديد؟'))return;const settings=cleanForFirestore(org.settings||{});settings.entityLogoSrc=org.logoData||'';window.MajalisApp.startNewMeetingFromOrganization(settings);adminState.currentMeetingId=null;adminState.currentMeetingLabel='اجتماع جديد — لم يحفظ بعد';adminState.dirty=false;updateAdminBar();setAdminStatus('اجتماع جديد جاهز.','success');modal('adminWorkspaceModal',false);toast('تم إنشاء اجتماع جديد للجهة.')}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.8.0',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderName:'',inviteSenderPosition:'',chairName:'',secretaryName:'',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
+async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
+async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;await signOut(auth)}
+
+A('adminAccessButton').addEventListener('click',()=>adminState.user?modal('adminWorkspaceModal',true):modal('adminLoginModal',true));
+A('adminLoginForm').addEventListener('submit',login);A('adminResetPassword').addEventListener('click',resetPassword);A('organizationCreateForm').addEventListener('submit',createOrganization);
+document.querySelectorAll('[data-close-admin-modal]').forEach(el=>el.addEventListener('click',()=>closeModal(el.dataset.closeAdminModal)));
+A('showCreateOrganization').addEventListener('click',()=>{modal('organizationCreateModal',true);setTimeout(()=>A('newOrganizationName').focus(),50)});
+A('openAdminDashboard').addEventListener('click',()=>modal('adminWorkspaceModal',true));A('newAdminMeeting').addEventListener('click',startNewMeeting);A('adminNewMeetingFromDashboard').addEventListener('click',startNewMeeting);A('saveOrganizationSettings').addEventListener('click',saveOrganization);A('saveAdminMeeting').addEventListener('click',saveMeeting);A('adminLogoutButton').addEventListener('click',logoutAdmin);
+A('adminOrganizationSearch').addEventListener('input',renderOrganizations);A('adminMeetingSearch').addEventListener('input',renderMeetings);A('adminMeetingStatusFilter').addEventListener('change',renderMeetings);
+A('adminOrganizationsList').addEventListener('click',async e=>{const open=e.target.closest('[data-open-org]'),archive=e.target.closest('[data-org-archive]');try{if(open)await selectOrganization(open.dataset.openOrg,{close:true});if(archive){await selectOrganization(archive.dataset.orgArchive,{close:false});modal('adminWorkspaceModal',true)}}catch(err){console.error(err);toast(err.message||'تعذر فتح الجهة.','error')}});
+A('adminMeetingsList').addEventListener('click',async e=>{const open=e.target.closest('[data-open-meeting]'),copy=e.target.closest('[data-copy-meeting]');if(open)await openMeeting(open.dataset.openMeeting);if(copy)await copyMeeting(copy.dataset.copyMeeting)});
+document.addEventListener('input',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&!['adminOrganizationSearch','adminMeetingSearch'].includes(e.target.id))markAdminDirty()});document.addEventListener('change',e=>{if(adminState.user&&!e.target.closest('.admin-modal'))markAdminDirty()});document.addEventListener('click',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&e.target.closest('[data-calendar],#addAttendee,#addAgenda,[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))markAdminDirty()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!A('organizationCreateModal').hidden)modal('organizationCreateModal',false);else if(!A('adminWorkspaceModal').hidden)modal('adminWorkspaceModal',false);else if(!A('adminLoginModal').hidden)modal('adminLoginModal',false)}});
+
+renderOrganizationOptions();A('adminEmail').value=localStorage.getItem('majalis_admin_email')||'';updateAdminBar();
+onAuthStateChanged(auth,async user=>{
+  if(user&&user.uid!==NAIF_UID){await signOut(auth);toast('الحساب المسجل غير مصرح له.','error');return}
+  adminState.user=user||null;adminState.currentOrganization=null;adminState.currentMeetingId=null;adminState.currentMeetingLabel='';adminState.dirty=false;updateAdminBar();
+  if(user){setAdminStatus('متصل بقاعدة البيانات.','success');try{await loadOrganizations()}catch(err){console.error(err);setAdminStatus('تعذر تحميل الجهات. راجع الاتصال وقواعد Firestore.','error');toast('تعذر تحميل الجهات.','error')}}else{adminState.organizations=[];adminState.meetings=[];renderOrganizations();renderMeetings()}
+});
 </script>
 </body>
 </html>
