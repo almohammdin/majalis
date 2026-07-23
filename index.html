@@ -323,17 +323,24 @@
 .date-parts{direction:rtl}
 .date-parts .control{direction:ltr;text-align:center}
 .approval-date-fields,.due-date-row{display:grid;grid-template-columns:minmax(145px,.72fr) minmax(0,1.28fr);gap:8px;align-items:start;direction:rtl}
-.date-display{display:inline-flex;flex:0 0 auto;flex-direction:row-reverse;align-items:center;gap:3px;direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
-.date-display>span{flex:0 0 auto}
-.date-display .date-suffix{font-family:var(--font);font-weight:700;margin-inline-start:2px}
-.date-line{display:inline-flex;align-items:center;gap:6px;direction:rtl;unicode-bidi:isolate;white-space:nowrap}
+.date-display{display:inline-flex;align-items:center;gap:4px;direction:rtl;unicode-bidi:isolate;white-space:nowrap;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.date-display .date-part,.date-display .date-separator,.date-display .date-suffix{display:inline-block;flex:0 0 auto;white-space:nowrap}
+.date-display .date-part,.date-display .date-separator{direction:ltr;unicode-bidi:isolate;font:inherit;font-variant-numeric:tabular-nums}
+.date-display .date-suffix{direction:rtl;unicode-bidi:isolate;font-family:var(--font);font-weight:700}
+.date-line{display:flex;align-items:center;justify-content:flex-start;gap:6px;direction:rtl;unicode-bidi:isolate;white-space:nowrap;min-width:0}
 .date-conjunction{flex:0 0 auto;white-space:nowrap;color:inherit}
-.dual-date-display{display:inline-flex;max-width:100%;align-items:center;gap:7px;direction:rtl;unicode-bidi:isolate;flex-wrap:wrap}
+.dual-date-display{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:2px;direction:rtl;unicode-bidi:isolate;max-width:100%;min-width:0}
 .meta-row{min-width:0}
+.meta-row-wide{grid-column:1/-1}
+.meta-row-date{align-items:center}
 .meta-row strong{flex:1;min-width:0;overflow-wrap:anywhere}
-.meta-row strong .dual-date-display{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;max-width:100%}
+.meta-row-date strong{overflow:visible}
+.meta-row strong .dual-date-display{max-width:100%}
 .meta-row strong .date-line{max-width:100%}
 .meta-row strong .date-display,.doc-table .date-display{font-weight:700}
+.document-date-row{display:flex;align-items:flex-start;gap:7px;flex-wrap:wrap}
+.document-date-row>strong{flex:0 0 auto}
+.document-date-row>.dual-date-display,.document-date-row>.date-display{flex:0 0 auto}
 /* فصل جدول الأعمال عن المداولات والنتائج */
 .agenda-items-subsection{margin-top:20px}
 .agenda-prep-card{display:grid;grid-template-columns:38px minmax(0,1.45fr) minmax(155px,.65fr) auto;gap:10px;align-items:end;padding:10px 12px;background:#fff}
@@ -762,7 +769,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.4</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.5</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -860,7 +867,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_9_4';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.9.4';
+const TOOL_VERSION='v1.9.5';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -924,8 +931,8 @@ function getDate(kind){
 function numericGregorianDate(d){return `${String(d.getUTCDate()).padStart(2,'0')} / ${String(d.getUTCMonth()+1).padStart(2,'0')} / ${d.getUTCFullYear()}`;}
 function numericHijriDate(d){const parts=hijriPartsFromDate(d);return `${String(parts.day).padStart(2,'0')} / ${String(parts.month).padStart(2,'0')} / ${parts.year}`;}
 function datePartsFor(d,calendarKind){if(!d)return null;if(calendarKind==='hijri'){const parts=hijriPartsFromDate(d);return {day:String(parts.day).padStart(2,'0'),month:String(parts.month).padStart(2,'0'),year:String(parts.year),suffix:'هـ'}}return {day:String(d.getUTCDate()).padStart(2,'0'),month:String(d.getUTCMonth()+1).padStart(2,'0'),year:String(d.getUTCFullYear()),suffix:'م'}}
-function singleDateHtml(d,calendarKind){const parts=datePartsFor(d,calendarKind);if(!parts)return '';return `<span class="date-display" dir="rtl"><span>${parts.day}</span><span>/</span><span>${parts.month}</span><span>/</span><span>${parts.year}</span><span class="date-suffix">${parts.suffix}</span></span>`}
-function formatDateHtmlFor(d,calendarKind){if(!d)return '';if(calendarKind==='both')return `<span class="dual-date-display"><span class="date-line date-line-hijri">${singleDateHtml(d,'hijri')}</span><span class="date-line date-line-gregorian"><span class="date-conjunction">الموافق</span>${singleDateHtml(d,'gregorian')}</span></span>`;return singleDateHtml(d,calendarKind)}
+function singleDateHtml(d,calendarKind){const parts=datePartsFor(d,calendarKind);if(!parts)return '';return `<span class="date-display" dir="rtl"><span class="date-part" dir="ltr">${parts.day}</span><span class="date-separator">/</span><span class="date-part" dir="ltr">${parts.month}</span><span class="date-separator">/</span><span class="date-part" dir="ltr">${parts.year}</span><span class="date-suffix">${parts.suffix}</span></span>`}
+function formatDateHtmlFor(d,calendarKind){if(!d)return '';if(calendarKind==='both')return `<span class="dual-date-display" dir="rtl"><span class="date-line date-line-hijri">${singleDateHtml(d,'hijri')}</span><span class="date-line date-line-gregorian"><span class="date-conjunction">الموافق</span>${singleDateHtml(d,'gregorian')}</span></span>`;return singleDateHtml(d,calendarKind)}
 function formatBothDate(d){if(!d)return 'غير مدخل';return `${numericHijriDate(d)} هـ الموافق ${numericGregorianDate(d)} م`;}
 function formatDateFor(d,calendarKind){if(!d)return 'غير مدخل';if(calendarKind==='both')return formatBothDate(d);return calendarKind==='hijri'?`${numericHijriDate(d)} هـ`:`${numericGregorianDate(d)} م`;}
 function formatDate(d){return formatDateFor(d,calendar)}
@@ -1027,8 +1034,8 @@ function getApprovalDate(){ const cal=$('approvalCalendar')?.value||'gregorian';
 function syncMinutesApprovalMode(){const mode=$('minutesApprovalMode')?.value||'none',details=$('minutesApprovalDetails');if(details)details.hidden=mode!=='show';}
 const minutesStatusLabels={preparing:'تحت الإعداد',review:'جاهز للمراجعة',approved:'معتمد'};
 function commonHeader(title,kicker){const logo=logoMarkup(),headClass=logo?'doc-head':'doc-head no-logo';return `<div class="${headClass}">${logo}<div class="doc-org"><strong>${esc($('entityName').value||'اسم الجهة')}</strong><span>${esc(entityLabel())}</span></div></div><div class="doc-title"><small>${kicker}</small><h2>${title}</h2><p>${esc($('meetingTitle').value||meetingLabels[$('meetingType').value])}</p></div>`}
-function metaRow(label,value){return value?`<div class="meta-row"><span>${label}</span><strong>${value}</strong></div>`:''}
-function commonMeta(){const d=dateInfo();const meetingNo=($('meetingNo').value||'').trim();const time=formatMeetingTime();const location=($('location').value||'').trim();const rows=metaRow('نوع الاجتماع',esc(meetingLabels[$('meetingType').value]))+metaRow('رقم الاجتماع',meetingNo?esc(meetingNo):'')+metaRow('تاريخ الاجتماع',d.meetingDate?formatDateHtmlFor(d.meetingDate,'both'):'')+metaRow('الوقت',time!=='غير مدخل'?esc(time):'')+metaRow('طريقة الانعقاد',esc($('meetingMode').value))+metaRow('المكان',location?esc(location):'');return `<div class="meta-grid">${rows}</div>`}
+function metaRow(label,value,className=''){return value?`<div class="meta-row${className?` ${className}`:''}"><span>${label}</span><strong>${value}</strong></div>`:''}
+function commonMeta(){const d=dateInfo();const meetingNo=($('meetingNo').value||'').trim();const time=formatMeetingTime();const location=($('location').value||'').trim();const rows=metaRow('نوع الاجتماع',esc(meetingLabels[$('meetingType').value]))+metaRow('رقم الاجتماع',meetingNo?esc(meetingNo):'')+metaRow('تاريخ الاجتماع',d.meetingDate?formatDateHtmlFor(d.meetingDate,'both'):'','meta-row-wide meta-row-date')+metaRow('الوقت',time!=='غير مدخل'?esc(time):'')+metaRow('طريقة الانعقاد',esc($('meetingMode').value))+metaRow('المكان',location?esc(location):'','meta-row-wide');return `<div class="meta-grid">${rows}</div>`}
 function footer(){return `<div class="doc-footer"><div class="doc-footer-brand"><img src="${MAJALIS_LOGO}" alt="مجالس" class="tool-footer-logo"><div><strong>${esc(TOOL_NAME)}</strong><a href="${TOOL_LINK}" target="_blank" rel="noopener">${TOOL_LINK}</a></div></div><span class="doc-footer-version">${TOOL_VERSION}</span></div>`}
 function setOptionalDocumentVisibility(docName,enabled){const tab=document.querySelector(`[data-doc="${docName}"]`),doc=$('doc'+docName[0].toUpperCase()+docName.slice(1));if(tab)tab.hidden=!enabled;if(doc)doc.hidden=!enabled;if(!enabled&&doc?.classList.contains('active')){document.querySelector('[data-doc="invitation"]')?.click();}}
 function syncDocumentOptionVisibility(){const attendanceEnabled=!!$('enableAttendanceSheet')?.checked,votingEnabled=!!$('enableVotingCard')?.checked;if($('attendanceDocumentOptions'))$('attendanceDocumentOptions').hidden=!attendanceEnabled;if($('votingDocumentOptions'))$('votingDocumentOptions').hidden=!votingEnabled;setOptionalDocumentVisibility('attendance',attendanceEnabled);setOptionalDocumentVisibility('voting',votingEnabled);}
@@ -1070,7 +1077,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; syncMinutesApprovalMo
  const minutesStatus=$('minutesStatus')?.value||'preparing';
  const minutesStatusLabel=minutesStatusLabels[minutesStatus]||minutesStatusLabels.preparing;
  const minutesStatusClass=minutesStatus==='approved'?'good':(minutesStatus==='review'?'warn':'warn');
- const inviteDateLine=d.inviteDate?`<p><strong>تاريخ توجيه الدعوة:</strong> ${formatDateHtmlFor(d.inviteDate,'both')}</p>`:'';
+ const inviteDateLine=d.inviteDate?`<p class="document-date-row"><strong>تاريخ توجيه الدعوة:</strong>${formatDateHtmlFor(d.inviteDate,'both')}</p>`:'';
  const approvalDate=getApprovalDate(),approvalCalendar=$('approvalCalendar')?.value||'gregorian',minutesApproverRaw=($('minutesApprover')?.value||'').trim(),minutesApprovalMode=$('minutesApprovalMode')?.value||'none';
  const approvalLine=minutesApprovalMode==='show'?`<p><strong>اعتماد المحضر:</strong> ${minutesApproverRaw?esc(minutesApproverRaw):'____________________________'}${approvalDate?` — ${formatDateHtmlFor(approvalDate,approvalCalendar)}`:''}</p>`:'';
  const attendanceEnabled=!!$('enableAttendanceSheet')?.checked;
@@ -1264,16 +1271,23 @@ function printStylesheet(){
 .status-chip.bad{background:#FDEAEA;color:#9C3333}
 .status-chip.neutral{background:#E7EBF0;color:#526072}
 .minutes-vote-detail{display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-top:1.5mm;padding-top:1.2mm;border-top:.25mm dashed #D6DCE4;color:#4C596A;font-size:7.8pt}.minutes-vote-detail strong{color:#0B1A2B}
-.date-display{display:inline-flex;flex:0 0 auto;flex-direction:row-reverse;align-items:center;gap:.8mm;direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
-.date-display>span{flex:0 0 auto}
-.date-display .date-suffix{font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-weight:700;margin-inline-start:.4mm}
-.date-line{display:inline-flex;align-items:center;gap:1.5mm;direction:rtl;unicode-bidi:isolate;white-space:nowrap}
+.date-display{display:inline-flex;align-items:center;gap:1mm;direction:rtl;unicode-bidi:isolate;white-space:nowrap;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.date-display .date-part,.date-display .date-separator,.date-display .date-suffix{display:inline-block;flex:0 0 auto;white-space:nowrap}
+.date-display .date-part,.date-display .date-separator{direction:ltr;unicode-bidi:isolate;font:inherit;font-variant-numeric:tabular-nums}
+.date-display .date-suffix{direction:rtl;unicode-bidi:isolate;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-weight:700}
+.date-line{display:flex;align-items:center;justify-content:flex-start;gap:1.5mm;direction:rtl;unicode-bidi:isolate;white-space:nowrap;min-width:0}
 .date-conjunction{flex:0 0 auto;white-space:nowrap}
-.dual-date-display{display:inline-flex;max-width:100%;align-items:center;gap:2mm;direction:rtl;unicode-bidi:isolate;flex-wrap:wrap}
+.dual-date-display{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start;gap:.5mm;direction:rtl;unicode-bidi:isolate;max-width:100%;min-width:0}
 .meta-row{min-width:0}
+.meta-row-wide{grid-column:1/-1}
+.meta-row-date{align-items:center}
 .meta-row strong{flex:1;min-width:0;overflow-wrap:anywhere}
-.meta-row strong .dual-date-display{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.3mm;max-width:100%}
+.meta-row-date strong{overflow:visible}
+.meta-row strong .dual-date-display{max-width:100%}
 .meta-row strong .date-line{max-width:100%}
+.document-date-row{display:flex;align-items:flex-start;gap:1.5mm;flex-wrap:wrap}
+.document-date-row>strong{flex:0 0 auto}
+.document-date-row>.dual-date-display,.document-date-row>.date-display{flex:0 0 auto}
 .doc-footer{margin-top:auto;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8mm;border-top:1px solid #DDE3EA;padding-top:2.5mm;font-size:7.5pt;color:#6F7A89;background:#fff}
 .doc-footer a{color:#415065;text-decoration:none;direction:ltr}
 .doc-footer-brand{display:flex;align-items:center;gap:9px;min-width:0}
@@ -1598,7 +1612,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.4',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.5',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
