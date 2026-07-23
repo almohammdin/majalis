@@ -403,6 +403,40 @@ window.scrollTo(0,0);
 window.addEventListener('pageshow',()=>requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'auto'})));
 window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'auto'})));
 </script>
+
+<style id="majalis-v199-footer-mobile">
+/* يحافظ على توزيع فوتر معاينة الوثيقة داخل الشاشات الضيقة دون التأثير على طباعة A4 */
+@media screen and (max-width:680px){
+  .document{padding-bottom:86px}
+  .doc-footer{
+    align-items:flex-start;
+    flex-wrap:wrap;
+    row-gap:5px;
+    font-size:9px;
+  }
+  .doc-footer-brand{
+    flex:1 1 100%;
+    width:100%;
+  }
+  .doc-footer-brand strong{
+    white-space:normal;
+    line-height:1.35;
+    font-size:9px;
+  }
+  .doc-footer-meta{
+    flex:1 1 100%;
+    width:100%;
+    justify-content:flex-start;
+    gap:6px;
+    font-size:7.5px;
+  }
+  .doc-footer-meta a,
+  .doc-footer-version{
+    font-size:7.5px;
+    white-space:nowrap;
+  }
+}
+</style>
 </head>
 <body>
 <header class="hero">
@@ -784,7 +818,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.8</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.10.0</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -881,8 +915,8 @@ let currentStep=1, calendar='gregorian', attendees=[], agendaItems=[], meetingAt
 const STORAGE_KEY='majalis_tool_draft_v1_9_6';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_4','majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
-const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.9.8';
+const TOOL_NAME='منظومة أعمال المجالس | أداة مجالس';
+const TOOL_VERSION='v1.10.0';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1517,7 +1551,7 @@ fillEntities();syncInviteSenderSelector();if(!restoreWork(true)){renderLogoPrevi
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js';
 import { getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, runTransaction, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
 
 const firebaseConfig={
   apiKey:'AIzaSyCHefMzpFRZi6TQHMt7NTkqMAzPFQB3_6U',
@@ -1535,7 +1569,7 @@ const db=getFirestore(firebaseApp);
 await setPersistence(auth,browserLocalPersistence).catch(console.error);
 
 const A=id=>document.getElementById(id);
-const adminState={user:null,organizations:[],meetings:[],currentOrganization:null,currentMeetingId:null,currentMeetingArchiveSequence:null,currentMeetingLabel:'',signatureMeetingId:null,dirty:false};
+const adminState={user:null,organizations:[],meetings:[],currentOrganization:null,currentMeetingId:null,currentMeetingArchiveSequence:null,currentMeetingLabel:'',signatureMeetingId:null,dirty:false,savingMeeting:false};
 const entityLabels=Object.fromEntries(window.MajalisApp.getEntityOptions());
 const statusLabels={preparing:'تحت الإعداد',review:'جاهز للمراجعة',approved:'معتمد',signing:'بانتظار التوقيع',signed:'موقّع ومكتمل'};
 let toastTimer=null;
@@ -1562,17 +1596,19 @@ function buildMeetingSearchText(meta={},snapshot={}){
   return normalizeAdminSearch([meta.archiveSequence,meta.meetingNumber,meta.meetingYear,meta.meetingTitle,meta.meetingTypeLabel,meta.meetingDateDisplay,meta.status,...fieldParts,...participantParts,...agendaParts,...attachmentParts].filter(v=>v!==undefined&&v!==null&&v!=='').join(' ')).slice(0,50000);
 }
 function requiredSignersFromMeeting(meeting){
-  const snapshot=meeting?.snapshot||{},fields=snapshot.fields||{},all=[];
-  const add=(key,name,role)=>{name=String(name||'').trim();if(name)all.push({key,name,role})};
-  add('chair',fields.chairName,'رئيس الاجتماع');
-  add('secretary',fields.secretaryName,'أمين السر أو المقرر');
+  const snapshot=meeting?.snapshot||{},fields=snapshot.fields||{},participants=Array.isArray(snapshot.attendees)?snapshot.attendees:[],all=[];
+  const participantIdentity=id=>String(id??'').trim()?`participant:${String(id).trim()}`:'';
+  const add=(key,name,role,identityKey=key)=>{name=String(name||'').trim();if(name)all.push({key,name,role,identityKey})};
+  const chairParticipantId=fields.chairSourceMode==='participant'?fields.chairParticipantId:'';
+  const secretaryParticipantId=fields.secretarySourceMode==='participant'?fields.secretaryParticipantId:'';
+  add('chair',fields.chairName,'رئيس الاجتماع',participantIdentity(chairParticipantId)||'officer:chair');
+  add('secretary',fields.secretaryName,'أمين السر أو المقرر',participantIdentity(secretaryParticipantId)||'officer:secretary');
   if(fields.minutesParticipantSignatures){
-    const participants=Array.isArray(snapshot.attendees)?snapshot.attendees:[];
     let eligible=participants.filter(p=>['inperson','remote'].includes(p?.attendance));
     if(!eligible.length)eligible=participants.filter(p=>!['absent','excused'].includes(p?.attendance));
-    eligible.forEach((p,index)=>add(`participant:${p?.id??index}`,p?.name,p?.role||'مشارك'));
+    eligible.forEach((p,index)=>{const key=participantIdentity(p?.id)||`participant-index:${index}`;add(key,p?.name,p?.role||'مشارك',key)});
   }
-  const seen=new Set();return all.filter(s=>{const k=normalizeAdminSearch(s.name);if(!k||seen.has(k))return false;seen.add(k);return true});
+  const seen=new Set();return all.filter(s=>{if(!s.identityKey||seen.has(s.identityKey))return false;seen.add(s.identityKey);return true}).map(({identityKey,...signer})=>signer);
 }
 function meetingWorkflowStatus(meeting){
   const base=meeting?.status||'preparing';if(base!=='approved')return base;
@@ -1592,7 +1628,7 @@ function updateAdminBar(){
   const signed=!!adminState.user;A('adminCloudBar').hidden=!signed;A('adminAccessButton').classList.toggle('signed-in',signed);A('adminAccessLabel').textContent=signed?'لوحة الإدارة':'دخول الإدارة';
   const org=adminState.currentOrganization,banner=A('meetingContextBanner');A('adminCurrentOrg').textContent=org?.name||'اختر جهة من لوحة الإدارة';A('adminCurrentMeeting').textContent=adminState.currentMeetingLabel||'لا يوجد اجتماع محفوظ حاليا';
   banner.hidden=!signed||!org;if(org){A('meetingContextState').textContent=adminState.currentMeetingArchiveSequence?archiveRecordLabel(adminState.currentMeetingArchiveSequence):'اجتماع حالي';refreshMeetingIdentity()}
-  A('newAdminMeeting').disabled=!org;A('saveOrganizationSettings').disabled=!org;A('saveAdminMeeting').disabled=!org;A('adminNewMeetingFromDashboard').disabled=!org;
+  A('newAdminMeeting').disabled=!org;A('saveOrganizationSettings').disabled=!org;A('saveAdminMeeting').disabled=!org||adminState.savingMeeting;A('adminNewMeetingFromDashboard').disabled=!org;
 }
 function renderOrganizationOptions(){A('newOrganizationType').innerHTML=window.MajalisApp.getEntityOptions().map(([v,l])=>`<option value="${escapeAdmin(v)}">${escapeAdmin(l)}</option>`).join('')}
 function filteredOrganizations(){const q=(A('adminOrganizationSearch').value||'').trim().toLowerCase();return adminState.organizations.filter(o=>!q||`${o.name} ${entityLabels[o.type]||''}`.toLowerCase().includes(q))}
@@ -1616,11 +1652,26 @@ async function loadOrganizations(){
 }
 async function loadMeetings(orgId){
   adminState.meetings=[];A('adminMeetingsList').innerHTML='<div class="admin-empty">جاري تحميل الأرشيف وترقيم السجلات...</div>';
-  const snap=await getDocs(collection(db,'organizations',orgId,'meetings'));let items=snap.docs.map(d=>({id:d.id,...d.data()}));
-  let maxSequence=Math.max(0,...items.map(m=>Number(m.archiveSequence)||0));
-  const ascending=[...items].sort((a,b)=>(dateFromTimestamp(a.createdAt)?.getTime()||dateFromTimestamp(a.updatedAt)?.getTime()||0)-(dateFromTimestamp(b.createdAt)?.getTime()||dateFromTimestamp(b.updatedAt)?.getTime()||0));
-  const updates=[];for(const meeting of ascending){const patch={};if(!Number(meeting.archiveSequence)){meeting.archiveSequence=++maxSequence;patch.archiveSequence=meeting.archiveSequence}if(!meeting.searchText){meeting.searchText=buildMeetingSearchText(meeting,meeting.snapshot||{});patch.searchText=meeting.searchText}if(Object.keys(patch).length)updates.push(setDoc(doc(db,'organizations',orgId,'meetings',meeting.id),patch,{merge:true}))}
-  if(updates.length)await Promise.all(updates);await setDoc(doc(db,'organizations',orgId),{nextArchiveSequence:maxSequence+1},{merge:true});
+  const orgRef=doc(db,'organizations',orgId),meetingsRef=collection(db,'organizations',orgId,'meetings');
+  let snap=await getDocs(meetingsRef),items=snap.docs.map(d=>({id:d.id,...d.data()}));
+  const missingIds=items.filter(m=>!Number(m.archiveSequence)).map(m=>m.id);
+  if(missingIds.length){
+    const knownMax=Math.max(0,...items.map(m=>Number(m.archiveSequence)||0));
+    await runTransaction(db,async transaction=>{
+      const orgSnap=await transaction.get(orgRef);if(!orgSnap.exists())throw new Error('تعذر العثور على الجهة أثناء ترقيم الأرشيف.');
+      const refs=missingIds.map(id=>doc(db,'organizations',orgId,'meetings',id)),meetingSnaps=[];
+      for(const ref of refs)meetingSnaps.push(await transaction.get(ref));
+      const storedNext=Number(orgSnap.data()?.nextArchiveSequence)||1;let next=Math.max(1,storedNext,knownMax+1),assigned=[];
+      meetingSnaps.forEach((meetingSnap,index)=>{if(!meetingSnap.exists())return;const current=Number(meetingSnap.data()?.archiveSequence)||0;if(current){next=Math.max(next,current+1);return}assigned.push({ref:refs[index],sequence:next++})});
+      assigned.forEach(item=>transaction.set(item.ref,{archiveSequence:item.sequence},{merge:true}));
+      if(next>storedNext)transaction.set(orgRef,{nextArchiveSequence:next},{merge:true});
+    });
+    snap=await getDocs(meetingsRef);items=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }
+  const searchUpdates=[];for(const meeting of items){if(!meeting.searchText){meeting.searchText=buildMeetingSearchText(meeting,meeting.snapshot||{});searchUpdates.push(setDoc(doc(db,'organizations',orgId,'meetings',meeting.id),{searchText:meeting.searchText},{merge:true}))}}
+  if(searchUpdates.length)await Promise.all(searchUpdates);
+  const requiredNext=Math.max(0,...items.map(m=>Number(m.archiveSequence)||0))+1;
+  await runTransaction(db,async transaction=>{const orgSnap=await transaction.get(orgRef);if(!orgSnap.exists())throw new Error('تعذر العثور على الجهة أثناء مزامنة الأرشيف.');const storedNext=Number(orgSnap.data()?.nextArchiveSequence)||1;if(storedNext<requiredNext)transaction.set(orgRef,{nextArchiveSequence:requiredNext},{merge:true})});
   adminState.meetings=items.sort((a,b)=>(Number(b.archiveSequence)||0)-(Number(a.archiveSequence)||0));renderMeetings();
 }
 async function selectOrganization(orgId,{close=true,startNew=false}={}){
@@ -1635,19 +1686,22 @@ async function saveOrganization(){
   try{const settings=window.MajalisApp.captureOrganizationSettings();const logoData=await compressLogo(settings.entityLogoSrc||'');settings.entityLogoSrc='';const name=(settings.fields.entityName||org.name||'').trim();const type=settings.fields.entityType||org.type;await setDoc(doc(db,'organizations',org.id),{ownerUid:NAIF_UID,name,type,logoData,settings:cleanForFirestore(settings),updatedAt:serverTimestamp()},{merge:true});org.name=name;org.type=type;org.logoData=logoData;org.settings=settings;adminState.dirty=false;setAdminStatus('تم حفظ إعدادات الجهة والمشاركين.','success');toast('تم حفظ إعدادات الجهة.');await loadOrganizations();updateAdminBar()}catch(err){console.error(err);setAdminStatus('تعذر حفظ إعدادات الجهة.','error');toast(err.message||'تعذر الحفظ.','error')}
 }
 async function saveMeeting(){
-  const org=adminState.currentOrganization;if(!org){toast('اختر جهة أو أنشئ جهة أولا.','error');return}
-  setAdminStatus('جاري حفظ الاجتماع وترقيمه في الأرشيف...');
+  const org=adminState.currentOrganization;if(!org){toast('اختر جهة أو أنشئ جهة أولا.','error');return}if(adminState.savingMeeting)return;
+  adminState.savingMeeting=true;updateAdminBar();setAdminStatus('جاري حفظ الاجتماع وترقيمه في الأرشيف...');
   try{
-    const snapshot=window.MajalisApp.captureSnapshot();snapshot.entityLogoSrc='';const meta=window.MajalisApp.cloudMeetingMetadata();let ref,archiveSequence=adminState.currentMeetingArchiveSequence;
-    const existing=adminState.currentMeetingId?adminState.meetings.find(m=>m.id===adminState.currentMeetingId):null;
-    if(adminState.currentMeetingId){ref=doc(db,'organizations',org.id,'meetings',adminState.currentMeetingId);archiveSequence=archiveSequence||existing?.archiveSequence}
-    else{ref=doc(collection(db,'organizations',org.id,'meetings'));archiveSequence=Math.max(0,...adminState.meetings.map(m=>Number(m.archiveSequence)||0))+1}
-    const draft={...cleanForFirestore(meta),archiveSequence},signers=requiredSignersFromMeeting({snapshot}),previousSigned=new Set(Array.isArray(existing?.signatureTracking?.signedKeys)?existing.signatureTracking.signedKeys:[]),signedKeys=signers.filter(s=>previousSigned.has(s.key)).map(s=>s.key),workflowStatus=meta.status==='approved'?(signers.length?(signedKeys.length===signers.length?'signed':'signing'):'approved'):meta.status;
-    const payload={...draft,workflowStatus,signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,searchText:buildMeetingSearchText(draft,snapshot),ownerUid:NAIF_UID,organizationId:org.id,snapshot:cleanForFirestore(snapshot),updatedAt:serverTimestamp()};
-    if(existing?.signatureTracking)payload.signatureTracking={...cleanForFirestore(existing.signatureTracking),signedKeys};if(!adminState.currentMeetingId)payload.createdAt=serverTimestamp();
-    await setDoc(ref,payload,{merge:true});await setDoc(doc(db,'organizations',org.id),{nextArchiveSequence:Number(archiveSequence)+1},{merge:true});
+    const snapshot=window.MajalisApp.captureSnapshot();snapshot.entityLogoSrc='';const meta=window.MajalisApp.cloudMeetingMetadata();const orgRef=doc(db,'organizations',org.id);let ref,archiveSequence=adminState.currentMeetingArchiveSequence;
+    let existing=adminState.currentMeetingId?adminState.meetings.find(m=>m.id===adminState.currentMeetingId):null;
+    if(adminState.currentMeetingId){ref=doc(db,'organizations',org.id,'meetings',adminState.currentMeetingId);if(!existing){const existingSnap=await getDoc(ref);if(existingSnap.exists())existing={id:existingSnap.id,...existingSnap.data()}}archiveSequence=archiveSequence||existing?.archiveSequence}
+    else ref=doc(collection(db,'organizations',org.id,'meetings'));
+    const buildPayload=(sequence,isNew)=>{const draft={...cleanForFirestore(meta),archiveSequence:sequence},signers=requiredSignersFromMeeting({snapshot}),previousSigned=new Set(Array.isArray(existing?.signatureTracking?.signedKeys)?existing.signatureTracking.signedKeys:[]),signedKeys=signers.filter(s=>previousSigned.has(s.key)).map(s=>s.key),workflowStatus=meta.status==='approved'?(signers.length?(signedKeys.length===signers.length?'signed':'signing'):'approved'):meta.status;const payload={...draft,workflowStatus,signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,searchText:buildMeetingSearchText(draft,snapshot),ownerUid:NAIF_UID,organizationId:org.id,snapshot:cleanForFirestore(snapshot),updatedAt:serverTimestamp()};if(existing?.signatureTracking)payload.signatureTracking={...cleanForFirestore(existing.signatureTracking),signedKeys};if(isNew)payload.createdAt=serverTimestamp();return payload};
+    const needsSequence=!Number(archiveSequence);
+    if(needsSequence){
+      const localFloor=Math.max(0,...adminState.meetings.map(m=>Number(m.archiveSequence)||0))+1,isNew=!adminState.currentMeetingId;
+      await runTransaction(db,async transaction=>{const orgSnap=await transaction.get(orgRef);if(!orgSnap.exists())throw new Error('تعذر العثور على الجهة أثناء حفظ الاجتماع.');const storedNext=Number(orgSnap.data()?.nextArchiveSequence)||1;archiveSequence=Math.max(1,storedNext,localFloor);transaction.set(ref,buildPayload(archiveSequence,isNew),{merge:true});transaction.set(orgRef,{nextArchiveSequence:archiveSequence+1},{merge:true})});
+    }else await setDoc(ref,buildPayload(archiveSequence,false),{merge:true});
     adminState.currentMeetingId=ref.id;adminState.currentMeetingArchiveSequence=archiveSequence;adminState.currentMeetingLabel=`${archiveRecordLabel(archiveSequence)} — ${meta.meetingTitle||meta.meetingTypeLabel||'اجتماع'}`;adminState.dirty=false;setAdminStatus(`تم حفظ ${archiveRecordLabel(archiveSequence)} في الأرشيف السحابي.`,'success');toast(`تم حفظ الاجتماع برقم ${archiveRecordLabel(archiveSequence)}.`);updateAdminBar();await loadMeetings(org.id)
   }catch(err){console.error(err);setAdminStatus('تعذر حفظ الاجتماع. راجع الاتصال وحجم البيانات.','error');toast(err.message||'تعذر حفظ الاجتماع.','error')}
+  finally{adminState.savingMeeting=false;updateAdminBar()}
 }
 async function openMeeting(meetingId){
   const org=adminState.currentOrganization;if(!org)return;setAdminStatus('جاري فتح الاجتماع...');
@@ -1674,7 +1728,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.8',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.10.0',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,nextArchiveSequence:1,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
