@@ -323,7 +323,7 @@
 .date-parts{direction:rtl}
 .date-parts .control{direction:ltr;text-align:center}
 .approval-date-fields,.due-date-row{display:grid;grid-template-columns:minmax(145px,.72fr) minmax(0,1.28fr);gap:8px;align-items:start;direction:rtl}
-.date-display{display:inline-flex;flex-direction:row;align-items:center;gap:3px;direction:rtl;unicode-bidi:isolate;white-space:nowrap;font-family:Arial,Tahoma,sans-serif;font-variant-numeric:tabular-nums}
+.date-display{display:inline-flex;flex-direction:row;align-items:center;gap:3px;direction:rtl;unicode-bidi:isolate;white-space:nowrap;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-variant-numeric:tabular-nums}
 .date-display .date-suffix{font-family:var(--font);font-weight:700;margin-inline-start:2px}
 .dual-date-display{display:inline-flex;align-items:center;gap:7px;direction:rtl;unicode-bidi:isolate;flex-wrap:wrap}
 .meta-row strong .date-display,.doc-table .date-display{font-weight:700}
@@ -346,7 +346,9 @@
 .agenda-attachment-row .control{min-height:38px;padding:7px 10px;border-radius:9px}
 .agenda-attachment-actions{display:flex;gap:5px}.agenda-attachment-actions .icon-btn{width:34px;height:34px;flex-basis:34px}
 .invitation-attachments{margin:13px 0;padding:11px 13px;border:1px solid #D9DEE5;border-radius:10px;background:#F8FAFC;break-inside:avoid;page-break-inside:avoid}
-.invitation-attachments h3{margin:0 0 6px!important;font-size:13px}.invitation-attachments ol{margin:0;padding-right:22px}.invitation-attachments li{margin:2px 0}
+.invitation-attachments h3{margin:0 0 4px!important;font-size:11px}.invitation-attachments ol{margin:0;padding-right:19px;font-size:10.5px;line-height:1.55}.invitation-attachments li{margin:1px 0}
+.agenda-document-table th:first-child,.agenda-document-table td:first-child,.minutes-table th:first-child,.minutes-table td:first-child{width:42px;text-align:center;white-space:nowrap;padding-inline:6px}
+.minutes-vote-detail{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px;padding-top:6px;border-top:1px dashed #D6DCE4;color:#4C596A;font-size:10.5px}.minutes-vote-detail strong{color:var(--navy)}
 .minutes-approval-details[hidden]{display:none!important}
 .minutes-approval-details{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
 .ballot-decision{margin-top:4px;color:#465266;font-size:10.5px;line-height:1.65}
@@ -362,7 +364,7 @@
 .vote-state-chip{flex:0 0 auto;border-radius:999px;padding:4px 8px;font-size:9.5px;font-weight:700}.vote-state-chip.no-vote{background:#E7EBF0;color:#526072}.vote-state-chip.has-vote{background:#F5E7B9;color:#705412}
 .ballot-field[hidden]{display:none!important}
 .management-empty{border:1px dashed #C5CED8;border-radius:12px;background:#FAFBFC;color:var(--muted);padding:20px;text-align:center;font-size:11px}
-.minutes-no-vote td{background:#F8FAFC}.status-chip.neutral{background:#E7EBF0;color:#526072}.admin-card-date{direction:rtl;unicode-bidi:isolate;font-family:Arial,Tahoma,sans-serif;font-variant-numeric:tabular-nums}
+.status-chip.neutral{background:#E7EBF0;color:#526072}.admin-card-date{direction:rtl;unicode-bidi:isolate;font-family:Arial,Tahoma,sans-serif;font-variant-numeric:tabular-nums}
 @media(max-width:960px){.top-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.top-tab{justify-content:space-between;padding-inline:12px}.top-tab .tab-label{text-align:right}.management-tab{grid-column:auto}}
 @media(max-width:760px){.meeting-context-card{align-items:flex-start}.meeting-context-state{display:none}.top-tabs{grid-template-columns:1fr}.top-tab{justify-content:space-between;padding-inline:12px}.invite-sender-grid,.invite-sender-manual,.approval-date-fields,.due-date-row{grid-template-columns:1fr}.management-agenda-head{flex-direction:column}.agenda-prep-card{grid-template-columns:34px minmax(0,1fr) auto;align-items:end}.agenda-prep-card .agenda-index{grid-column:1;grid-row:1}.agenda-prep-card .agenda-title-field{grid-column:2;grid-row:1}.agenda-prep-card .agenda-purpose-field{grid-column:2;grid-row:2}.agenda-prep-card .item-actions{grid-column:3;grid-row:1;align-self:end}.agenda-prep-card .item-actions .icon-btn{width:34px;flex-basis:34px}.agenda-attachments-head{align-items:stretch;flex-direction:column}.agenda-attachments-head .btn{width:100%}.agenda-attachment-row{grid-template-columns:30px minmax(0,1fr) auto}.agenda-attachment-actions [data-attachment-up],.agenda-attachment-actions [data-attachment-down]{display:none}}
 </style>
@@ -753,7 +755,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.2</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.3</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -847,11 +849,11 @@ const rules = {
   }
 };
 let currentStep=1, calendar='gregorian', attendees=[], agendaItems=[], meetingAttachments=[], entityLogoSrc='', printMode='current', autoSaveReady=false, autoSaveTimer=null;
-const STORAGE_KEY='majalis_tool_draft_v1_9_2';
-const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
+const STORAGE_KEY='majalis_tool_draft_v1_9_3';
+const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.9.2';
+const TOOL_VERSION='v1.9.3';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1000,7 +1002,7 @@ function renderAttendanceManager(){if(!$('attendanceManagementList'))return;$('a
 function renderAttendees(){attendees=attendees.map(normalizeParticipant);$('attendeesList').innerHTML=attendees.length?attendees.map(attendeeCard).join(''):'<div class="empty">أضف أعضاء الاجتماع والمدعوين وصفة كل شخص.</div>';syncOfficerSelectors();renderAttendanceManager();renderDocuments();updateCompletionIndicators();}
 function normalizeAgendaItem(item){return {id:item?.id??Date.now(),title:item?.title||'',purpose:item?.purpose||'مناقشة',discussion:item?.discussion||'',decision:item?.decision||'',owner:item?.owner||'',dueCalendar:item?.dueCalendar||'gregorian',dueDay:item?.dueDay||'',dueMonth:item?.dueMonth||'',dueYear:item?.dueYear||'',vote:item?.vote||'لم يجر تصويت',includeInBallot:item?.vote==='لم يجر تصويت'?false:item?.includeInBallot===true}}
 function agendaCard(item,i){item=normalizeAgendaItem(item);return `<div class="item agenda-prep-card" data-id="${item.id}"><span class="number agenda-index">${i+1}</span><div class="agenda-prep-field agenda-title-field"><label>عنوان البند</label><input class="control agenda-input" data-key="title" value="${esc(item.title)}" placeholder="موضوع البند"></div><div class="agenda-prep-field agenda-purpose-field"><label>الغرض</label><select class="control agenda-input" data-key="purpose"><option ${item.purpose==='إحاطة'?'selected':''}>إحاطة</option><option ${item.purpose==='مناقشة'?'selected':''}>مناقشة</option><option ${item.purpose==='اعتماد'?'selected':''}>اعتماد</option><option ${item.purpose==='تصويت'?'selected':''}>تصويت</option></select></div><div class="item-actions"><button class="icon-btn" type="button" data-up="${item.id}" title="رفع البند" aria-label="رفع البند">${iconUp}</button><button class="icon-btn" type="button" data-down="${item.id}" title="خفض البند" aria-label="خفض البند">${iconDown}</button><button class="icon-btn remove" type="button" data-remove-agenda="${item.id}" title="حذف البند" aria-label="حذف البند">${iconTrash}</button></div></div>`}
-function managementAgendaCard(item,i){item=normalizeAgendaItem(item);const noVote=item.vote==='لم يجر تصويت';return `<article class="management-agenda-card ${noVote?'no-vote-item':'vote-item'}" data-management-agenda-id="${item.id}"><div class="management-agenda-title"><div><span class="number">${i+1}</span><div><strong>${esc(item.title||`البند ${i+1}`)}</strong><small>${esc(item.purpose||'')}</small></div></div><span class="vote-state-chip ${noVote?'no-vote':'has-vote'}">${noVote?'بند دون تصويت':'بند بتصويت'}</span></div><div class="form-grid"><div class="field w12"><label>خلاصة المناقشة</label><textarea class="control agenda-result-input" data-key="discussion" placeholder="أبرز ما دار حول البند">${esc(item.discussion)}</textarea><div class="info-help"><span class="info-mark">i</span><span>سجل أبرز الآراء والملاحظات والتحفظات بصياغة مختصرة ومحايدة.</span></div></div><div class="field w8"><label>القرار أو الإجراء الناتج</label><textarea class="control agenda-result-input" data-key="decision" placeholder="نص القرار أو الإجراء الناتج">${esc(item.decision)}</textarea></div><div class="field"><label>المسؤول</label><input class="control agenda-result-input" data-key="owner" value="${esc(item.owner)}" placeholder="الاسم أو الإدارة"></div><div class="field w6"><label>موعد التنفيذ</label><div class="due-date-row"><select class="control agenda-result-input" data-key="dueCalendar"><option value="gregorian" ${item.dueCalendar==='gregorian'?'selected':''}>ميلادي</option><option value="hijri" ${item.dueCalendar==='hijri'?'selected':''}>هجري أم القرى</option></select><div class="date-parts"><input class="control agenda-result-input latin-number" data-key="dueDay" inputmode="numeric" maxlength="2" value="${esc(item.dueDay)}" placeholder="اليوم"><input class="control agenda-result-input latin-number" data-key="dueMonth" inputmode="numeric" maxlength="2" value="${esc(item.dueMonth)}" placeholder="الشهر"><input class="control agenda-result-input latin-number" data-key="dueYear" inputmode="numeric" maxlength="4" value="${esc(item.dueYear)}" placeholder="السنة"></div></div></div><div class="field w6"><label>نتيجة التصويت</label><select class="control agenda-result-input vote-result-select" data-key="vote"><option ${item.vote==='لم يجر تصويت'?'selected':''}>لم يجر تصويت</option><option ${item.vote==='موافق'?'selected':''}>موافق</option><option ${item.vote==='موافق مع تحفظ'?'selected':''}>موافق مع تحفظ</option><option ${item.vote==='مرفوض'?'selected':''}>مرفوض</option><option ${item.vote==='مؤجل'?'selected':''}>مؤجل</option></select><div class="info-help"><span class="info-mark">i</span><span>عند اختيار «لم يجر تصويت» يعرض البند كموضوع مناقشة أو إحاطة ويستبعد تلقائيا من بطاقة التصويت.</span></div></div><div class="field w6 ballot-field" ${noVote?'hidden':''}><label>بطاقة التصويت <span class="optional-tag">اختياري</span></label><label class="quorum-check"><input type="checkbox" class="agenda-result-input ballot-checkbox" data-key="includeInBallot" ${item.includeInBallot?'checked':''}><span>إدراج هذا البند في بطاقة التصويت</span></label></div></div></article>`}
+function managementAgendaCard(item,i){item=normalizeAgendaItem(item);const noVote=item.vote==='لم يجر تصويت';return `<article class="management-agenda-card ${noVote?'no-vote-item':'vote-item'}" data-management-agenda-id="${item.id}"><div class="management-agenda-title"><div><span class="number">${i+1}</span><div><strong>${esc(item.title||`البند ${i+1}`)}</strong><small>${esc(item.purpose||'')}</small></div></div>${noVote?'':`<span class="vote-state-chip has-vote">بند بتصويت</span>`}</div><div class="form-grid"><div class="field w12"><label>خلاصة المناقشة</label><textarea class="control agenda-result-input" data-key="discussion" placeholder="أبرز ما دار حول البند">${esc(item.discussion)}</textarea><div class="info-help"><span class="info-mark">i</span><span>سجل أبرز الآراء والملاحظات والتحفظات بصياغة مختصرة ومحايدة.</span></div></div><div class="field w8"><label>القرار أو الإجراء الناتج</label><textarea class="control agenda-result-input" data-key="decision" placeholder="نص القرار أو الإجراء الناتج">${esc(item.decision)}</textarea></div><div class="field"><label>المسؤول</label><input class="control agenda-result-input" data-key="owner" value="${esc(item.owner)}" placeholder="الاسم أو الإدارة"></div><div class="field w6"><label>موعد التنفيذ</label><div class="due-date-row"><select class="control agenda-result-input" data-key="dueCalendar"><option value="gregorian" ${item.dueCalendar==='gregorian'?'selected':''}>ميلادي</option><option value="hijri" ${item.dueCalendar==='hijri'?'selected':''}>هجري أم القرى</option></select><div class="date-parts"><input class="control agenda-result-input latin-number" data-key="dueDay" inputmode="numeric" maxlength="2" value="${esc(item.dueDay)}" placeholder="اليوم"><input class="control agenda-result-input latin-number" data-key="dueMonth" inputmode="numeric" maxlength="2" value="${esc(item.dueMonth)}" placeholder="الشهر"><input class="control agenda-result-input latin-number" data-key="dueYear" inputmode="numeric" maxlength="4" value="${esc(item.dueYear)}" placeholder="السنة"></div></div></div><div class="field w6"><label>نتيجة التصويت</label><select class="control agenda-result-input vote-result-select" data-key="vote"><option ${item.vote==='لم يجر تصويت'?'selected':''}>لم يجر تصويت</option><option ${item.vote==='موافق'?'selected':''}>موافق</option><option ${item.vote==='موافق مع تحفظ'?'selected':''}>موافق مع تحفظ</option><option ${item.vote==='مرفوض'?'selected':''}>مرفوض</option><option ${item.vote==='مؤجل'?'selected':''}>مؤجل</option></select><div class="info-help"><span class="info-mark">i</span><span>عند اختيار «لم يجر تصويت» يعرض البند كموضوع مناقشة أو إحاطة ويستبعد تلقائيا من بطاقة التصويت.</span></div></div><div class="field w6 ballot-field" ${noVote?'hidden':''}><label>بطاقة التصويت <span class="optional-tag">اختياري</span></label><label class="quorum-check"><input type="checkbox" class="agenda-result-input ballot-checkbox" data-key="includeInBallot" ${item.includeInBallot?'checked':''}><span>إدراج هذا البند في بطاقة التصويت</span></label></div></div></article>`}
 function renderManagementAgenda(){if(!$('managementAgendaList'))return;$('managementAgendaList').innerHTML=agendaItems.length?agendaItems.map(managementAgendaCard).join(''):'<div class="management-empty">أضف بنود جدول الأعمال في المرحلة الثالثة، ثم عد إلى إدارة الاجتماع لتسجيل المداولات والنتائج.</div>';updateCompletionIndicators()}
 function renderAgenda(){agendaItems=agendaItems.map(normalizeAgendaItem);$('agendaList').innerHTML=agendaItems.length?agendaItems.map(agendaCard).join(''):'<div class="empty">أضف بنود جدول الأعمال والغرض من كل بند.</div>';renderManagementAgenda();renderDocuments();updateCompletionIndicators()}
 function normalizeMeetingAttachment(item){return {id:item?.id??Date.now()+Math.floor(Math.random()*1000),name:String(item?.name||'')}}
@@ -1033,8 +1035,9 @@ function renderDocuments(){ if(!$('docInvitation'))return; syncMinutesApprovalMo
  const attendeeRowsWithSignature=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td>${esc(x.name||'')}</td><td>${esc(x.role||'')}</td><td>${esc(attendanceLabels[x.attendance]||attendanceLabels.pending)}</td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'';
  const attendanceSheetRows=attendees.length?attendees.map((x,i)=>{x=normalizeParticipant(x);return `<tr><td>${i+1}</td><td><strong>${esc(x.name||'')}</strong><div class="attendance-role">${esc(x.role||'')}</div></td><td class="sign-cell"><span class="sign-pad"></span></td></tr>`}).join(''):'';
  const aobRaw=($('aobContent')?.value||'').trim();
- const minutesAgendaItems=aobRaw?[...agendaItems,{title:'ما يستجد من أعمال',discussion:aobRaw,decision:'',vote:''}]:agendaItems;
- const minutesRows=minutesAgendaItems.length?minutesAgendaItems.map((x,i)=>{const noVote=!x.vote||x.vote==='لم يجر تصويت',voteMarkup=noVote?'<span class="status-chip neutral">دون تصويت</span>':`<span class="status-chip warn">${esc(x.vote)}</span>`,due=agendaDueDate(x),meta=[x.owner?`<span><strong>المسؤول:</strong> ${esc(x.owner)}</span>`:'',due?`<span><strong>موعد التنفيذ:</strong> ${formatDateHtmlFor(due,x.dueCalendar||'gregorian')}</span>`:''].filter(Boolean).join('');return `<tr class="${noVote?'minutes-no-vote':'minutes-vote'}"><td>${i+1}</td><td><strong>${esc(x.title||'')}</strong><div>${esc(x.discussion||'')}</div></td><td>${esc(x.decision||'')}${meta?`<div class="decision-meta">${meta}</div>`:''}</td><td>${voteMarkup}</td></tr>`}).join(''):'';
+ const minutesAgendaItems=[...agendaItems];
+ if(aobRaw)minutesAgendaItems.push({title:'ما يستجد من أعمال',discussion:aobRaw,decision:'',owner:'',dueCalendar:'gregorian',dueDay:'',dueMonth:'',dueYear:'',vote:'لم يجر تصويت'});
+ const minutesRows=minutesAgendaItems.length?minutesAgendaItems.map((x,i)=>{const hasVote=!!x.vote&&x.vote!=='لم يجر تصويت',voteMarkup=hasVote?`<div class="minutes-vote-detail"><strong>نتيجة التصويت</strong><span class="status-chip warn">${esc(x.vote)}</span></div>`:'',due=agendaDueDate(x),meta=[x.owner?`<span><strong>المسؤول:</strong> ${esc(x.owner)}</span>`:'',due?`<span><strong>موعد التنفيذ:</strong> ${formatDateHtmlFor(due,x.dueCalendar||'gregorian')}</span>`:''].filter(Boolean).join('');return `<tr><td>${i+1}</td><td><strong>${esc(x.title||'')}</strong><div>${esc(x.discussion||'')}</div></td><td>${esc(x.decision||'')}${meta?`<div class="decision-meta">${meta}</div>`:''}${voteMarkup}</td></tr>`}).join(''):'';
  const decisions=agendaItems.filter(x=>x.decision||x.owner||x.dueDay||x.dueMonth||x.dueYear);
  const decisionRows=decisions.length?decisions.map((x,i)=>{const due=agendaDueDate(x);return `<tr><td>${i+1}</td><td>${esc(x.decision||'')}</td><td>${esc(x.owner||'')}</td><td>${due?formatDateHtmlFor(due,x.dueCalendar):''}</td><td>قيد المتابعة</td></tr>`}).join(''):'';
  const secretaryLine=secretary?`<p><strong>${esc(r.secretaryLabel)}:</strong> ${secretary}</p>`:'';
@@ -1067,9 +1070,9 @@ function renderDocuments(){ if(!$('docInvitation'))return; syncMinutesApprovalMo
  const includeParticipantNames=attendanceEnabled&&!!$('minutesParticipantNames')?.checked;
  const includeParticipantSignatures=includeParticipantNames&&!!$('minutesParticipantSignatures')?.checked;
  const minutesAttendanceSection=includeParticipantNames?`<h3>الحضور</h3><table class="doc-table"><thead><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th>${includeParticipantSignatures?'<th>التوقيع</th>':''}</tr></thead><tbody>${includeParticipantSignatures?attendeeRowsWithSignature:attendeeRows}</tbody></table>`:'';
- $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationAttachmentsLine}${invitationClosingLine}${inviteSenderLine}</div>`+footer();
- $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
- $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body minutes-doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${approvalLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}</div>`+footer();
+ $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body invitation-doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table agenda-document-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationAttachmentsLine}${invitationClosingLine}${inviteSenderLine}</div>`+footer();
+ $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table agenda-document-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
+ $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body minutes-doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${approvalLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table minutes-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار أو الإجراء</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}</div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer();
  if($('docAttendance')){
   const attendanceMode=$('attendanceSheetMode')?.value||'combined';
@@ -1108,7 +1111,7 @@ function extractPrintSections(docEl){
 }
 function paginateIntoPages(doc,targetDoc){
  targetDoc=targetDoc||document;
- const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=15*MM,PAGE_NUMBER_RESERVE=46,SAFETY=28;
+ const MM=96/25.4,PAGE_H=297*MM,PAD_TOP=12*MM,PAD_SIDE=12*MM,PAD_BOTTOM=15*MM,PAGE_NUMBER_RESERVE=30,SAFETY=12;
  const contentW=210*MM-PAD_SIDE*2,availH0=PAGE_H-PAD_TOP-PAD_BOTTOM;
  let stage=targetDoc.getElementById('pagStage');
  if(!stage){stage=targetDoc.createElement('div');stage.id='pagStage';targetDoc.body.appendChild(stage);}
@@ -1123,41 +1126,46 @@ function paginateIntoPages(doc,targetDoc){
   return Math.ceil(box.getBoundingClientRect().height);
  }
  const headerH=measure(doc.headerHtml),footerH=measure(doc.footerHtml);
- const avail0=Math.max(availH0-headerH-footerH-PAGE_NUMBER_RESERVE-SAFETY,150);
- const pages=[];let current=[],avail=avail0;
- function newPage(){if(current.length)pages.push(current);current=[];avail=avail0;}
- doc.sections.forEach(sec=>{
-  if(sec.type==='atomic'){
-   const h=measure(sec.html,true);
-   if(sec.forcePage){
-    if(current.length)newPage();
-    current.push(sec.html);avail-=h;
-    newPage();
-   }else{
-    if(current.length&&h>avail)newPage();
-    current.push(sec.html);avail-=h;
-   }
-  }else{
-   const emptyHtml=`<table class="${sec.cls}">${sec.thead}<tbody></tbody></table>`;
-   const emptyH=measure(emptyHtml,true);
-   if(current.length&&emptyH>avail)newPage();
-   avail-=emptyH;
-   let buf=[];
-   const flush=()=>{if(buf.length){current.push(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`);buf=[];}};
-   sec.rows.forEach(rowHtml=>{
-    const before=buf.length?measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`,true):emptyH;
-    const after=measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')+rowHtml}</tbody></table>`,true);
-    const rowH=after-before;
-    if(rowH>avail){
-     if(buf.length){flush();newPage();avail-=emptyH;}
-     else if(current.length){newPage();avail-=emptyH;}
+ function buildPages(pageNumberReserve=0){
+  const avail0=Math.max(availH0-headerH-footerH-pageNumberReserve-SAFETY,150);
+  const pages=[];let current=[],avail=avail0;
+  function newPage(){if(current.length)pages.push(current);current=[];avail=avail0;}
+  doc.sections.forEach(sec=>{
+   if(sec.type==='atomic'){
+    const h=measure(sec.html,true);
+    if(sec.forcePage){
+     if(current.length)newPage();
+     current.push(sec.html);avail-=h;
+     newPage();
+    }else{
+     if(current.length&&h>avail)newPage();
+     current.push(sec.html);avail-=h;
     }
-    buf.push(rowHtml);avail-=rowH;
-   });
-   flush();
-  }
- });
- newPage();
+   }else{
+    const emptyHtml=`<table class="${sec.cls}">${sec.thead}<tbody></tbody></table>`;
+    const emptyH=measure(emptyHtml,true);
+    if(current.length&&emptyH>avail)newPage();
+    avail-=emptyH;
+    let buf=[];
+    const flush=()=>{if(buf.length){current.push(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`);buf=[];}};
+    sec.rows.forEach(rowHtml=>{
+     const before=buf.length?measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')}</tbody></table>`,true):emptyH;
+     const after=measure(`<table class="${sec.cls}">${sec.thead}<tbody>${buf.join('')+rowHtml}</tbody></table>`,true);
+     const rowH=after-before;
+     if(rowH>avail){
+      if(buf.length){flush();newPage();avail-=emptyH;}
+      else if(current.length){newPage();avail-=emptyH;}
+     }
+     buf.push(rowHtml);avail-=rowH;
+    });
+    flush();
+   }
+  });
+  newPage();
+  return pages;
+ }
+ let pages=buildPages(0);
+ if(pages.length>1)pages=buildPages(PAGE_NUMBER_RESERVE);
  stage.remove();
  const totalPages=pages.length;
  const pageNumberBottom=PAD_BOTTOM+footerH+8;
@@ -1168,7 +1176,7 @@ function paginateIntoPages(doc,targetDoc){
 }
 function printStylesheet(){
  return `@page{size:A4 portrait;margin:0}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}body{font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;color:#18202A;direction:rtl}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}body,body *{font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif!important}body{color:#18202A;direction:rtl}
 #printArea{width:100%}
 .print-page{width:210mm;height:297mm;padding:12mm 12mm 15mm;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#fff;break-after:page;page-break-after:always;position:relative}
 .print-page:last-of-type{break-after:auto;page-break-after:auto}
@@ -1189,6 +1197,14 @@ function printStylesheet(){
 .doc-body{font-size:9.5pt;line-height:1.75;color:#18202A}
 .doc-body h3{font-size:11pt;color:#0B1A2B;margin:5mm 0 2mm}
 .doc-body p{margin:0 0 2.2mm}
+.invitation-doc-body{font-size:9pt;line-height:1.55}
+.invitation-doc-body>p{margin:0 0 1.35mm}
+.invitation-doc-body>.free-paragraph{margin:1.4mm 0;line-height:1.58}
+.invitation-doc-body>h3{margin:2.6mm 0 1.2mm}
+.invitation-doc-body>.meta-grid{margin:2.3mm 0}
+.invitation-doc-body>.meta-grid .meta-row{padding:1.35mm 2mm}
+.invitation-doc-body>.doc-table{margin:2.2mm 0}
+.invitation-doc-body>.doc-table th,.invitation-doc-body>.doc-table td{padding:1.35mm 1.7mm}
 .minutes-doc-body{line-height:1.5}
 .minutes-doc-body>p{margin:0 0 1.1mm}
 .minutes-doc-body>.free-paragraph{margin:1.5mm 0;line-height:1.65}
@@ -1204,18 +1220,23 @@ function printStylesheet(){
 .doc-table{width:100%;border-collapse:collapse;table-layout:fixed;margin:4mm 0;font-size:8.7pt}
 .doc-table th,.doc-table td{border:1px solid #CDD4DD;padding:2.2mm;text-align:right;vertical-align:top;color:#18202A;overflow-wrap:anywhere}
 .doc-table th{background:#F0F3F6;color:#0B1A2B;font-weight:700}
+.agenda-document-table th:first-child,.agenda-document-table td:first-child,.minutes-table th:first-child,.minutes-table td:first-child{width:8.5mm;text-align:center;white-space:nowrap;padding-inline:1mm}
 .doc-table thead{display:table-header-group}
 .doc-table tr{break-inside:avoid;page-break-inside:avoid}
 .doc-table td.sign-cell{vertical-align:bottom}
 .sign-pad{display:block;height:9mm;border-bottom:.3mm solid #B9C2CC}
 .invite-signature{margin-top:6mm;display:flow-root;break-inside:avoid;page-break-inside:avoid;flex:none}
+.invitation-doc-body .invite-signature{margin-top:2.5mm}
+.invitation-doc-body .invite-signature-details strong{min-height:5.5mm;font-size:8.8pt}
+.invitation-doc-body .invite-signature .signature-row{margin-top:2mm}
+.invitation-doc-body .invite-signature .sign-pad{height:5.5mm}
 .invite-signature-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6mm;max-width:135mm}.invite-signature-details div{display:flex;align-items:flex-end;gap:3mm}.invite-signature-details span{font-size:8.5pt;color:#7B8492;white-space:nowrap}.invite-signature-details strong{flex:1;min-height:8mm;border-bottom:.25mm solid #DDE3EA;font-size:9.5pt;color:#18202A;font-weight:600}
 .invite-signature .signature-row{display:flex;align-items:flex-end;gap:10px;margin-top:4mm;max-width:65mm}
 .invite-signature .signature-label{font-size:8.5pt;color:#7B8492;white-space:nowrap}
 .invite-signature .signature-row .sign-pad{flex:1}
 .free-paragraph{white-space:pre-line;margin:3mm 0;line-height:1.85}
-.invitation-attachments{margin:3mm 0;padding:3mm 3.5mm;border:.25mm solid #D9DEE5;border-radius:2.5mm;background:#F8FAFC;break-inside:avoid;page-break-inside:avoid}
-.invitation-attachments h3{margin:0 0 1.5mm;font-size:10.5pt;color:#0B1A2B}.invitation-attachments ol{margin:0;padding-right:6mm}.invitation-attachments li{margin:.7mm 0}
+.invitation-attachments{margin:2mm 0;padding:2mm 3mm;border:.25mm solid #D9DEE5;border-radius:2.5mm;background:#F8FAFC;break-inside:avoid;page-break-inside:avoid;font-size:8pt;line-height:1.45}
+.invitation-attachments h3{margin:0 0 .8mm;font-size:8.7pt;color:#0B1A2B}.invitation-attachments ol{margin:0;padding-right:5mm}.invitation-attachments li{margin:.25mm 0}
 .ballot-card,.individual-attendance-sheet{border:1px solid #CBD3DD;border-radius:3mm;padding:5mm;margin:4mm 0;background:#fff;min-height:160mm}
 .ballot-person,.attendance-person-card{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2mm 5mm;margin-bottom:4mm;padding:3mm;border:1px solid #E1E6EC;border-radius:2.5mm;background:#F8F9FB}
 .ballot-person div,.attendance-person-card div{display:flex;gap:2mm;font-size:8.5pt}.ballot-person span,.attendance-person-card span{color:#677386;min-width:22mm}.ballot-person strong,.attendance-person-card strong{color:#0B1A2B}
@@ -1235,7 +1256,7 @@ function printStylesheet(){
 .status-chip.warn{background:#FFF3D6;color:#8A6112}
 .status-chip.bad{background:#FDEAEA;color:#9C3333}
 .status-chip.neutral{background:#E7EBF0;color:#526072}
-.minutes-no-vote td{background:#F8FAFC}
+.minutes-vote-detail{display:flex;align-items:center;gap:2mm;flex-wrap:wrap;margin-top:1.5mm;padding-top:1.2mm;border-top:.25mm dashed #D6DCE4;color:#4C596A;font-size:7.8pt}.minutes-vote-detail strong{color:#0B1A2B}
 .date-display{display:inline-flex;flex-direction:row;align-items:center;gap:1mm;direction:rtl;unicode-bidi:isolate;white-space:nowrap;font-family:Arial,Tahoma,sans-serif;font-variant-numeric:tabular-nums}
 .date-display .date-suffix{font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-weight:700;margin-inline-start:.5mm}
 .dual-date-display{display:inline-flex;align-items:center;gap:2mm;direction:rtl;unicode-bidi:isolate;flex-wrap:wrap}
@@ -1247,7 +1268,7 @@ function printStylesheet(){
 .doc-footer-brand a{color:#667386;font-size:6.9pt;white-space:nowrap}
 .tool-footer-logo{width:11mm;max-height:11mm;object-fit:contain;display:block}
 .doc-footer-version{margin-inline-start:auto;white-space:nowrap;direction:ltr;font-size:7pt}
-.print-page-number{position:absolute;left:50%;transform:translateX(-50%);z-index:3;min-width:22mm;padding:1mm 3mm;border:1px solid #D7DEE6;border-radius:999px;background:#fff;color:#344255;font-family:Arial,Tahoma,sans-serif;font-size:8pt;font-weight:700;line-height:1.2;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:.15mm}
+.print-page-number{position:absolute;left:50%;transform:translateX(-50%);z-index:3;min-width:22mm;padding:1mm 3mm;border:1px solid #D7DEE6;border-radius:999px;background:#fff;color:#344255;font-family:'IBM Plex Sans Arabic',Tahoma,Arial,sans-serif;font-size:8pt;font-weight:700;line-height:1.2;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;letter-spacing:.15mm}
 @media print{.print-page{margin:0}}`;
 }
 function printDocuments(mode){
@@ -1260,7 +1281,7 @@ function printDocuments(mode){
  const printWin=window.open('','_blank','width=900,height=1000');
  if(!printWin){alert('يبدو أن المتصفح منع فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع ثم المحاولة مجددًا.');return;}
  printWin.document.open();
- printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>${printStylesheet()}</style></head><body><div id="printArea"></div></body></html>`);
+ printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>${printStylesheet()}</style></head><body><div id="printArea"></div></body></html>`);
  printWin.document.close();
  let printed=false;
  const doPrint=()=>{
@@ -1273,8 +1294,13 @@ function printDocuments(mode){
   printWin.print();
  };
  const schedulePrint=()=>{
-  const fontsReady=printWin.document.fonts?.ready||Promise.resolve();
-  fontsReady.then(()=>setTimeout(doPrint,80)).catch(()=>setTimeout(doPrint,200));
+  const ensureIbmFont=async()=>{
+   const fonts=printWin.document.fonts;
+   if(!fonts)return;
+   try{await fonts.ready}catch{}
+   for(let attempt=0;attempt<25&&!fonts.check('12px "IBM Plex Sans Arabic"');attempt++)await new Promise(resolve=>setTimeout(resolve,100));
+  };
+  ensureIbmFont().then(()=>setTimeout(doPrint,80)).catch(()=>setTimeout(doPrint,200));
  };
  printWin.addEventListener('load',schedulePrint);
  setTimeout(schedulePrint,3000);
@@ -1558,7 +1584,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.2',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.3',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
