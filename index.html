@@ -781,7 +781,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.6</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.7</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -879,7 +879,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_9_6';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_4','majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.9.6';
+const TOOL_VERSION='v1.9.7';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1341,29 +1341,57 @@ function printDocuments(mode){
  printWin.document.open();
  printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>${printStylesheet()}</style></head><body><div id="printArea"></div></body></html>`);
  printWin.document.close();
- let printed=false;
+
+ // حالة محلية لكل محاولة طباعة؛ لا تؤثر في أي محاولة لاحقة داخل الجلسة نفسها.
+ let printState='idle';
+ let fallbackTimer=null;
+
+ const waitForPrintFont=async()=>{
+  const fonts=printWin.document.fonts;
+  if(!fonts)throw new Error('المتصفح لا يدعم التحقق من خط الطباعة. استخدم متصفح Chrome أو Edge لتثبيت خط IBM Plex Sans Arabic.');
+  const probe='مجالس 0123456789';
+  const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('تعذر تحميل خط IBM Plex Sans Arabic. تحقق من الاتصال ثم أعد التصدير؛ تم إيقاف الطباعة لمنع استبدال الخط.')),8000));
+  const loadFont=async()=>{
+   try{await fonts.ready}catch{}
+   const regularFaces=await fonts.load('400 12px "IBM Plex Sans Arabic"',probe);
+   const boldFaces=await fonts.load('700 12px "IBM Plex Sans Arabic"',probe);
+   if(!regularFaces.length||!boldFaces.length||!fonts.check('400 12px "IBM Plex Sans Arabic"',probe)||!fonts.check('700 12px "IBM Plex Sans Arabic"',probe)){
+    throw new Error('تعذر تحميل خط IBM Plex Sans Arabic. تحقق من الاتصال ثم أعد التصدير؛ تم إيقاف الطباعة لمنع استبدال الخط.');
+   }
+  };
+  await Promise.race([loadFont(),timeout]);
+ };
+
  const doPrint=()=>{
-  if(printed)return;printed=true;
-  try{
-   const pagesHtml=docsData.map(d=>paginateIntoPages(d,printWin.document)).join('');
-   printWin.document.getElementById('printArea').innerHTML=pagesHtml;
-  }catch(err){console.error(err);alert(err.message||'تعذر تجهيز الوثيقة للطباعة دون فقد محتوى.');printWin.close();return}
+  const pagesHtml=docsData.map(d=>paginateIntoPages(d,printWin.document)).join('');
+  printWin.document.getElementById('printArea').innerHTML=pagesHtml;
   printWin.focus();
   printWin.print();
  };
- const schedulePrint=()=>{
-  const ensureIbmFont=async()=>{
-   const fonts=printWin.document.fonts;
-   if(!fonts)throw new Error('المتصفح لا يدعم التحقق من خط الطباعة. استخدم متصفح Chrome أو Edge لتثبيت خط IBM Plex Sans Arabic.');
-   try{await fonts.ready}catch{}
-   for(let attempt=0;attempt<30&&!fonts.check('12px "IBM Plex Sans Arabic"');attempt++)await new Promise(resolve=>setTimeout(resolve,100));
-   if(!fonts.check('12px "IBM Plex Sans Arabic"'))throw new Error('تعذر تحميل خط IBM Plex Sans Arabic. تحقق من الاتصال ثم أعد التصدير؛ تم إيقاف الطباعة لمنع استبدال الخط.');
-  };
-  ensureIbmFont().then(()=>setTimeout(doPrint,80)).catch(err=>{console.error(err);alert(err.message);printWin.close()});
+
+ const schedulePrint=async()=>{
+  if(printState!=='idle')return;
+  printState='running';
+  if(fallbackTimer){clearTimeout(fallbackTimer);fallbackTimer=null;}
+  try{
+   await waitForPrintFont();
+   if(printState!=='running')return;
+   await new Promise(resolve=>setTimeout(resolve,80));
+   if(printState!=='running')return;
+   doPrint();
+   printState='done';
+  }catch(err){
+   if(printState!=='running')return;
+   printState='failed';
+   console.error(err);
+   alert(err.message||'تعذر تجهيز الوثيقة للطباعة دون فقد محتوى.');
+   printWin.close();
+  }
  };
- printWin.addEventListener('load',schedulePrint);
- setTimeout(schedulePrint,3000);
- printWin.addEventListener('afterprint',()=>printWin.close());
+
+ printWin.addEventListener('load',schedulePrint,{once:true});
+ fallbackTimer=setTimeout(schedulePrint,3000);
+ printWin.addEventListener('afterprint',()=>printWin.close(),{once:true});
 }
 
 function collectFormValues(){const data={};document.querySelectorAll('.main-card input[id], .main-card select[id], .main-card textarea[id], .review-card input[id], .review-card select[id], .review-card textarea[id]').forEach(el=>{if(el.id==='entityLogoInput')return;data[el.id]=el.type==='checkbox'?el.checked:el.value});return data}
@@ -1643,7 +1671,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.6',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.7',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
