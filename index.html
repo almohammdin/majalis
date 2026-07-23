@@ -307,9 +307,11 @@
 .meeting-context-copy{min-width:0;flex:1}.meeting-context-copy small{display:block;color:#8A6A17;font-size:9.5px;font-weight:700;margin-bottom:1px}.meeting-context-copy strong{display:block;color:var(--navy);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meeting-context-copy span{display:block;color:#596678;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .meeting-context-state{flex:0 0 auto;border-radius:999px;background:var(--navy);color:#fff;padding:5px 9px;font-size:9.5px;font-weight:700}
 /* مؤشرات اكتمال المراحل */
-.top-tab{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0}
-.top-tab .tab-label{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tab-progress{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:22px;padding:0 6px;border-radius:999px;background:#E7EBF0;color:#526072;font-family:Arial,Tahoma,sans-serif;font-size:9.5px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums}
+.top-tabs{grid-template-columns:1.08fr .92fr 1.28fr 1.2fr .82fr}
+.top-tab{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:54px;padding:8px 7px;line-height:1.35}
+.top-tab .tab-label{min-width:0;white-space:normal;overflow:visible;text-overflow:clip;text-align:center;font-size:11.5px}
+.top-tab .management-icon,.top-tab .tab-progress{flex:0 0 auto}
+.tab-progress{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:22px;padding:0 5px;border-radius:999px;background:#E7EBF0;color:#526072;font-family:Arial,Tahoma,sans-serif;font-size:9px;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums}
 .tab-progress.complete{background:#DDF3E7;color:#176342}.tab-progress.partial{background:#FFF0C8;color:#825B0F}.tab-progress.empty{background:#E7EBF0;color:#647185}
 .top-tab.active .tab-progress{background:rgba(255,255,255,.17);color:#fff}.top-tab.active .tab-progress.complete{background:#C9A84C;color:#0B1A2B}
 /* حقول اختيار الداعي */
@@ -334,6 +336,17 @@
 .agenda-prep-card .control{min-height:39px;padding:7px 10px;border-radius:9px}
 .agenda-prep-card .item-actions{align-self:end;flex-wrap:nowrap}
 .agenda-aob-row{margin-top:10px;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:var(--soft)}
+.agenda-attachments-panel[hidden]{display:none!important}
+.agenda-attachments-panel{margin-top:10px;padding:13px;border:1px solid #D8C781;border-radius:13px;background:#FFFDF7}
+.agenda-attachments-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.agenda-attachments-head strong{display:block;color:var(--navy);font-size:13px}.agenda-attachments-head span{display:block;color:var(--muted);font-size:10.5px;margin-top:1px}
+.agenda-attachments-list{display:grid;gap:8px}
+.agenda-attachment-row{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;background:#fff;padding:8px 9px}
+.agenda-attachment-row .number{width:28px;height:28px;border-radius:8px}
+.agenda-attachment-row .control{min-height:38px;padding:7px 10px;border-radius:9px}
+.agenda-attachment-actions{display:flex;gap:5px}.agenda-attachment-actions .icon-btn{width:34px;height:34px;flex-basis:34px}
+.invitation-attachments{margin:13px 0;padding:11px 13px;border:1px solid #D9DEE5;border-radius:10px;background:#F8FAFC;break-inside:avoid;page-break-inside:avoid}
+.invitation-attachments h3{margin:0 0 6px!important;font-size:13px}.invitation-attachments ol{margin:0;padding-right:22px}.invitation-attachments li{margin:2px 0}
 .minutes-approval-details[hidden]{display:none!important}
 .minutes-approval-details{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
 .ballot-decision{margin-top:4px;color:#465266;font-size:10.5px;line-height:1.65}
@@ -350,7 +363,8 @@
 .ballot-field[hidden]{display:none!important}
 .management-empty{border:1px dashed #C5CED8;border-radius:12px;background:#FAFBFC;color:var(--muted);padding:20px;text-align:center;font-size:11px}
 .minutes-no-vote td{background:#F8FAFC}.status-chip.neutral{background:#E7EBF0;color:#526072}.admin-card-date{direction:rtl;unicode-bidi:isolate;font-family:Arial,Tahoma,sans-serif;font-variant-numeric:tabular-nums}
-@media(max-width:760px){.meeting-context-card{align-items:flex-start}.meeting-context-state{display:none}.top-tabs{grid-template-columns:1fr}.top-tab{justify-content:space-between;padding-inline:12px}.invite-sender-grid,.invite-sender-manual,.approval-date-fields,.due-date-row{grid-template-columns:1fr}.management-agenda-head{flex-direction:column}.agenda-prep-card{grid-template-columns:34px minmax(0,1fr) auto;align-items:end}.agenda-prep-card .agenda-index{grid-column:1;grid-row:1}.agenda-prep-card .agenda-title-field{grid-column:2;grid-row:1}.agenda-prep-card .agenda-purpose-field{grid-column:2;grid-row:2}.agenda-prep-card .item-actions{grid-column:3;grid-row:1;align-self:end}.agenda-prep-card .item-actions .icon-btn{width:34px;flex-basis:34px}}
+@media(max-width:960px){.top-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.top-tab{justify-content:space-between;padding-inline:12px}.top-tab .tab-label{text-align:right}.management-tab{grid-column:auto}}
+@media(max-width:760px){.meeting-context-card{align-items:flex-start}.meeting-context-state{display:none}.top-tabs{grid-template-columns:1fr}.top-tab{justify-content:space-between;padding-inline:12px}.invite-sender-grid,.invite-sender-manual,.approval-date-fields,.due-date-row{grid-template-columns:1fr}.management-agenda-head{flex-direction:column}.agenda-prep-card{grid-template-columns:34px minmax(0,1fr) auto;align-items:end}.agenda-prep-card .agenda-index{grid-column:1;grid-row:1}.agenda-prep-card .agenda-title-field{grid-column:2;grid-row:1}.agenda-prep-card .agenda-purpose-field{grid-column:2;grid-row:2}.agenda-prep-card .item-actions{grid-column:3;grid-row:1;align-self:end}.agenda-prep-card .item-actions .icon-btn{width:34px;flex-basis:34px}.agenda-attachments-head{align-items:stretch;flex-direction:column}.agenda-attachments-head .btn{width:100%}.agenda-attachment-row{grid-template-columns:30px minmax(0,1fr) auto}.agenda-attachment-actions [data-attachment-up],.agenda-attachment-actions [data-attachment-down]{display:none}}
 </style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
@@ -416,7 +430,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
       <div class="top-tabs" id="steps">
         <button class="top-tab active" data-step="1"><span class="tab-label">إعدادات الاجتماع</span><span class="tab-progress empty" id="stepProgress1">0%</span></button>
         <button class="top-tab" data-step="2"><span class="tab-label">المشاركون</span><span class="tab-progress empty" id="stepProgress2">0%</span></button>
-        <button class="top-tab" data-step="3"><span class="tab-label">جدول الأعمال</span><span class="tab-progress empty" id="stepProgress3">0%</span></button>
+        <button class="top-tab" data-step="3"><span class="tab-label">جدول الأعمال والدعوة</span><span class="tab-progress empty" id="stepProgress3">0%</span></button>
         <button class="top-tab management-tab" data-step="4"><span class="management-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V2h6v2"></path><path d="m9 13 2 2 4-4"></path></svg></span><span class="tab-label">إدارة الاجتماع</span><span class="tab-progress empty" id="stepProgress4">0%</span></button>
         <button class="top-tab" data-step="5"><span class="tab-label">الوثائق</span><span class="tab-progress empty" id="stepProgress5">0%</span></button>
       </div>
@@ -450,14 +464,6 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
           </div>
         </div>
 
-        <div class="subsection">
-          <div class="subsection-title">نصوص اختيارية للدعوة</div>
-          <div class="form-grid">
-            <div class="field w12"><label>مقدمة الدعوة <span class="optional-tag">اختياري</span></label><textarea class="control live" id="invitationIntro" placeholder="اكتب فقرة تظهر بعد التحية مباشرة دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر الفقرة داخل الدعوة دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
-            <div class="field w12"><label>خاتمة الدعوة <span class="optional-tag">اختياري</span></label><textarea class="control live" id="invitationClosing" placeholder="اكتب خاتمة الدعوة دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تحل هذه الفقرة محل الخاتمة الافتراضية في الدعوة وتظهر دون عنوان</span></div></div>
-          </div>
-        </div>
-
         <div class="nav-row"><span></span><button class="btn primary next" data-go="2">المشاركون</button></div>
       </div>
 
@@ -467,11 +473,11 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
         <div class="item-list" id="attendeesList"></div>
         <div class="info-help compact participants-quick-help"><span class="info-mark">i</span><span>فعّل احتساب النصاب للأعضاء الذين يدخل حضورهم ضمن النصاب، واتركه متوقفا لأمين السر والرئيس التنفيذي والضيوف والمدعوين ما لم تكن لهم عضوية محتسبة.</span></div>
         <div class="button-row participants-add-bottom"><button class="btn soft" id="addAttendeeBottom" data-add-attendee type="button">إضافة مشارك آخر</button></div>
-        <div class="nav-row"><button class="btn soft next" data-go="1">بيانات الاجتماع</button><button class="btn primary next" data-go="3">جدول الأعمال</button></div>
+        <div class="nav-row"><button class="btn soft next" data-go="1">بيانات الاجتماع</button><button class="btn primary next" data-go="3">جدول الأعمال والدعوة</button></div>
       </div>
 
       <div class="section step-panel" data-panel="3" hidden>
-        <div class="section-head"><div><h2>جدول الأعمال</h2><p>حدد موعد الدعوة والاجتماع، ثم أضف البنود التي ستعرض وغرض كل بند. تسجل المداولات والنتائج داخل إدارة الاجتماع.</p></div><div class="step-label">المرحلة الثالثة</div></div>
+        <div class="section-head"><div><h2>جدول الأعمال والدعوة</h2><p>حدد موعد الدعوة والاجتماع، وأضف بنود جدول الأعمال والمرفقات ونصوص الدعوة. تسجل المداولات والنتائج داخل إدارة الاجتماع.</p></div><div class="step-label">المرحلة الثالثة</div></div>
 
         <div class="subsection">
           <div class="subsection-title">موعد الدعوة والاجتماع</div>
@@ -511,7 +517,22 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
           <div class="subsection-title">بنود جدول الأعمال</div>
           <div class="button-row"><button class="btn primary" id="addAgenda">إضافة بند</button></div>
           <div class="item-list" id="agendaList"></div>
-          <label class="check-row agenda-aob-row"><input type="checkbox" class="live" id="aobInAgenda"><span>تفعيل بند "ما يستجد من أعمال" كبند أخير في جدول الأعمال</span></label>
+          <label class="check-row agenda-aob-row"><input type="checkbox" class="live" id="aobInAgenda"><span>تفعيل بند ما يستجد من أعمال كبند أخير في جدول الأعمال</span></label>
+          <label class="check-row agenda-aob-row"><input type="checkbox" class="live" id="enableAgendaAttachments"><span>تفعيل وجود مرفقات مع الدعوة</span></label>
+          <div class="agenda-attachments-panel" id="agendaAttachmentsPanel" hidden>
+            <div class="agenda-attachments-head">
+              <div><strong>مرفقات الدعوة</strong><span>أضف اسم كل مرفق كما سيظهر في نهاية مستند الدعوة.</span></div>
+              <button class="btn soft" id="addAgendaAttachment" type="button">إضافة مرفق</button>
+            </div>
+            <div class="agenda-attachments-list" id="agendaAttachmentsList"></div>
+          </div>
+        </div>
+        <div class="subsection invitation-texts-subsection">
+          <div class="subsection-title">نصوص اختيارية للدعوة</div>
+          <div class="form-grid">
+            <div class="field w12"><label>مقدمة الدعوة <span class="optional-tag">اختياري</span></label><textarea class="control live" id="invitationIntro" placeholder="اكتب فقرة تظهر بعد التحية مباشرة دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر الفقرة داخل الدعوة دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
+            <div class="field w12"><label>خاتمة الدعوة <span class="optional-tag">اختياري</span></label><textarea class="control live" id="invitationClosing" placeholder="اكتب خاتمة الدعوة دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تحل هذه الفقرة محل الخاتمة الافتراضية في الدعوة وتظهر دون عنوان</span></div></div>
+          </div>
         </div>
         <div class="nav-row"><button class="btn soft next" data-go="2">المشاركون</button><button class="btn primary next" data-go="4">إدارة الاجتماع</button></div>
       </div>
@@ -553,12 +574,12 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
           <div class="field w12 management-agenda-field">
             <div class="management-agenda-head">
               <div><strong>مداولات البنود ونتائجها</strong><span>تظهر بنود جدول الأعمال تلقائيا هنا لتسجيل ما جرى أثناء الاجتماع والقرار أو الإجراء الناتج.</span></div>
-              <button class="btn soft next" type="button" data-go="3">تعديل جدول الأعمال</button>
+              <button class="btn soft next" type="button" data-go="3">تعديل جدول الأعمال والدعوة</button>
             </div>
             <div class="management-agenda-list" id="managementAgendaList"></div>
           </div>
           <div class="field w12"><label>مقدمة المحضر <span class="optional-tag">اختياري</span></label><textarea class="control live" id="minutesIntro" placeholder="اكتب مقدمة تظهر في المحضر دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر الفقرة بعد بيانات الاجتماع وحالة المحضر دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
-          <div class="field w12"><label>ما يستجد من أعمال <span class="optional-tag">اختياري</span></label><textarea class="control live" id="aobContent" placeholder="اكتب أي موضوع استجد أثناء الاجتماع خارج جدول الأعمال المعلن"></textarea><div class="info-help"><span class="info-mark">i</span><span>يُضاف تلقائيا كبند أخير في جدول المداولات والقرارات بالمحضر عند تعبئته، ويُحذف من المحضر بالكامل إذا ترك فارغا. هذا الحقل مستقل عن خيار "تفعيل بند ما يستجد من أعمال" في جدول الأعمال بالمرحلة الثالثة</span></div></div>
+          <div class="field w12"><label>ما يستجد من أعمال <span class="optional-tag">اختياري</span></label><textarea class="control live" id="aobContent" placeholder="اكتب أي موضوع استجد أثناء الاجتماع خارج جدول الأعمال المعلن"></textarea><div class="info-help"><span class="info-mark">i</span><span>يُضاف تلقائيا كبند أخير في جدول المداولات والقرارات بالمحضر عند تعبئته، ويُحذف من المحضر بالكامل إذا ترك فارغا. هذا الحقل مستقل عن خيار تفعيل بند ما يستجد من أعمال في جدول الأعمال والدعوة بالمرحلة الثالثة</span></div></div>
           <div class="field w12"><label>خاتمة المحضر <span class="optional-tag">اختياري</span></label><textarea class="control live" id="closingNote" placeholder="اكتب خاتمة المحضر دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر بعد جدول المداولات والقرارات دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
           <div class="field w6"><label>وقت انتهاء الاجتماع <span class="optional-tag">يستكمل عند الانتهاء</span></label><div class="time-fields"><select class="control live time-part" id="endHour"><option value="">الساعة</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><input class="control live time-part latin-number" id="endMinute" type="text" lang="en" dir="ltr" maxlength="2" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="دقائق انتهاء الاجتماع"><select class="control live time-part" id="endPeriod"><option value="صباحا">صباحا</option><option value="مساء">مساء</option></select></div><div class="info-help"><span class="info-mark">i</span><span>أدخل الوقت الفعلي لانتهاء الاجتماع بعد إقفال جميع البنود، يظهر الوقت في محضر الاجتماع</span></div></div>
           <div class="field w6"><label>حالة المحضر <span class="optional-tag">تحدد بعد المراجعة</span></label><select class="control live" id="minutesStatus"><option value="preparing">تحت الإعداد</option><option value="review">جاهز للمراجعة</option><option value="approved">معتمد</option></select><div class="info-help"><span class="info-mark">i</span><span>اختر (تحت الإعداد) أثناء التحرير، و(جاهز للمراجعة) بعد استكمال البيانات، و(معتمد) بعد إقراره وفق آلية الجهة</span></div></div>
@@ -574,7 +595,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
             </div>
           </div>
         </div>
-        <div class="nav-row"><button class="btn soft next" data-go="3">جدول الأعمال</button><button class="btn primary next" data-go="5">الوثائق</button></div>
+        <div class="nav-row"><button class="btn soft next" data-go="3">جدول الأعمال والدعوة</button><button class="btn primary next" data-go="5">الوثائق</button></div>
       </div>
 
       <div class="step-panel output-wrap" data-panel="5" hidden>
@@ -732,7 +753,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.1</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس: أداة مجالس</span><span class="version">v1.9.2</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -825,12 +846,12 @@ const rules = {
     management:{noticeDays:null,notice:'وفق الإجراء الداخلي للجهة',secretary:'optional',secretaryLabel:'مقرر الاجتماع',quorum:'وفق الإجراء الداخلي',frequency:'وفق حاجة العمل',reference:'الإجراءات الداخلية للجهة',note:'هذا اجتماع إداري وتحدد متطلباته من السياسات الداخلية.'}
   }
 };
-let currentStep=1, calendar='gregorian', attendees=[], agendaItems=[], entityLogoSrc='', printMode='current', autoSaveReady=false, autoSaveTimer=null;
-const STORAGE_KEY='majalis_tool_draft_v1_9_1';
-const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
+let currentStep=1, calendar='gregorian', attendees=[], agendaItems=[], meetingAttachments=[], entityLogoSrc='', printMode='current', autoSaveReady=false, autoSaveTimer=null;
+const STORAGE_KEY='majalis_tool_draft_v1_9_2';
+const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس: أداة مجالس';
-const TOOL_VERSION='v1.9.1';
+const TOOL_VERSION='v1.9.2';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -915,7 +936,7 @@ function sectionProgress(){
  const step1Checks=[!!$('entityName')?.value.trim(),!!$('entityType')?.value,!!$('meetingType')?.value,!!$('meetingTitle')?.value.trim(),!!$('meetingMode')?.value];
  const step1=percentage(step1Checks.filter(Boolean).length,step1Checks.length);
  const participantChecks=attendees.flatMap(p=>[!!String(p.name||'').trim(),!!String(p.role||'').trim()]);const step2=attendees.length?percentage(participantChecks.filter(Boolean).length,participantChecks.length):0;
- const agendaChecks=[meetingDate,!!$('meetingHour')?.value,!!$('location')?.value.trim()];if(inviteRequired)agendaChecks.push(!!getDate('invite'));agendaItems.forEach(item=>agendaChecks.push(!!String(item.title||'').trim(),!!String(item.purpose||'').trim()));const step3=agendaItems.length?percentage(agendaChecks.filter(Boolean).length,agendaChecks.length):percentage(agendaChecks.filter(Boolean).length,agendaChecks.length);
+ const agendaChecks=[meetingDate,!!$('meetingHour')?.value,!!$('location')?.value.trim()];if(inviteRequired)agendaChecks.push(!!getDate('invite'));agendaItems.forEach(item=>agendaChecks.push(!!String(item.title||'').trim(),!!String(item.purpose||'').trim()));if($('enableAgendaAttachments')?.checked){agendaChecks.push(meetingAttachments.length>0);meetingAttachments.forEach(item=>agendaChecks.push(!!String(item.name||'').trim()))}const step3=percentage(agendaChecks.filter(Boolean).length,agendaChecks.length);
  const managementChecks=[!!$('chairName')?.value.trim(),$('quorumStatus')?.value!=='pending'];if(rule?.secretary==='required')managementChecks.push($('secretarySourceMode')?.value!=='none'&&!!$('secretaryName')?.value.trim());attendees.forEach(p=>managementChecks.push(normalizeParticipant(p).attendance!=='pending'));agendaItems.forEach(item=>{const normalized=normalizeAgendaItem(item);managementChecks.push(!!String(normalized.discussion||'').trim(),!!String(normalized.decision||'').trim(),!!normalized.vote)});if($('minutesStatus')?.value==='approved'&&$('minutesApprovalMode')?.value==='show')managementChecks.push(!!$('minutesApprover')?.value.trim(),!!getApprovalDate());
  const step4=percentage(managementChecks.filter(Boolean).length,managementChecks.length);
  const step5=Math.round((step1+step2+step3+step4)/4);
@@ -982,6 +1003,11 @@ function agendaCard(item,i){item=normalizeAgendaItem(item);return `<div class="i
 function managementAgendaCard(item,i){item=normalizeAgendaItem(item);const noVote=item.vote==='لم يجر تصويت';return `<article class="management-agenda-card ${noVote?'no-vote-item':'vote-item'}" data-management-agenda-id="${item.id}"><div class="management-agenda-title"><div><span class="number">${i+1}</span><div><strong>${esc(item.title||`البند ${i+1}`)}</strong><small>${esc(item.purpose||'')}</small></div></div><span class="vote-state-chip ${noVote?'no-vote':'has-vote'}">${noVote?'بند دون تصويت':'بند بتصويت'}</span></div><div class="form-grid"><div class="field w12"><label>خلاصة المناقشة</label><textarea class="control agenda-result-input" data-key="discussion" placeholder="أبرز ما دار حول البند">${esc(item.discussion)}</textarea><div class="info-help"><span class="info-mark">i</span><span>سجل أبرز الآراء والملاحظات والتحفظات بصياغة مختصرة ومحايدة.</span></div></div><div class="field w8"><label>القرار أو الإجراء الناتج</label><textarea class="control agenda-result-input" data-key="decision" placeholder="نص القرار أو الإجراء الناتج">${esc(item.decision)}</textarea></div><div class="field"><label>المسؤول</label><input class="control agenda-result-input" data-key="owner" value="${esc(item.owner)}" placeholder="الاسم أو الإدارة"></div><div class="field w6"><label>موعد التنفيذ</label><div class="due-date-row"><select class="control agenda-result-input" data-key="dueCalendar"><option value="gregorian" ${item.dueCalendar==='gregorian'?'selected':''}>ميلادي</option><option value="hijri" ${item.dueCalendar==='hijri'?'selected':''}>هجري أم القرى</option></select><div class="date-parts"><input class="control agenda-result-input latin-number" data-key="dueDay" inputmode="numeric" maxlength="2" value="${esc(item.dueDay)}" placeholder="اليوم"><input class="control agenda-result-input latin-number" data-key="dueMonth" inputmode="numeric" maxlength="2" value="${esc(item.dueMonth)}" placeholder="الشهر"><input class="control agenda-result-input latin-number" data-key="dueYear" inputmode="numeric" maxlength="4" value="${esc(item.dueYear)}" placeholder="السنة"></div></div></div><div class="field w6"><label>نتيجة التصويت</label><select class="control agenda-result-input vote-result-select" data-key="vote"><option ${item.vote==='لم يجر تصويت'?'selected':''}>لم يجر تصويت</option><option ${item.vote==='موافق'?'selected':''}>موافق</option><option ${item.vote==='موافق مع تحفظ'?'selected':''}>موافق مع تحفظ</option><option ${item.vote==='مرفوض'?'selected':''}>مرفوض</option><option ${item.vote==='مؤجل'?'selected':''}>مؤجل</option></select><div class="info-help"><span class="info-mark">i</span><span>عند اختيار «لم يجر تصويت» يعرض البند كموضوع مناقشة أو إحاطة ويستبعد تلقائيا من بطاقة التصويت.</span></div></div><div class="field w6 ballot-field" ${noVote?'hidden':''}><label>بطاقة التصويت <span class="optional-tag">اختياري</span></label><label class="quorum-check"><input type="checkbox" class="agenda-result-input ballot-checkbox" data-key="includeInBallot" ${item.includeInBallot?'checked':''}><span>إدراج هذا البند في بطاقة التصويت</span></label></div></div></article>`}
 function renderManagementAgenda(){if(!$('managementAgendaList'))return;$('managementAgendaList').innerHTML=agendaItems.length?agendaItems.map(managementAgendaCard).join(''):'<div class="management-empty">أضف بنود جدول الأعمال في المرحلة الثالثة، ثم عد إلى إدارة الاجتماع لتسجيل المداولات والنتائج.</div>';updateCompletionIndicators()}
 function renderAgenda(){agendaItems=agendaItems.map(normalizeAgendaItem);$('agendaList').innerHTML=agendaItems.length?agendaItems.map(agendaCard).join(''):'<div class="empty">أضف بنود جدول الأعمال والغرض من كل بند.</div>';renderManagementAgenda();renderDocuments();updateCompletionIndicators()}
+function normalizeMeetingAttachment(item){return {id:item?.id??Date.now()+Math.floor(Math.random()*1000),name:String(item?.name||'')}}
+function attachmentCard(item,i){item=normalizeMeetingAttachment(item);return `<div class="agenda-attachment-row" data-attachment-id="${item.id}"><span class="number">${i+1}</span><input class="control agenda-attachment-input" value="${esc(item.name)}" placeholder="مثال: خطة العمل أو القوائم المالية" aria-label="اسم المرفق ${i+1}"><div class="agenda-attachment-actions"><button class="icon-btn" type="button" data-attachment-up="${item.id}" title="رفع المرفق" aria-label="رفع المرفق">${iconUp}</button><button class="icon-btn" type="button" data-attachment-down="${item.id}" title="خفض المرفق" aria-label="خفض المرفق">${iconDown}</button><button class="icon-btn remove" type="button" data-remove-attachment="${item.id}" title="حذف المرفق" aria-label="حذف المرفق">${iconTrash}</button></div></div>`}
+function syncAgendaAttachmentsVisibility(){const enabled=!!$('enableAgendaAttachments')?.checked,panel=$('agendaAttachmentsPanel');if(panel)panel.hidden=!enabled}
+function renderAgendaAttachments(){meetingAttachments=meetingAttachments.map(normalizeMeetingAttachment);syncAgendaAttachmentsVisibility();if(!$('agendaAttachmentsList'))return;$('agendaAttachmentsList').innerHTML=meetingAttachments.length?meetingAttachments.map(attachmentCard).join(''):'<div class="empty">أضف أسماء المرفقات التي سترسل مع الدعوة.</div>';renderDocuments();updateCompletionIndicators()}
+function moveMeetingAttachment(id,dir){const i=meetingAttachments.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=meetingAttachments.length)return;[meetingAttachments[i],meetingAttachments[j]]=[meetingAttachments[j],meetingAttachments[i]];renderAgendaAttachments()}
 function moveAgenda(id,dir){ const i=agendaItems.findIndex(x=>x.id===id),j=i+dir; if(i<0||j<0||j>=agendaItems.length)return; [agendaItems[i],agendaItems[j]]=[agendaItems[j],agendaItems[i]];renderAgenda(); }
 function entityLabel(){return entityOptions.find(x=>x[0]===$('entityType').value)?.[1]||''}
 function dateInfo(){const inviteDate=getDate('invite'),meetingDate=getDate('meeting');return {inviteDate,meetingDate,invite:inviteDate?formatBothDate(inviteDate):'غير مدخل',meeting:meetingDate?formatBothDate(meetingDate):'غير مدخل'}}
@@ -1026,6 +1052,8 @@ function renderDocuments(){ if(!$('docInvitation'))return; syncMinutesApprovalMo
  const closingNoteRaw=($('closingNote')?.value||'').trim();
  const invitationIntroLine=invitationIntroRaw?`<p class="free-paragraph">${esc(invitationIntroRaw)}</p>`:'';
  const invitationClosingLine=invitationClosingRaw?`<p class="free-paragraph">${esc(invitationClosingRaw)}</p>`:'<p>وتقبلوا خالص التقدير.</p>';
+ const attachmentNames=$('enableAgendaAttachments')?.checked?meetingAttachments.map(item=>String(item.name||'').trim()).filter(Boolean):[];
+ const invitationAttachmentsLine=attachmentNames.length?`<section class="invitation-attachments"><h3>مرفقات الدعوة</h3><ol>${attachmentNames.map(name=>`<li>${esc(name)}</li>`).join('')}</ol></section>`:'';
  const minutesIntroLine=minutesIntroRaw?`<p class="free-paragraph">${esc(minutesIntroRaw)}</p>`:'';
  const closingNoteLine=closingNoteRaw?`<p class="free-paragraph">${esc(closingNoteRaw)}</p>`:'';
  const endLine=endTime?`<p><strong>وقت انتهاء الاجتماع:</strong> ${esc(endTime)}</p>`:'';
@@ -1039,7 +1067,7 @@ function renderDocuments(){ if(!$('docInvitation'))return; syncMinutesApprovalMo
  const includeParticipantNames=attendanceEnabled&&!!$('minutesParticipantNames')?.checked;
  const includeParticipantSignatures=includeParticipantNames&&!!$('minutesParticipantSignatures')?.checked;
  const minutesAttendanceSection=includeParticipantNames?`<h3>الحضور</h3><table class="doc-table"><thead><tr><th>م</th><th>الاسم</th><th>الصفة</th><th>حالة الحضور</th>${includeParticipantSignatures?'<th>التوقيع</th>':''}</tr></thead><tbody>${includeParticipantSignatures?attendeeRowsWithSignature:attendeeRows}</tbody></table>`:'';
- $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationClosingLine}${inviteSenderLine}</div>`+footer();
+ $('docInvitation').innerHTML=commonHeader('دعوة الاجتماع','وثيقة الدعوة')+`<div class="doc-body"><p>السادة أعضاء ${meeting} في ${entity}</p><p>السلام عليكم ورحمة الله وبركاته</p>${invitationIntroLine}<p>يسرنا دعوتكم لحضور <strong>${title}</strong>، وذلك في الموعد والوسيلة الموضحين أدناه.</p>${commonMeta()}${inviteDateLine}<h3>جدول الأعمال</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table>${invitationAttachmentsLine}${invitationClosingLine}${inviteSenderLine}</div>`+footer();
  $('docAgenda').innerHTML=commonHeader('جدول الأعمال','وثيقة التحضير')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>الموضوع</th><th>الغرض</th></tr></thead><tbody>${agendaRows}</tbody></table></div>`+footer();
  $('docMinutes').innerHTML=commonHeader('محضر الاجتماع',minutesStatus==='approved'?'وثيقة المحضر المعتمد':'وثيقة المحضر')+`<div class="doc-body minutes-doc-body">${commonMeta()}<p><strong>حالة المحضر:</strong> <span class="status-chip ${minutesStatusClass}">${esc(minutesStatusLabel)}</span></p>${minutesIntroLine}${chairLine}${secretaryLine}${quorumStatusLine}${approvalLine}${waiverLine}${minutesAttendanceSection}<h3>المداولات والقرارات</h3><table class="doc-table"><thead><tr><th>م</th><th>الموضوع والمناقشة</th><th>القرار</th><th>التصويت</th></tr></thead><tbody>${minutesRows}</tbody></table>${closingNoteLine}${endLine}</div>`+footer();
  $('docDecisions').innerHTML=commonHeader('سجل القرارات والمتابعة','وثيقة المتابعة')+`<div class="doc-body">${commonMeta()}<table class="doc-table"><thead><tr><th>م</th><th>القرار أو التكليف</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${decisionRows}</tbody></table></div>`+footer();
@@ -1186,6 +1214,8 @@ function printStylesheet(){
 .invite-signature .signature-label{font-size:8.5pt;color:#7B8492;white-space:nowrap}
 .invite-signature .signature-row .sign-pad{flex:1}
 .free-paragraph{white-space:pre-line;margin:3mm 0;line-height:1.85}
+.invitation-attachments{margin:3mm 0;padding:3mm 3.5mm;border:.25mm solid #D9DEE5;border-radius:2.5mm;background:#F8FAFC;break-inside:avoid;page-break-inside:avoid}
+.invitation-attachments h3{margin:0 0 1.5mm;font-size:10.5pt;color:#0B1A2B}.invitation-attachments ol{margin:0;padding-right:6mm}.invitation-attachments li{margin:.7mm 0}
 .ballot-card,.individual-attendance-sheet{border:1px solid #CBD3DD;border-radius:3mm;padding:5mm;margin:4mm 0;background:#fff;min-height:160mm}
 .ballot-person,.attendance-person-card{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2mm 5mm;margin-bottom:4mm;padding:3mm;border:1px solid #E1E6EC;border-radius:2.5mm;background:#F8F9FB}
 .ballot-person div,.attendance-person-card div{display:flex;gap:2mm;font-size:8.5pt}.ballot-person span,.attendance-person-card span{color:#677386;min-width:22mm}.ballot-person strong,.attendance-person-card strong{color:#0B1A2B}
@@ -1253,33 +1283,35 @@ function printDocuments(mode){
 
 function collectFormValues(){const data={};document.querySelectorAll('.main-card input[id], .main-card select[id], .main-card textarea[id], .review-card input[id], .review-card select[id], .review-card textarea[id]').forEach(el=>{if(el.id==='entityLogoInput')return;data[el.id]=el.type==='checkbox'?el.checked:el.value});return data}
 function applyFormValues(data){Object.entries(data||{}).forEach(([id,val])=>{const el=$(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val??''})}
-function saveWork(){if(!autoSaveReady)return;const payload={version:TOOL_VERSION,currentStep,calendar,attendees,agendaItems,entityLogoSrc,fields:collectFormValues()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload))}catch(err){console.error(err)}}
+function saveWork(){if(!autoSaveReady)return;const payload={version:TOOL_VERSION,currentStep,calendar,attendees,agendaItems,meetingAttachments,entityLogoSrc,fields:collectFormValues()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload))}catch(err){console.error(err)}}
 function scheduleAutoSave(){if(!autoSaveReady)return;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(saveWork,500)}
-function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);if(!Object.prototype.hasOwnProperty.call(payload.fields||{},'minutesApprovalMode')&&(payload.fields?.minutesApprover||payload.fields?.approvalDay||payload.fields?.approvalMonth||payload.fields?.approvalYear))$('minutesApprovalMode').value='show';syncMinutesApprovalMode();attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();setCalendar(payload.calendar||'gregorian');updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
+function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);if(!Object.prototype.hasOwnProperty.call(payload.fields||{},'minutesApprovalMode')&&(payload.fields?.minutesApprover||payload.fields?.approvalDay||payload.fields?.approvalMonth||payload.fields?.approvalYear))$('minutesApprovalMode').value='show';syncMinutesApprovalMode();attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];meetingAttachments=Array.isArray(payload.meetingAttachments)?payload.meetingAttachments:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();setCalendar(payload.calendar||'gregorian');updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
 
 const ORGANIZATION_DEFAULT_FIELD_IDS=[
   'entityName','entityType','meetingType','meetingMode','location','inviteSenderSourceMode','inviteSenderParticipantId','inviteSenderManualName','inviteSenderManualPosition','inviteSenderName','inviteSenderPosition',
-  'invitationIntro','invitationClosing','chairSourceMode','chairParticipantId','chairManualName','chairName',
+  'chairSourceMode','chairParticipantId','chairManualName','chairName',
   'secretarySourceMode','secretaryParticipantId','secretaryManualName','secretaryName','minutesApprovalMode','approvalCalendar',
   'enableAttendanceSheet','attendanceSheetMode','minutesParticipantNames','minutesParticipantSignatures',
   'enableVotingCard','votingCardMode'
 ];
 function clonePlain(value){return JSON.parse(JSON.stringify(value??null))}
-function captureMajalisSnapshot(){return {version:TOOL_VERSION,currentStep,calendar,attendees:clonePlain(attendees)||[],agendaItems:clonePlain(agendaItems)||[],entityLogoSrc,fields:collectFormValues()}}
+function captureMajalisSnapshot(){return {version:TOOL_VERSION,currentStep,calendar,attendees:clonePlain(attendees)||[],agendaItems:clonePlain(agendaItems)||[],meetingAttachments:clonePlain(meetingAttachments)||[],entityLogoSrc,fields:collectFormValues()}}
 function applyMajalisSnapshot(payload,options={}){
   if(!payload||typeof payload!=='object')return false;
   const wasReady=autoSaveReady;autoSaveReady=false;
   try{
     ['inviteSenderSourceMode','chairSourceMode','secretarySourceMode'].forEach(id=>{if($(id))$(id).value='participant'});
-    ['inviteSenderParticipantId','inviteSenderManualName','inviteSenderManualPosition','inviteSenderName','inviteSenderPosition','chairParticipantId','chairManualName','chairName','secretaryParticipantId','secretaryManualName','secretaryName'].forEach(id=>{if($(id))$(id).value=''});
+    ['inviteSenderParticipantId','inviteSenderManualName','inviteSenderManualPosition','inviteSenderName','inviteSenderPosition','chairParticipantId','chairManualName','chairName','secretaryParticipantId','secretaryManualName','secretaryName','invitationIntro','invitationClosing'].forEach(id=>{if($(id))$(id).value=''});
+    if($('enableAgendaAttachments'))$('enableAgendaAttachments').checked=false;
     if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}
     if(payload.fields?.meetingType&&Array.from($('meetingType').options).some(o=>o.value===payload.fields.meetingType))$('meetingType').value=payload.fields.meetingType;
     applyFormValues(payload.fields||{});
     if(!Object.prototype.hasOwnProperty.call(payload.fields||{},'minutesApprovalMode')&&((payload.fields||{}).minutesApprover||(payload.fields||{}).approvalDay||(payload.fields||{}).approvalMonth||(payload.fields||{}).approvalYear))$('minutesApprovalMode').value='show';syncMinutesApprovalMode();
     attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];
     agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems:[];
+    meetingAttachments=Array.isArray(payload.meetingAttachments)?payload.meetingAttachments:[];
     entityLogoSrc=options.entityLogoSrc??payload.entityLogoSrc??'';
-    renderLogoPreview();renderAttendees();renderAgenda();
+    renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();
     setCalendar(payload.calendar||'gregorian');updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();
     showStep(Number(options.step||payload.currentStep||1),false);
     return true;
@@ -1308,11 +1340,11 @@ function startNewMeetingFromOrganization(settings){
     if(fields.meetingType&&Array.from($('meetingType').options).some(o=>o.value===fields.meetingType))$('meetingType').value=fields.meetingType;
     applyFormValues(fields);
     $('meetingNo').value='';$('meetingYear').value=String(new Date().getFullYear());$('meetingTitle').value='';
-    ['inviteGDay','inviteGMonth','inviteGYear','inviteHDay','inviteHMonth','inviteHYear','meetingGDay','meetingGMonth','meetingGYear','meetingHDay','meetingHMonth','meetingHYear','endHour','minutesApprover','approvalDay','approvalMonth','approvalYear','aobContent','minutesIntro','closingNote'].forEach(id=>{if($(id))$(id).value=''});
+    ['inviteGDay','inviteGMonth','inviteGYear','inviteHDay','inviteHMonth','inviteHYear','meetingGDay','meetingGMonth','meetingGYear','meetingHDay','meetingHMonth','meetingHYear','endHour','minutesApprover','approvalDay','approvalMonth','approvalYear','aobContent','minutesIntro','closingNote','invitationIntro','invitationClosing'].forEach(id=>{if($(id))$(id).value=''});
     $('meetingHour').value='';$('meetingMinute').value='0';$('endMinute').value='0';$('fullRights').checked=false;$('quorumStatus').value='pending';$('minutesStatus').value='preparing';if($('minutesApprovalMode'))$('minutesApprovalMode').value='none';syncMinutesApprovalMode();
     attendees=Array.isArray(settings?.attendees)?settings.attendees.map(p=>({...normalizeParticipant(p),attendance:'pending'})):[];
-    agendaItems=[];entityLogoSrc=settings?.entityLogoSrc||'';
-    renderLogoPreview();renderAttendees();renderAgenda();setCalendar(settings?.calendar||'gregorian');updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();showStep(1,false);
+    agendaItems=[];meetingAttachments=[];entityLogoSrc=settings?.entityLogoSrc||'';
+    renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();setCalendar(settings?.calendar||'gregorian');updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();showStep(1,false);
   }finally{autoSaveReady=wasReady;if(wasReady)saveWork()}
 }
 function cloudMeetingMetadata(){
@@ -1326,7 +1358,7 @@ function cloudMeetingMetadata(){
   };
 }
 window.MajalisApp={captureSnapshot:captureMajalisSnapshot,applySnapshot:applyMajalisSnapshot,captureOrganizationSettings,startNewMeetingFromOrganization,cloudMeetingMetadata,getEntityOptions:()=>clonePlain(entityOptions),getMeetingLabels:()=>clonePlain(meetingLabels),setEntityLogo:value=>{entityLogoSrc=value||'';renderLogoPreview();renderDocuments();scheduleAutoSave()},getEntityLogo:()=>entityLogoSrc};
-document.addEventListener('click',e=>{const step=e.target.closest('[data-step]');if(step)showStep(step.dataset.step);const go=e.target.closest('[data-go]');if(go)showStep(go.dataset.go);const cal=e.target.closest('[data-calendar]');if(cal)setCalendar(cal.dataset.calendar);const addAttendeeButton=e.target.closest('[data-add-attendee]');if(addAttendeeButton){const id=Date.now()+Math.floor(Math.random()*1000);attendees.push({id,name:'',role:'عضو',attendance:'pending',countsQuorum:true});renderAttendees();requestAnimationFrame(()=>{const input=document.querySelector(`[data-id="${id}"] .attendee-input[data-key="name"]`);input?.scrollIntoView({behavior:'smooth',block:'center'});input?.focus()})}if(e.target.id==='addAgenda'){agendaItems.push(normalizeAgendaItem({id:Date.now(),title:'',purpose:'مناقشة'}));renderAgenda()}const ra=e.target.closest('[data-remove-attendee]');if(ra){attendees=attendees.filter(x=>x.id!==Number(ra.dataset.removeAttendee));renderAttendees()}const rg=e.target.closest('[data-remove-agenda]');if(rg){agendaItems=agendaItems.filter(x=>x.id!==Number(rg.dataset.removeAgenda));renderAgenda()}const up=e.target.closest('[data-up]');if(up)moveAgenda(Number(up.dataset.up),-1);const down=e.target.closest('[data-down]');if(down)moveAgenda(Number(down.dataset.down),1);const tab=e.target.closest('[data-doc]');if(tab&&!tab.hidden){document.querySelectorAll('.doc-tab').forEach(x=>x.classList.toggle('active',x===tab));document.querySelectorAll('.document').forEach(x=>x.classList.toggle('active',x.id==='doc'+tab.dataset.doc[0].toUpperCase()+tab.dataset.doc.slice(1)))}if(e.target.id==='removeEntityLogo'){entityLogoSrc='';$('entityLogoInput').value='';renderLogoPreview();renderDocuments()}if(e.target.id==='printCurrent')printDocuments('current');if(e.target.id==='printPackage')printDocuments('all')});
+document.addEventListener('click',e=>{const step=e.target.closest('[data-step]');if(step)showStep(step.dataset.step);const go=e.target.closest('[data-go]');if(go)showStep(go.dataset.go);const cal=e.target.closest('[data-calendar]');if(cal)setCalendar(cal.dataset.calendar);const addAttendeeButton=e.target.closest('[data-add-attendee]');if(addAttendeeButton){const id=Date.now()+Math.floor(Math.random()*1000);attendees.push({id,name:'',role:'عضو',attendance:'pending',countsQuorum:true});renderAttendees();requestAnimationFrame(()=>{const input=document.querySelector(`[data-id="${id}"] .attendee-input[data-key="name"]`);input?.scrollIntoView({behavior:'smooth',block:'center'});input?.focus()})}if(e.target.id==='addAgenda'){agendaItems.push(normalizeAgendaItem({id:Date.now(),title:'',purpose:'مناقشة'}));renderAgenda()}if(e.target.id==='addAgendaAttachment'){const id=Date.now()+Math.floor(Math.random()*1000);meetingAttachments.push({id,name:''});renderAgendaAttachments();requestAnimationFrame(()=>document.querySelector(`[data-attachment-id="${id}"] .agenda-attachment-input`)?.focus())}const removeAttachment=e.target.closest('[data-remove-attachment]');if(removeAttachment){meetingAttachments=meetingAttachments.filter(x=>x.id!==Number(removeAttachment.dataset.removeAttachment));renderAgendaAttachments()}const attachmentUp=e.target.closest('[data-attachment-up]');if(attachmentUp)moveMeetingAttachment(Number(attachmentUp.dataset.attachmentUp),-1);const attachmentDown=e.target.closest('[data-attachment-down]');if(attachmentDown)moveMeetingAttachment(Number(attachmentDown.dataset.attachmentDown),1);const ra=e.target.closest('[data-remove-attendee]');if(ra){attendees=attendees.filter(x=>x.id!==Number(ra.dataset.removeAttendee));renderAttendees()}const rg=e.target.closest('[data-remove-agenda]');if(rg){agendaItems=agendaItems.filter(x=>x.id!==Number(rg.dataset.removeAgenda));renderAgenda()}const up=e.target.closest('[data-up]');if(up)moveAgenda(Number(up.dataset.up),-1);const down=e.target.closest('[data-down]');if(down)moveAgenda(Number(down.dataset.down),1);const tab=e.target.closest('[data-doc]');if(tab&&!tab.hidden){document.querySelectorAll('.doc-tab').forEach(x=>x.classList.toggle('active',x===tab));document.querySelectorAll('.document').forEach(x=>x.classList.toggle('active',x.id==='doc'+tab.dataset.doc[0].toUpperCase()+tab.dataset.doc.slice(1)))}if(e.target.id==='removeEntityLogo'){entityLogoSrc='';$('entityLogoInput').value='';renderLogoPreview();renderDocuments()}if(e.target.id==='printCurrent')printDocuments('current');if(e.target.id==='printPackage')printDocuments('all')});
 document.addEventListener('input',e=>{
  if(e.target.classList.contains('latin-number')){const max=e.target.maxLength>0?e.target.maxLength:0,value=digitsOnly(e.target.value,max);if(e.target.value!==value)e.target.value=value}
  if(e.target.id==='meetingMinute'||e.target.id==='endMinute'){const n=Number(e.target.value||0);if(n>59)e.target.value='59'}
@@ -1338,6 +1370,7 @@ document.addEventListener('input',e=>{
  if(e.target.classList.contains('officer-source-mode')||e.target.classList.contains('officer-participant-select')||e.target.classList.contains('officer-manual-input')){if(updateOfficerFromControl(e.target))return}
  if(e.target.classList.contains('attendee-input')){const card=e.target.closest('.item'),item=attendees.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.value;syncOfficerSelectors();renderAttendanceManager();renderDocuments();return}
  if(e.target.classList.contains('agenda-input')){const card=e.target.closest('.item'),item=agendaItems.find(x=>x.id===Number(card.dataset.id));if(item)item[e.target.dataset.key]=e.target.type==='checkbox'?e.target.checked:e.target.value;renderDocuments();updateCompletionIndicators();return}
+ if(e.target.classList.contains('agenda-attachment-input')){const row=e.target.closest('[data-attachment-id]'),item=meetingAttachments.find(x=>x.id===Number(row.dataset.attachmentId));if(item)item.name=e.target.value;renderDocuments();updateCompletionIndicators();return}
  if(e.target.classList.contains('agenda-result-input')){const card=e.target.closest('[data-management-agenda-id]'),item=agendaItems.find(x=>x.id===Number(card.dataset.managementAgendaId));if(!item)return;item[e.target.dataset.key]=e.target.type==='checkbox'?e.target.checked:e.target.value;if(e.target.dataset.key==='vote'&&item.vote==='لم يجر تصويت')item.includeInBallot=false;renderDocuments();updateCompletionIndicators();return}
  if(e.target.classList.contains('live'))renderDocuments();
 });
@@ -1345,6 +1378,7 @@ document.addEventListener('change',e=>{
  if(e.target.classList.contains('invite-sender-source-mode')||e.target.classList.contains('invite-sender-participant')||e.target.classList.contains('invite-sender-manual-input')){updateInviteSenderFromControl();scheduleAutoSave();return}
  if(e.target.classList.contains('officer-source-mode')||e.target.classList.contains('officer-participant-select')||e.target.classList.contains('officer-manual-input')){if(updateOfficerFromControl(e.target)){scheduleAutoSave();return}}
  if(e.target.id==='entityLogoInput'){handleLogoFile(e.target.files?.[0]);return}
+ if(e.target.id==='enableAgendaAttachments'){if(e.target.checked&&!meetingAttachments.length)meetingAttachments.push({id:Date.now()+Math.floor(Math.random()*1000),name:''});renderAgendaAttachments();return}
  if(e.target.id==='entityType')fillMeetings();
  else if(e.target.id==='meetingType')updateRule();
  else if(e.target.id==='fullRights'){updateDateStatus();renderDocuments()}else if(e.target.id==='minutesApprovalMode'){syncMinutesApprovalMode();renderDocuments()}
@@ -1360,8 +1394,8 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('input',scheduleAutoSave);
 document.addEventListener('change',scheduleAutoSave);
-document.addEventListener('click',e=>{if(e.target.closest('[data-calendar],[data-add-attendee],#addAgenda,[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))scheduleAutoSave()});
-fillEntities();syncInviteSenderSelector();if(!restoreWork(true)){renderLogoPreview();renderAttendees();renderAgenda();renderAttendanceManager();updateRule();syncDocumentOptionVisibility();renderDocuments();}else{syncDocumentOptionVisibility();renderDocuments();}autoSaveReady=true;saveWork(true);window.scrollTo({top:0,left:0,behavior:'auto'});
+document.addEventListener('click',e=>{if(e.target.closest('[data-calendar],[data-add-attendee],#addAgenda,#addAgendaAttachment,[data-remove-attachment],[data-attachment-up],[data-attachment-down],[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))scheduleAutoSave()});
+fillEntities();syncInviteSenderSelector();if(!restoreWork(true)){renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();renderAttendanceManager();updateRule();syncDocumentOptionVisibility();renderDocuments();}else{syncDocumentOptionVisibility();renderDocuments();}autoSaveReady=true;saveWork(true);window.scrollTo({top:0,left:0,behavior:'auto'});
 
 </script>
 <script type="module">
@@ -1408,7 +1442,8 @@ function buildMeetingSearchText(meta={},snapshot={}){
   const fieldParts=Object.entries(fields).filter(([key])=>!['entityLogoSrc'].includes(key)).flatMap(([,value])=>typeof value==='string'||typeof value==='number'?[value]:[]);
   const participantParts=participants.flatMap(p=>[p?.name,p?.role,p?.attendance]);
   const agendaParts=agenda.flatMap(a=>[a?.title,a?.purpose,a?.discussion,a?.decision,a?.owner,a?.vote,a?.dueDay,a?.dueMonth,a?.dueYear]);
-  return normalizeAdminSearch([meta.archiveSequence,meta.meetingNumber,meta.meetingYear,meta.meetingTitle,meta.meetingTypeLabel,meta.meetingDateDisplay,meta.status,...fieldParts,...participantParts,...agendaParts].filter(v=>v!==undefined&&v!==null&&v!=='').join(' ')).slice(0,50000);
+  const attachmentParts=Array.isArray(snapshot?.meetingAttachments)?snapshot.meetingAttachments.map(a=>a?.name):[];
+  return normalizeAdminSearch([meta.archiveSequence,meta.meetingNumber,meta.meetingYear,meta.meetingTitle,meta.meetingTypeLabel,meta.meetingDateDisplay,meta.status,...fieldParts,...participantParts,...agendaParts,...attachmentParts].filter(v=>v!==undefined&&v!==null&&v!=='').join(' ')).slice(0,50000);
 }
 function requiredSignersFromMeeting(meeting){
   const snapshot=meeting?.snapshot||{},fields=snapshot.fields||{},all=[];
@@ -1523,7 +1558,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.1',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.9.2',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
@@ -1537,7 +1572,7 @@ A('adminOrganizationSearch').addEventListener('input',renderOrganizations);A('ad
 A('adminOrganizationsList').addEventListener('click',async e=>{const open=e.target.closest('[data-open-org]'),archive=e.target.closest('[data-org-archive]');try{if(open)await selectOrganization(open.dataset.openOrg,{close:true});if(archive){await selectOrganization(archive.dataset.orgArchive,{close:false});modal('adminWorkspaceModal',true)}}catch(err){console.error(err);toast(err.message||'تعذر فتح الجهة.','error')}});
 A('adminMeetingsList').addEventListener('click',async e=>{const open=e.target.closest('[data-open-meeting]'),copy=e.target.closest('[data-copy-meeting]'),signatures=e.target.closest('[data-signatures-meeting]');if(open)await openMeeting(open.dataset.openMeeting);if(copy)await copyMeeting(copy.dataset.copyMeeting);if(signatures)openSignatureTracking(signatures.dataset.signaturesMeeting)});
 A('signatureTrackingList').addEventListener('change',updateSignatureTrackingSummary);A('saveSignatureTracking').addEventListener('click',saveSignatureTracking);
-document.addEventListener('input',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&!['adminOrganizationSearch','adminMeetingSearch'].includes(e.target.id))markAdminDirty()});document.addEventListener('change',e=>{if(adminState.user&&!e.target.closest('.admin-modal'))markAdminDirty()});document.addEventListener('click',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&e.target.closest('[data-calendar],[data-add-attendee],#addAgenda,[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))markAdminDirty()});
+document.addEventListener('input',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&!['adminOrganizationSearch','adminMeetingSearch'].includes(e.target.id))markAdminDirty()});document.addEventListener('change',e=>{if(adminState.user&&!e.target.closest('.admin-modal'))markAdminDirty()});document.addEventListener('click',e=>{if(adminState.user&&!e.target.closest('.admin-modal')&&e.target.closest('[data-calendar],[data-add-attendee],#addAgenda,#addAgendaAttachment,[data-remove-attachment],[data-attachment-up],[data-attachment-down],[data-remove-attendee],[data-remove-agenda],[data-up],[data-down],#removeEntityLogo'))markAdminDirty()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!A('signatureTrackingModal').hidden)modal('signatureTrackingModal',false);else if(!A('organizationCreateModal').hidden)modal('organizationCreateModal',false);else if(!A('adminWorkspaceModal').hidden)modal('adminWorkspaceModal',false);else if(!A('adminLoginModal').hidden)modal('adminLoginModal',false)}});
 
 renderOrganizationOptions();A('adminEmail').value=localStorage.getItem('majalis_admin_email')||'';updateAdminBar();
