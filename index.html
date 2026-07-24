@@ -402,7 +402,7 @@
 @media(max-width:680px){.meta-pair{grid-template-columns:1fr}.meta-pair>.meta-row+ .meta-row{border-right:0}}
 </style>
 
-<style id="majalis-date-picker-v1104">
+<style id="majalis-date-picker-v1105">
 .date-field-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.date-field-head>label{margin:0}.date-picker-open-btn{flex:0 0 auto;border:1px solid #D7C27A;border-radius:9px;background:#FFF9E9;color:#6E5718;padding:6px 10px;font-size:10.5px;font-weight:700;line-height:1.4}.date-picker-open-btn:hover{border-color:#B69132;background:#FFF5D6}.date-picker-open-btn:focus-visible{outline:3px solid rgba(201,168,76,.22);outline-offset:2px}
 .date-picker-modal{position:fixed;inset:0;z-index:11500;display:grid;place-items:center;padding:18px}.date-picker-modal[hidden]{display:none!important}.date-picker-backdrop{position:absolute;inset:0;background:rgba(4,12,22,.68);backdrop-filter:blur(4px)}.date-picker-dialog{position:relative;z-index:1;width:min(100%,930px);max-height:calc(100vh - 36px);overflow:auto;border:1px solid rgba(201,168,76,.35);border-radius:20px;background:#fff;box-shadow:0 28px 70px rgba(0,0,0,.28)}.date-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(145deg,#07111D,var(--navy) 58%,#173754);color:#fff}.date-picker-head h2{margin:0;font-size:20px}.date-picker-head p{margin:3px 0 0;color:rgba(255,255,255,.7);font-size:11px}.date-picker-close{width:36px;height:36px;flex:0 0 36px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.10);color:#fff;font-size:22px;line-height:1}.date-picker-body{padding:18px 20px}.date-picker-mode{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.date-picker-mode-btn{border:1px solid var(--line);border-radius:9px;background:#fff;color:#5F6B7D;padding:7px 12px;font-size:11px;font-weight:700}.date-picker-mode-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}.date-picker-help{margin:0 0 14px;color:var(--muted);font-size:11px}.date-picker-calendars{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.date-calendar-panel{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:12px}.date-calendar-panel[hidden]{display:none!important}.date-calendar-toolbar{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;align-items:center;gap:8px;margin-bottom:10px}.date-calendar-nav{width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--navy);font-size:18px;font-weight:700}.date-calendar-title{text-align:center;color:var(--navy);font-size:13px;font-weight:700;direction:rtl;unicode-bidi:isolate}.date-calendar-weekdays,.date-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.date-calendar-weekdays span{padding:4px 0;text-align:center;color:#6A7585;font-size:9px;font-weight:700}.date-calendar-day,.date-calendar-blank{aspect-ratio:1/1;min-height:35px;border-radius:9px}.date-calendar-blank{display:block}.date-calendar-day{border:1px solid #DCE2E9;background:#fff;color:#263241;font-family:var(--font);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;direction:ltr}.date-calendar-day:hover{border-color:#B69132;background:#FFF9E9}.date-calendar-day.today{box-shadow:inset 0 0 0 2px #C9A84C}.date-calendar-day.selected{border-color:var(--navy);background:var(--navy);color:#fff;box-shadow:none}.date-picker-selection{margin-top:14px;padding:11px 13px;border:1px solid #D8E0E8;border-radius:11px;background:#F8FAFC}.date-picker-selection span{display:block;color:var(--muted);font-size:10px}.date-picker-selection strong{display:block;margin-top:2px;color:var(--navy);font-size:12px;min-height:22px}.date-picker-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:14px 20px;border-top:1px solid var(--line);background:#FCFCFD}.date-picker-actions-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}body.date-picker-open{overflow:hidden}
 @media(max-width:760px){.date-picker-modal{padding:8px}.date-picker-dialog{max-height:calc(100vh - 16px)}.date-picker-calendars{grid-template-columns:1fr}.date-picker-body{padding:14px}.date-picker-head{padding:15px 16px}.date-picker-actions{align-items:stretch;flex-direction:column;padding:12px 14px}.date-picker-actions-group{width:100%}.date-picker-actions .btn{flex:1}.date-field-head{align-items:flex-start}.date-picker-open-btn{padding:5px 8px;font-size:10px}}
@@ -421,6 +421,27 @@
 .date-storage-fields{display:none!important}
 .date-field-note{font-size:10.5px;color:var(--muted);line-height:1.65}
 @media(max-width:760px){.date-picker-dialog{width:100%}.date-display-button{padding:8px 10px}.date-both-toggle{font-size:11px}}
+</style>
+
+<style id="majalis-time-picker-v1105">
+.unified-time-control{display:grid;gap:8px}
+.time-display-button{width:100%;min-height:45px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;transition:.18s}
+.time-display-button:hover{border-color:#B69132;background:#FFFDF7}.time-display-button:focus-visible{outline:3px solid rgba(201,168,76,.18);outline-offset:2px}
+.time-display-value{flex:1;min-width:0;color:var(--navy);font-size:12px;font-weight:700;line-height:1.65;direction:rtl;unicode-bidi:isolate}.time-display-value.empty{color:#7A8594;font-weight:500}
+.time-display-icon{width:28px;height:28px;flex:0 0 28px;border-radius:8px;background:#F7F1DE;color:#7C6117;display:grid;place-items:center;font-size:17px;line-height:1}
+.time-storage-fields{display:none!important}
+.time-picker-modal{position:fixed;inset:0;z-index:11600;display:grid;place-items:center;padding:18px}.time-picker-modal[hidden]{display:none!important}.time-picker-backdrop{position:absolute;inset:0;background:rgba(4,12,22,.68);backdrop-filter:blur(4px)}
+.time-picker-dialog{position:relative;z-index:1;width:min(100%,560px);max-height:calc(100vh - 36px);overflow:auto;border:1px solid rgba(201,168,76,.35);border-radius:20px;background:#fff;box-shadow:0 28px 70px rgba(0,0,0,.28)}
+.time-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px;background:linear-gradient(145deg,#07111D,var(--navy) 58%,#173754);color:#fff}.time-picker-head h2{margin:0;font-size:20px}.time-picker-head p{margin:3px 0 0;color:rgba(255,255,255,.7);font-size:11px}.time-picker-close{width:36px;height:36px;flex:0 0 36px;border:1px solid rgba(255,255,255,.28);border-radius:10px;background:rgba(255,255,255,.10);color:#fff;font-size:22px;line-height:1}
+.time-picker-body{padding:18px 20px}.time-picker-section+.time-picker-section{margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}.time-picker-section-title{display:block;margin-bottom:9px;color:var(--navy);font-size:12px;font-weight:700}
+.time-hour-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.time-minute-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.time-choice-button{min-height:38px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#3D4856;font-family:var(--font);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr}.time-choice-button:hover{border-color:#B69132;background:#FFF9E9}.time-choice-button.active{border-color:var(--navy);background:var(--navy);color:#fff}
+.time-period-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.time-period-button{min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#435064;font-size:12px;font-weight:700}.time-period-button.active{border-color:var(--navy);background:var(--navy);color:#fff}
+.time-custom-minute{display:grid;grid-template-columns:minmax(0,1fr) 115px;align-items:end;gap:10px;margin-top:10px}.time-custom-minute label{display:block;color:var(--muted);font-size:10.5px}.time-custom-minute .control{min-height:40px;text-align:center;direction:ltr;font-variant-numeric:tabular-nums}
+.time-picker-selection{margin-top:16px;padding:12px 14px;border:1px solid #D8E0E8;border-radius:11px;background:#F8FAFC}.time-picker-selection span{display:block;color:var(--muted);font-size:10px}.time-picker-selection strong{display:block;margin-top:2px;color:var(--navy);font-size:18px;min-height:29px;direction:rtl;unicode-bidi:isolate}
+.time-picker-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:14px 20px;border-top:1px solid var(--line);background:#FCFCFD}.time-picker-actions-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}body.time-picker-open{overflow:hidden}
+@media(max-width:680px){.time-picker-modal{padding:8px}.time-picker-dialog{width:100%;max-height:calc(100vh - 16px)}.time-picker-body{padding:14px}.time-picker-head{padding:15px 16px}.time-hour-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.time-minute-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.time-custom-minute{grid-template-columns:1fr}.time-picker-actions{align-items:stretch;flex-direction:column;padding:12px 14px}.time-picker-actions-group{width:100%}.time-picker-actions .btn{flex:1}.time-display-button{padding:8px 10px}}
+@media print{.time-picker-modal{display:none!important}}
 </style>
 <script>
 if('scrollRestoration' in history)history.scrollRestoration='manual';
@@ -597,7 +618,14 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
                 <input id="meetingHDay"><input id="meetingHMonth"><input id="meetingHYear">
               </div>
             </div>
-            <div class="field w6"><label>وقت الاجتماع <span class="required-tag">أساسي</span></label><div class="time-fields"><select class="control live time-part" id="meetingHour"><option value="">الساعة</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><input class="control live time-part latin-number" id="meetingMinute" type="text" lang="en" dir="ltr" maxlength="2" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="الدقائق"><select class="control live time-part" id="meetingPeriod"><option value="صباحا">صباحا</option><option value="مساء">مساء</option></select></div><div class="hint">الدقائق تبدأ بقيمة 0 ويمكن تعديلها حتى 59.</div></div>
+            <div class="field w6">
+              <label>وقت الاجتماع <span class="required-tag">أساسي</span></label>
+              <div class="unified-time-control">
+                <button class="time-display-button" type="button" data-open-time-picker="meeting" aria-haspopup="dialog"><span class="time-display-value empty" id="meetingTimeDisplay">اختر الوقت</span><span class="time-display-icon" aria-hidden="true">◷</span></button>
+              </div>
+              <div class="time-storage-fields" aria-hidden="true"><input type="hidden" id="meetingHour"><input type="hidden" id="meetingMinute" value="0"><input type="hidden" id="meetingPeriod" value="صباحا"></div>
+              <div class="hint">يفتح المنتقي على الوقت الحالي عند عدم وجود وقت محفوظ.</div>
+            </div>
             <div class="field w6"><label>المكان أو رابط الاتصال <span class="required-tag">أساسي</span></label><input class="control live" id="location" placeholder="المقر أو منصة الاتصال"></div>
             <div class="field w12 invite-sender-picker">
               <label>الداعي والمنصب <span class="optional-tag">اختياري</span></label>
@@ -683,7 +711,14 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
           <div class="field w12"><label>مقدمة المحضر <span class="optional-tag">اختياري</span></label><textarea class="control live" id="minutesIntro" placeholder="اكتب مقدمة تظهر في المحضر دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر الفقرة بعد بيانات الاجتماع وحالة المحضر دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
           <div class="field w12"><label>ما يستجد من أعمال <span class="optional-tag">اختياري</span></label><textarea class="control live" id="aobContent" placeholder="اكتب أي موضوع استجد أثناء الاجتماع خارج جدول الأعمال المعلن"></textarea><div class="info-help"><span class="info-mark">i</span><span>يُضاف تلقائيا كبند أخير في جدول المداولات والقرارات بالمحضر عند تعبئته، ويُحذف من المحضر بالكامل إذا ترك فارغا. هذا الحقل مستقل عن خيار تفعيل بند ما يستجد من أعمال في جدول الأعمال والدعوة بالمرحلة الثالثة</span></div></div>
           <div class="field w12"><label>خاتمة المحضر <span class="optional-tag">اختياري</span></label><textarea class="control live" id="closingNote" placeholder="اكتب خاتمة المحضر دون عنوان"></textarea><div class="info-help"><span class="info-mark">i</span><span>تظهر بعد جدول المداولات والقرارات دون عنوان مستقل، وتحذف تلقائيا عند تركها فارغة</span></div></div>
-          <div class="field w6"><label>وقت انتهاء الاجتماع <span class="optional-tag">يستكمل عند الانتهاء</span></label><div class="time-fields"><select class="control live time-part" id="endHour"><option value="">الساعة</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select><input class="control live time-part latin-number" id="endMinute" type="text" lang="en" dir="ltr" maxlength="2" value="0" inputmode="numeric" pattern="[0-9]*" aria-label="دقائق انتهاء الاجتماع"><select class="control live time-part" id="endPeriod"><option value="صباحا">صباحا</option><option value="مساء">مساء</option></select></div><div class="info-help"><span class="info-mark">i</span><span>أدخل الوقت الفعلي لانتهاء الاجتماع بعد إقفال جميع البنود، يظهر الوقت في محضر الاجتماع</span></div></div>
+          <div class="field w6">
+            <label>وقت انتهاء الاجتماع <span class="optional-tag">يستكمل عند الانتهاء</span></label>
+            <div class="unified-time-control">
+              <button class="time-display-button" type="button" data-open-time-picker="end" aria-haspopup="dialog"><span class="time-display-value empty" id="endTimeDisplay">اختر الوقت</span><span class="time-display-icon" aria-hidden="true">◷</span></button>
+            </div>
+            <div class="time-storage-fields" aria-hidden="true"><input type="hidden" id="endHour"><input type="hidden" id="endMinute" value="0"><input type="hidden" id="endPeriod" value="صباحا"></div>
+            <div class="info-help"><span class="info-mark">i</span><span>عند عدم وجود وقت محفوظ يقترح المنتقي وقت الاجتماع مضافا إليه ساعة. يظهر الوقت المعتمد في محضر الاجتماع.</span></div>
+          </div>
           <div class="field w6"><label>حالة المحضر <span class="optional-tag">تحدد بعد المراجعة</span></label><select class="control live" id="minutesStatus"><option value="preparing">تحت الإعداد</option><option value="review">جاهز للمراجعة</option><option value="approved">معتمد</option></select><div class="info-help"><span class="info-mark">i</span><span>اختر (تحت الإعداد) أثناء التحرير، و(جاهز للمراجعة) بعد استكمال البيانات، و(معتمد) بعد إقراره وفق آلية الجهة</span></div></div>
           <div class="field w12 minutes-approval-mode-field">
             <label>اعتماد المحضر <span class="optional-tag">اختياري</span></label>
@@ -811,6 +846,36 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
   </section>
 </div>
 
+<div class="time-picker-modal" id="timePickerModal" hidden>
+  <div class="time-picker-backdrop" data-close-time-picker></div>
+  <section class="time-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="timePickerTitle">
+    <header class="time-picker-head">
+      <div><h2 id="timePickerTitle">اختيار الوقت</h2><p id="timePickerSubtitle">حدد الساعة والدقائق ثم اعتمد الوقت.</p></div>
+      <button class="time-picker-close" type="button" data-close-time-picker aria-label="إغلاق منتقي الوقت">×</button>
+    </header>
+    <div class="time-picker-body">
+      <section class="time-picker-section">
+        <span class="time-picker-section-title">الساعة</span>
+        <div class="time-hour-grid" id="timePickerHours" aria-label="اختيار الساعة"></div>
+      </section>
+      <section class="time-picker-section">
+        <span class="time-picker-section-title">الدقائق</span>
+        <div class="time-minute-grid" id="timePickerMinutes" aria-label="اختيار الدقائق الشائعة"></div>
+        <div class="time-custom-minute"><label for="timePickerCustomMinute">دقيقة أخرى من 00 إلى 59</label><input class="control latin-number" id="timePickerCustomMinute" type="text" lang="en" dir="ltr" maxlength="2" inputmode="numeric" pattern="[0-9]*" aria-label="إدخال دقيقة مخصصة"></div>
+      </section>
+      <section class="time-picker-section">
+        <span class="time-picker-section-title">الفترة</span>
+        <div class="time-period-grid"><button class="time-period-button" type="button" data-time-period="صباحا">صباحا</button><button class="time-period-button" type="button" data-time-period="مساء">مساء</button></div>
+      </section>
+      <div class="time-picker-selection"><span>الوقت المحدد</span><strong id="timePickerSelectedText"></strong></div>
+    </div>
+    <footer class="time-picker-actions">
+      <div class="time-picker-actions-group"><button class="btn soft" id="timePickerNow" type="button">الوقت الحالي</button><button class="btn danger" id="timePickerClear" type="button">مسح الوقت</button></div>
+      <div class="time-picker-actions-group"><button class="btn soft" type="button" data-close-time-picker>إلغاء</button><button class="btn primary" id="timePickerConfirm" type="button">اعتماد الوقت</button></div>
+    </footer>
+  </section>
+</div>
+
 <!-- نوافذ الإدارة الخاصة بحساب نايف -->
 <div class="admin-modal" id="adminLoginModal" hidden>
   <div class="admin-modal-backdrop" data-close-admin-modal="login"></div>
@@ -890,7 +955,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
 <div class="site-footer-wrap">
-  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.10.4</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
+  <footer class="footer"><span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.10.5</span><span class="privacy-note">تُحفظ بيانات الزائر على جهازه فقط، ويستخدم التخزين السحابي في الوضع الإداري المحمي.</span></footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
@@ -988,7 +1053,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_9_6';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_4','majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس | أداة مجالس';
-const TOOL_VERSION='v1.10.4';
+const TOOL_VERSION='v1.10.5';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1059,7 +1124,7 @@ function setDateDisplay(id,date,mode){const el=$(id);if(!el)return;if(!date){el.
 function refreshUnifiedDateDisplays(){setDateDisplay('inviteDateDisplay',getDate('invite'),mainDateOutputMode('invite'));setDateDisplay('meetingDateDisplay',getDate('meeting'),mainDateOutputMode('meeting'));setDateDisplay('approvalDateDisplay',getApprovalDate(),approvalDateOutputMode())}
 function updateDatePreviews(){refreshUnifiedDateDisplays();renderDocuments()}
 function updateDateStatus(){ const r=activeRule(); if(!r)return; const invite=getDate('invite'),meeting=getDate('meeting'),full=$('fullRights').checked; const box=$('dateRule'),text=$('dateStatus'); box.className='rule'; if(r.noticeDays===null){text.textContent='المدة تحددها الوثيقة المنظمة للجهة';box.classList.add('warn');return} if(full&&r.waiver){text.textContent='المدة مستثناة بسبب اكتمال التمثيل المطلوب';box.classList.add('good');return} if(!invite||!meeting){text.textContent='أدخل تاريخ الدعوة والاجتماع لفحص المدة';box.classList.add('warn');return} const diff=Math.round((meeting-invite)/86400000); if(diff<0){text.textContent='تاريخ الدعوة لاحق لتاريخ الاجتماع';box.classList.add('bad')}else if(diff>=r.noticeDays){text.textContent=`المدة ${diff} يوما ومتطلب الدعوة متحقق`;box.classList.add('good')}else{text.textContent=`المدة ${diff} يوما والمتطلب ${r.noticeDays} يوما`;box.classList.add('bad')} }
-function formatMeetingTime(){ const hour=$('meetingHour').value; if(!hour)return 'غير مدخل'; const minute=Math.min(59,Math.max(0,Number(latinDigits($('meetingMinute').value||0))||0)); return `${hour}:${String(minute).padStart(2,'0')} ${$('meetingPeriod').value}`; }
+function formatMeetingTime(){ const hour=$('meetingHour').value; if(!hour)return 'غير مدخل'; const minute=Math.min(59,Math.max(0,Number(latinDigits($('meetingMinute').value||0))||0)); return `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} ${$('meetingPeriod').value||'صباحا'}`; }
 function refreshMeetingIdentity(){
  const banner=$('meetingContextBanner');if(!banner||banner.hidden)return;
  const logoBox=$('meetingContextLogo'),orgName=($('entityName')?.value||'').trim(),meetingName=($('meetingTitle')?.value||'').trim()||meetingLabels[$('meetingType')?.value]||'اجتماع جديد';
@@ -1150,7 +1215,7 @@ function entityLabel(){return entityOptions.find(x=>x[0]===$('entityType').value
 function dateInfo(){const inviteDate=getDate('invite'),meetingDate=getDate('meeting');return {inviteDate,meetingDate,invite:inviteDate?formatDateFor(inviteDate,mainDateOutputMode('invite')):'غير مدخل',meeting:meetingDate?formatDateFor(meetingDate,mainDateOutputMode('meeting')):'غير مدخل'}}
 function agendaDueDate(item){ return item.dueCalendar==='hijri'?hijriToDate(item.dueYear,item.dueMonth,item.dueDay):gregorianToDate(item.dueYear,item.dueMonth,item.dueDay); }
 function logoMarkup(){return entityLogoSrc?`<div class="doc-logo"><img src="${entityLogoSrc}" alt="شعار الجهة"></div>`:''}
-function formatEndTime(){ const hour=$('endHour')?.value; if(!hour)return ''; const minute=Math.min(59,Math.max(0,Number(latinDigits($('endMinute')?.value||0))||0)); return `${hour}:${String(minute).padStart(2,'0')} ${$('endPeriod')?.value||'صباحا'}`; }
+function formatEndTime(){ const hour=$('endHour')?.value; if(!hour)return ''; const minute=Math.min(59,Math.max(0,Number(latinDigits($('endMinute')?.value||0))||0)); return `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')} ${$('endPeriod')?.value||'صباحا'}`; }
 function getApprovalDate(){ const cal=$('approvalCalendar')?.value||'gregorian'; return cal==='hijri'?hijriToDate($('approvalYear')?.value,$('approvalMonth')?.value,$('approvalDay')?.value):gregorianToDate($('approvalYear')?.value,$('approvalMonth')?.value,$('approvalDay')?.value); }
 function syncMinutesApprovalMode(){const mode=$('minutesApprovalMode')?.value||'none',details=$('minutesApprovalDetails');if(details)details.hidden=mode!=='show';}
 const minutesStatusLabels={preparing:'تحت الإعداد',review:'جاهز للمراجعة',approved:'معتمد'};
@@ -1518,7 +1583,7 @@ function migrateDatePreferences(payload){
  ['invite','meeting'].forEach(kind=>{const source=fields[kind+'Calendar']||legacySource||dateEditSource[kind];if($(kind+'Calendar'))$(kind+'Calendar').value=source==='hijri'?'hijri':'gregorian';dateEditSource[kind]=source==='hijri'?'hijri':'gregorian';if(!Object.prototype.hasOwnProperty.call(fields,kind+'UseBoth')&&$(kind+'UseBoth'))$(kind+'UseBoth').checked=legacy==='both'});
  calendar=legacy;refreshUnifiedDateDisplays();
 }
-function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);if(!Object.prototype.hasOwnProperty.call(payload.fields||{},'minutesApprovalMode')&&(payload.fields?.minutesApprover||payload.fields?.approvalDay||payload.fields?.approvalMonth||payload.fields?.approvalYear))$('minutesApprovalMode').value='show';syncMinutesApprovalMode();attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems.map(normalizeAgendaItem):[];meetingAttachments=Array.isArray(payload.meetingAttachments)?payload.meetingAttachments:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();migrateDatePreferences(payload);updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
+function restoreWork(silent=true){const raw=localStorage.getItem(STORAGE_KEY)||LEGACY_STORAGE_KEYS.map(key=>localStorage.getItem(key)).find(Boolean);if(!raw)return false;try{const payload=JSON.parse(raw);if(payload.fields?.entityType){$('entityType').value=payload.fields.entityType;fillMeetings()}if(payload.fields?.meetingType){$('meetingType').value=payload.fields.meetingType}applyFormValues(payload.fields);if(!Object.prototype.hasOwnProperty.call(payload.fields||{},'minutesApprovalMode')&&(payload.fields?.minutesApprover||payload.fields?.approvalDay||payload.fields?.approvalMonth||payload.fields?.approvalYear))$('minutesApprovalMode').value='show';syncMinutesApprovalMode();attendees=Array.isArray(payload.attendees)?payload.attendees.map(normalizeParticipant):[];agendaItems=Array.isArray(payload.agendaItems)?payload.agendaItems.map(normalizeAgendaItem):[];meetingAttachments=Array.isArray(payload.meetingAttachments)?payload.meetingAttachments:[];entityLogoSrc=payload.entityLogoSrc||'';renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();migrateDatePreferences(payload);window.refreshUnifiedTimeDisplays?.();updateRule();renderDocuments();const restoredStep=payload.version==='v1.2.1'&&Number(payload.currentStep)===4?5:(payload.currentStep||1);showStep(restoredStep,false);if(!silent)alert('تمت استعادة العمل المحفوظ.');return true}catch(err){console.error(err);localStorage.removeItem(STORAGE_KEY);return false}}
 
 const ORGANIZATION_DEFAULT_FIELD_IDS=[
   'entityName','entityType','meetingType','meetingMode','location','inviteSenderSourceMode','inviteSenderParticipantId','inviteSenderManualName','inviteSenderManualPosition','inviteSenderName','inviteSenderPosition',
@@ -1545,7 +1610,7 @@ function applyMajalisSnapshot(payload,options={}){
     meetingAttachments=Array.isArray(payload.meetingAttachments)?payload.meetingAttachments:[];
     entityLogoSrc=options.entityLogoSrc??payload.entityLogoSrc??'';
     renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();
-    migrateDatePreferences(payload);updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();
+    migrateDatePreferences(payload);window.refreshUnifiedTimeDisplays?.();updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();
     showStep(Number(options.step||payload.currentStep||1),false);
     return true;
   }finally{autoSaveReady=wasReady;if(wasReady)saveWork()}
@@ -1562,7 +1627,7 @@ function resetFormControls(){
     else if(el.tagName==='SELECT')el.selectedIndex=0;
     else el.value='';
   });
-  $('meetingMinute').value='0';$('endMinute').value='0';$('quorumStatus').value='pending';$('minutesStatus').value='preparing';if($('minutesApprovalMode'))$('minutesApprovalMode').value='none';syncMinutesApprovalMode();
+  $('meetingMinute').value='0';$('meetingPeriod').value='صباحا';$('endMinute').value='0';$('endPeriod').value='صباحا';$('quorumStatus').value='pending';$('minutesStatus').value='preparing';if($('minutesApprovalMode'))$('minutesApprovalMode').value='none';syncMinutesApprovalMode();
 }
 function startNewMeetingFromOrganization(settings){
   const wasReady=autoSaveReady;autoSaveReady=false;
@@ -1574,10 +1639,10 @@ function startNewMeetingFromOrganization(settings){
     applyFormValues(fields);
     $('meetingNo').value='';$('meetingYear').value=String(new Date().getFullYear());$('meetingTitle').value='';
     ['inviteGDay','inviteGMonth','inviteGYear','inviteHDay','inviteHMonth','inviteHYear','meetingGDay','meetingGMonth','meetingGYear','meetingHDay','meetingHMonth','meetingHYear','endHour','minutesApprover','approvalDay','approvalMonth','approvalYear','aobContent','minutesIntro','closingNote','invitationIntro','invitationClosing'].forEach(id=>{if($(id))$(id).value=''});['invite','meeting'].forEach(kind=>{if($(kind+'Calendar'))$(kind+'Calendar').value='gregorian';if($(kind+'UseBoth'))$(kind+'UseBoth').checked=false;dateEditSource[kind]='gregorian'});if($('approvalCalendar'))$('approvalCalendar').value='gregorian';if($('approvalUseBoth'))$('approvalUseBoth').checked=false;
-    $('meetingHour').value='';$('meetingMinute').value='0';$('endMinute').value='0';$('fullRights').checked=false;$('quorumStatus').value='pending';$('minutesStatus').value='preparing';if($('minutesApprovalMode'))$('minutesApprovalMode').value='none';syncMinutesApprovalMode();
+    $('meetingHour').value='';$('meetingMinute').value='0';$('meetingPeriod').value='صباحا';$('endHour').value='';$('endMinute').value='0';$('endPeriod').value='صباحا';$('fullRights').checked=false;$('quorumStatus').value='pending';$('minutesStatus').value='preparing';if($('minutesApprovalMode'))$('minutesApprovalMode').value='none';syncMinutesApprovalMode();
     attendees=Array.isArray(settings?.attendees)?settings.attendees.map(p=>({...normalizeParticipant(p),attendance:'pending'})):[];
     agendaItems=[];meetingAttachments=[];entityLogoSrc=settings?.entityLogoSrc||'';
-    renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();migrateDatePreferences({calendar:'gregorian',fields:{}});updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();showStep(1,false);
+    renderLogoPreview();renderAttendees();renderAgenda();renderAgendaAttachments();migrateDatePreferences({calendar:'gregorian',fields:{}});window.refreshUnifiedTimeDisplays?.();updateRule();syncDocumentOptionVisibility();renderAttendanceManager();renderDocuments();showStep(1,false);
   }finally{autoSaveReady=wasReady;if(wasReady)saveWork()}
 }
 function cloudMeetingMetadata(){
@@ -1634,7 +1699,7 @@ fillEntities();syncInviteSenderSelector();if(!restoreWork(true)){renderLogoPrevi
 
 </script>
 
-<script id="majalis-date-picker-script-v1104">
+<script id="majalis-date-picker-script-v1105">
 (()=>{
  const state={target:null,selectedDate:null,source:'gregorian',mode:'gregorian',gregorianView:{year:0,month:0},hijriView:{year:0,month:0}};
  const modalEl=$('datePickerModal');
@@ -1734,6 +1799,72 @@ fillEntities();syncInviteSenderSelector();if(!restoreWork(true)){renderLogoPrevi
   if(event.target.id==='datePickerConfirm')confirmPicker();
  });
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modalEl.hidden)closePicker()});
+})();
+</script>
+<script id="majalis-time-picker-script-v1105">
+(()=>{
+ const modalEl=$('timePickerModal');
+ const state={target:null,hour:1,minute:0,period:'صباحا'};
+ const quickMinutes=[0,5,10,15,20,25,30,35,40,45,50,55];
+ const clampMinute=value=>Math.min(59,Math.max(0,Number(digitsOnly(value,2))||0));
+ function normalizePeriod(value){return value==='مساء'?'مساء':'صباحا'}
+ function timeToMinutes(hour,minute,period){hour=Number(hour)||12;minute=clampMinute(minute);let h=hour%12;if(normalizePeriod(period)==='مساء')h+=12;return h*60+minute}
+ function minutesToTime(total){total=((Number(total)||0)%1440+1440)%1440;const h24=Math.floor(total/60),minute=total%60,period=h24>=12?'مساء':'صباحا',hour=h24%12||12;return {hour,minute,period}}
+ function roundedNow(){const now=new Date(),total=now.getHours()*60+now.getMinutes(),rounded=Math.round(total/5)*5;return minutesToTime(rounded)}
+ function fieldValues(target){const prefix=target==='meeting'?'meeting':'end';const hour=Number($(prefix+'Hour')?.value||0),minute=clampMinute($(prefix+'Minute')?.value||0),period=normalizePeriod($(prefix+'Period')?.value);return hour?{hour,minute,period}:null}
+ function meetingPlusHour(){const meeting=fieldValues('meeting');return meeting?minutesToTime(timeToMinutes(meeting.hour,meeting.minute,meeting.period)+60):null}
+ function formatTimeParts(parts){return `${String(parts.hour).padStart(2,'0')}:${String(parts.minute).padStart(2,'0')} ${normalizePeriod(parts.period)}`}
+ function selectedParts(){return {hour:Number(state.hour)||1,minute:clampMinute(state.minute),period:normalizePeriod(state.period)}}
+ function renderHours(){
+  $('timePickerHours').innerHTML=Array.from({length:12},(_,i)=>i+1).map(hour=>`<button class="time-choice-button ${Number(state.hour)===hour?'active':''}" type="button" data-time-hour="${hour}">${hour}</button>`).join('');
+ }
+ function renderMinutes(){
+  $('timePickerMinutes').innerHTML=quickMinutes.map(minute=>`<button class="time-choice-button ${Number(state.minute)===minute?'active':''}" type="button" data-time-minute="${minute}">${String(minute).padStart(2,'0')}</button>`).join('');
+  const custom=$('timePickerCustomMinute');if(document.activeElement!==custom)custom.value=String(clampMinute(state.minute)).padStart(2,'0');
+ }
+ function renderPeriod(){document.querySelectorAll('[data-time-period]').forEach(button=>button.classList.toggle('active',button.dataset.timePeriod===normalizePeriod(state.period)))}
+ function renderSelection(){$('timePickerSelectedText').textContent=formatTimeParts(selectedParts())}
+ function renderPicker(){renderHours();renderMinutes();renderPeriod();renderSelection()}
+ function openPicker(target){
+  if(!['meeting','end'].includes(target))return;state.target=target;
+  const existing=fieldValues(target),initial=existing||(target==='end'?meetingPlusHour():null)||roundedNow();
+  Object.assign(state,initial);
+  $('timePickerTitle').textContent=target==='meeting'?'اختيار وقت الاجتماع':'اختيار وقت انتهاء الاجتماع';
+  $('timePickerSubtitle').textContent=existing?'الوقت الحالي محدد. عدله ثم اعتمده، أو أغلق النافذة دون تغيير.':(target==='end'&&meetingPlusHour()?'اقترح النظام وقت الاجتماع مضافا إليه ساعة، ويمكنك تعديله قبل الاعتماد.':'يعرض المنتقي الوقت الحالي افتراضيا، ولا يحفظه حتى تضغط اعتماد الوقت.');
+  $('timePickerClear').hidden=!existing;
+  modalEl.hidden=false;document.body.classList.add('time-picker-open');renderPicker();requestAnimationFrame(()=>modalEl.querySelector('.time-picker-close')?.focus());
+ }
+ function closePicker(){modalEl.hidden=true;document.body.classList.remove('time-picker-open');state.target=null}
+ function setStoredTime(target,parts){const prefix=target==='meeting'?'meeting':'end';$(prefix+'Hour').value=String(parts.hour);$(prefix+'Minute').value=String(parts.minute);$(prefix+'Period').value=normalizePeriod(parts.period)}
+ function clearStoredTime(target){const prefix=target==='meeting'?'meeting':'end';$(prefix+'Hour').value='';$(prefix+'Minute').value='0';$(prefix+'Period').value='صباحا'}
+ function validateEnd(parts){
+  const meeting=fieldValues('meeting');if(!meeting)return true;
+  const start=timeToMinutes(meeting.hour,meeting.minute,meeting.period),end=timeToMinutes(parts.hour,parts.minute,parts.period);
+  if(end<start)return confirm('وقت الانتهاء أسبق من وقت الاجتماع. هل امتد الاجتماع إلى ما بعد منتصف الليل؟');
+  return true;
+ }
+ function commit(){
+  if(!state.target)return;const parts=selectedParts();if(state.target==='end'&&!validateEnd(parts))return;
+  setStoredTime(state.target,parts);refreshUnifiedTimeDisplays();renderDocuments();updateCompletionIndicators();scheduleAutoSave();closePicker();
+ }
+ function clearCurrent(){if(!state.target)return;clearStoredTime(state.target);refreshUnifiedTimeDisplays();renderDocuments();updateCompletionIndicators();scheduleAutoSave();closePicker()}
+ function refreshUnifiedTimeDisplays(){
+  [['meeting','meetingTimeDisplay'],['end','endTimeDisplay']].forEach(([target,id])=>{const el=$(id);if(!el)return;const value=fieldValues(target);el.textContent=value?formatTimeParts(value):'اختر الوقت';el.classList.toggle('empty',!value)});
+ }
+ window.refreshUnifiedTimeDisplays=refreshUnifiedTimeDisplays;
+ document.addEventListener('click',event=>{
+  const opener=event.target.closest('[data-open-time-picker]');if(opener){openPicker(opener.dataset.openTimePicker);return}
+  if(event.target.closest('[data-close-time-picker]')){closePicker();return}
+  const hourButton=event.target.closest('[data-time-hour]');if(hourButton){state.hour=Number(hourButton.dataset.timeHour);renderPicker();return}
+  const minuteButton=event.target.closest('[data-time-minute]');if(minuteButton){state.minute=Number(minuteButton.dataset.timeMinute);renderPicker();return}
+  const periodButton=event.target.closest('[data-time-period]');if(periodButton){state.period=periodButton.dataset.timePeriod;renderPicker();return}
+  if(event.target.id==='timePickerNow'){Object.assign(state,roundedNow());renderPicker();return}
+  if(event.target.id==='timePickerClear'){clearCurrent();return}
+  if(event.target.id==='timePickerConfirm'){commit();return}
+ });
+ document.addEventListener('input',event=>{if(event.target.id!=='timePickerCustomMinute')return;const value=digitsOnly(event.target.value,2);if(event.target.value!==value)event.target.value=value;state.minute=clampMinute(value);renderMinutes();renderSelection()});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modalEl.hidden)closePicker()});
+ refreshUnifiedTimeDisplays();
 })();
 </script>
 <script type="module">
@@ -1916,7 +2047,7 @@ async function saveSignatureTracking(){
   const tracking={requiredSigners:signers,signedKeys,updatedAt:now,completedAt:complete?(meeting.signatureTracking?.completedAt||now):''};
   try{A('saveSignatureTracking').disabled=true;await setDoc(doc(db,'organizations',org.id,'meetings',meeting.id),{signatureTracking:cleanForFirestore(tracking),signatureRequiredCount:signers.length,signatureSignedCount:signedKeys.length,workflowStatus:complete?'signed':'signing',updatedAt:serverTimestamp()},{merge:true});modal('signatureTrackingModal',false);toast(complete?'اكتملت جميع التوقيعات وأصبحت الحالة موقّع ومكتمل.':'تم حفظ تقدم التوقيعات.');await loadMeetings(org.id)}catch(err){console.error(err);toast(err.message||'تعذر حفظ حالة التوقيع.','error')}finally{A('saveSignatureTracking').disabled=false}
 }
-async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.10.4',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,nextArchiveSequence:1,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
+async function createOrganization(event){event.preventDefault();const name=A('newOrganizationName').value.trim(),type=A('newOrganizationType').value;if(!name)return;const msg=A('organizationCreateMessage');msg.textContent='جاري إنشاء الجهة...';try{const ref=doc(collection(db,'organizations'));const settings={version:'v1.10.5',calendar:'gregorian',entityLogoSrc:'',fields:{entityName:name,entityType:type,meetingMode:'حضوري',inviteSenderSourceMode:'participant',inviteSenderParticipantId:'',inviteSenderManualName:'',inviteSenderManualPosition:'',inviteSenderName:'',inviteSenderPosition:'',chairSourceMode:'participant',chairParticipantId:'',chairManualName:'',chairName:'',secretarySourceMode:'participant',secretaryParticipantId:'',secretaryManualName:'',secretaryName:'',minutesApprovalMode:'none',enableAttendanceSheet:false,attendanceSheetMode:'combined',minutesParticipantNames:false,minutesParticipantSignatures:false,enableVotingCard:false,votingCardMode:'present'},attendees:[]};await setDoc(ref,{ownerUid:NAIF_UID,name,type,logoData:'',settings,nextArchiveSequence:1,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});A('organizationCreateForm').reset();msg.textContent='';modal('organizationCreateModal',false);await loadOrganizations();await selectOrganization(ref.id,{close:true,startNew:true});toast('تم إنشاء الجهة وفتح ملفها.')}catch(err){console.error(err);msg.textContent=err.message||'تعذر إنشاء الجهة.'}}
 async function login(event){event.preventDefault();const email=A('adminEmail').value.trim(),password=A('adminPassword').value;setLoginMessage('جاري التحقق...');A('adminLoginSubmit').disabled=true;try{localStorage.setItem('majalis_admin_email',email);const result=await signInWithEmailAndPassword(auth,email,password);if(result.user.uid!==NAIF_UID){await signOut(auth);throw new Error('هذا الحساب غير مصرح له بإدارة مجالس.')}A('adminPassword').value='';setLoginMessage('تم تسجيل الدخول.',true);modal('adminLoginModal',false)}catch(err){console.error(err);setLoginMessage('تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.')}finally{A('adminLoginSubmit').disabled=false}}
 async function resetPassword(){const email=A('adminEmail').value.trim();if(!email){setLoginMessage('اكتب البريد الإلكتروني أولا.');return}try{await sendPasswordResetEmail(auth,email);setLoginMessage('تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد.',true)}catch(err){console.error(err);setLoginMessage('تعذر إرسال الرابط. تحقق من البريد وحاول مجددا.')}}
 async function logoutAdmin(){if(adminState.dirty&&!confirm('توجد تعديلات لم تحفظ سحابيا. هل تريد تسجيل الخروج؟'))return;modal('adminWorkspaceModal',false);modal('adminLoginModal',false);await signOut(auth);toast('تم تسجيل الخروج والعودة إلى النسخة العامة.','success')}
