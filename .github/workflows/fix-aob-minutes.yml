@@ -1,0 +1,73 @@
+name: Fix AOB minutes behavior
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/fix-aob-minutes.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-aob-minutes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply focused code fix
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          replacements = [
+              (
+                  '<label class="check-row agenda-aob-row"><input type="checkbox" class="live" id="aobInAgenda"><span>تفعيل بند ما يستجد من أعمال كبند أخير في جدول الأعمال</span></label>',
+                  '<label class="check-row agenda-aob-row"><input type="checkbox" class="live" id="aobInAgenda"><span>تفعيل بند ما يستجد من أعمال في جدول الأعمال والمحضر</span></label>',
+                  "checkbox label",
+              ),
+              (
+                  '<div class="field w12"><label>ما يستجد من أعمال <span class="optional-tag">اختياري</span></label><textarea class="control live" id="aobContent" placeholder="اكتب أي موضوع استجد أثناء الاجتماع خارج جدول الأعمال المعلن"></textarea><div class="info-help"><span class="info-mark">i</span><span>يُضاف تلقائيا كبند أخير في جدول المداولات والقرارات بالمحضر عند تعبئته، ويُحذف من المحضر بالكامل إذا ترك فارغا. هذا الحقل مستقل عن خيار تفعيل بند ما يستجد من أعمال في جدول الأعمال والدعوة بالمرحلة الثالثة</span></div></div>',
+                  '<div class="field w12" id="aobContentField"><label>ما يستجد من أعمال <span class="optional-tag">اختياري</span></label><textarea class="control live" id="aobContent" placeholder="اكتب أي موضوع استجد أثناء الاجتماع خارج جدول الأعمال المعلن"></textarea><div class="info-help"><span class="info-mark">i</span><span>يظهر هذا الحقل عند تفعيل بند ما يستجد من أعمال في المرحلة الثالثة، ولا يضاف البند إلى المحضر عند إلغاء التفعيل حتى لو بقي نص محفوظ سابقا.</span></div></div>',
+                  "AOB field",
+              ),
+              (
+                  'function renderDocuments(){ if(!$(\'docInvitation\'))return; syncMinutesApprovalMode(); const r=activeRule(); if(!r)return; syncDocumentOptionVisibility(); const d=dateInfo(),entity=esc($(\'entityName\').value||\'الجهة\'),meeting=esc(meetingLabels[$(\'meetingType\').value]),title=esc($(\'meetingTitle\').value||meetingLabels[$(\'meetingType\').value]),chairRaw=($(\'chairName\')?.value||\'\').trim(),chair=esc(chairRaw),secretary=esc(($(\'secretaryName\')?.value||\'\').trim()),full=$(\'fullRights\').checked;',
+                  'function syncAobContentState(){const enabled=!!$(\'aobInAgenda\')?.checked,field=$(\'aobContentField\'),input=$(\'aobContent\');if(field)field.hidden=!enabled;if(input)input.disabled=!enabled}\nfunction renderDocuments(){ if(!$(\'docInvitation\'))return; syncMinutesApprovalMode(); const r=activeRule(); if(!r)return; syncDocumentOptionVisibility(); syncAobContentState(); const d=dateInfo(),entity=esc($(\'entityName\').value||\'الجهة\'),meeting=esc(meetingLabels[$(\'meetingType\').value]),title=esc($(\'meetingTitle\').value||meetingLabels[$(\'meetingType\').value]),chairRaw=($(\'chairName\')?.value||\'\').trim(),chair=esc(chairRaw),secretary=esc(($(\'secretaryName\')?.value||\'\').trim()),full=$(\'fullRights\').checked;',
+                  "state synchronizer",
+              ),
+              (
+                  " const aobRaw=($('aobContent')?.value||'').trim();",
+                  " const aobRaw=aobInAgenda?(($('aobContent')?.value||'').trim()):'';",
+                  "minutes gating",
+              ),
+          ]
+
+          for old, new, label in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"Expected exactly one match for {label}, found {count}")
+              text = text.replace(old, new, 1)
+
+          version_count = text.count("v1.11.10")
+          if version_count != 3:
+              raise SystemExit(f"Expected 3 version matches, found {version_count}")
+          text = text.replace("v1.11.10", "v1.11.11")
+
+          path.write_text(text, encoding="utf-8")
+
+      - name: Commit the fix and remove this one-time workflow
+        run: |
+          git config user.name "OpenAI ChatGPT"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix-aob-minutes.yml
+          git add index.html
+          git commit -m "Fix AOB minutes checkbox behavior"
+          git push
