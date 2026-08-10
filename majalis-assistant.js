@@ -21,7 +21,7 @@ const FIELD_REGISTRY={
 const ENTITY_ALIASES={
   jscListed:['مساهمة مدرجة','شركة مدرجة'],jscUnlisted:['مساهمة غير مدرجة','شركة مساهمة مقفلة','شركة مساهمة غير مدرجة'],sas:['مساهمة مبسطة'],llc:['ذات مسؤولية محدودة','مسؤولية محدودة'],association:['جمعية أهلية','جمعية اهليه','جمعية'],universityNew:['جامعة تطبق نظام الجامعات'],universityOld:['نظام مجلس التعليم العالي'],other:['جهة أخرى','جهه اخرى']
 };
-let chatBusy=false,aiUnavailable=false,currentConversationId='',history=[];
+let chatBusy=false,aiUnavailable=false,currentConversationId='',history=[],speechRecognition=null,voiceReplyEnabled=false;
 
 function escapeHtml(value=''){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function app(){return window.MajalisApp||null}
@@ -104,7 +104,7 @@ function renderProposal(title,description,onConfirm){
   const html=`<div class="majalis-assistant-proposal"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(description)}</p><div class="majalis-assistant-proposal-actions"><button type="button" data-confirm>اعتماد</button><button type="button" data-reject>تجاهل</button></div></div>`;
   const message=appendMessage('assistant','',html);message.querySelector('[data-confirm]').addEventListener('click',()=>{const result=onConfirm();message.querySelector('.majalis-assistant-proposal-actions').innerHTML=`<span>${result?.ok?'تم الاعتماد':'تعذر التنفيذ'}</span>`});message.querySelector('[data-reject]').addEventListener('click',()=>message.querySelector('.majalis-assistant-proposal-actions').innerHTML='<span>تم التجاهل</span>')
 }
-function setBusy(value){chatBusy=value;$('majalisAssistantSend').disabled=value;$('majalisAssistantInput').disabled=value}
+function setBusy(value){chatBusy=value;$('majalisAssistantSend').disabled=value;$('majalisAssistantInput').disabled=value;const mic=$('majalisAssistantMic');if(mic)mic.disabled=value}
 function openPanel(){activateDock();$('majalisAssistantPanel').hidden=false;$('majalisAssistantToggle').setAttribute('aria-expanded','true');document.body.classList.add('majalis-assistant-open');setTimeout(()=>$('majalisAssistantInput').focus(),40)}
 function closePanel(){$('majalisAssistantPanel').hidden=true;$('majalisAssistantToggle').setAttribute('aria-expanded','false');document.body.classList.remove('majalis-assistant-open')}
 function activateDock(){$('majalisAssistantEntry').hidden=true;$('majalisAssistantDock').hidden=false}
@@ -123,7 +123,38 @@ function initialQuestion(mode='new'){
   appendAssistant('ما الذي تريد إنجازه اليوم؟');
   showSuggestions(['إعداد اجتماع جديد','إكمال بيانات اجتماع','إعداد دعوة','إدارة اجتماع منعقد','إعداد محضر','أحتاج مساعدتك في الاختيار'].map((label,index)=>({label,message:label,primary:index===0})));
 }
-function appendAssistant(text){appendMessage('assistant',text);history.push({role:'assistant',text:String(text).slice(0,1200)});saveHistory()}
+function speakReply(text){
+  if(!voiceReplyEnabled||!('speechSynthesis' in window))return;
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(String(text||'').replace(/\n+/g,' ').slice(0,900));
+  utterance.lang='ar-SA';utterance.rate=.96;utterance.pitch=1;
+  const voices=window.speechSynthesis.getVoices(),arabic=voices.find(voice=>/^ar-SA/i.test(voice.lang))||voices.find(voice=>/^ar/i.test(voice.lang));
+  if(arabic)utterance.voice=arabic;
+  utterance.onend=()=>{const mic=$('majalisAssistantMic');if(mic)mic.classList.remove('speaking')};
+  const mic=$('majalisAssistantMic');if(mic)mic.classList.add('speaking');
+  window.speechSynthesis.speak(utterance);
+}
+function appendAssistant(text){appendMessage('assistant',text);history.push({role:'assistant',text:String(text).slice(0,1200)});saveHistory();speakReply(text)}
+
+function stopListening(){if(speechRecognition){try{speechRecognition.stop()}catch{}speechRecognition=null}const mic=$('majalisAssistantMic');if(mic){mic.classList.remove('listening');mic.setAttribute('aria-pressed','false')}}
+function startVoiceInput(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition,mic=$('majalisAssistantMic');
+  if(!SR){showNotice('الحديث يحتاج متصفحا يدعم الميكروفون. يمكنك الاستمرار بالكتابة.');$('majalisAssistantInput').focus();return}
+  if(speechRecognition){stopListening();return}
+  openPanel();window.speechSynthesis?.cancel();voiceReplyEnabled=true;
+  const recognition=new SR();speechRecognition=recognition;recognition.lang='ar-SA';recognition.interimResults=true;recognition.continuous=false;
+  mic.classList.add('listening');mic.setAttribute('aria-pressed','true');showNotice('أسمعك الآن. تحدث، وسأكتب كلامك ثم أرسله.');
+  recognition.onresult=event=>{let transcript='';for(let i=event.resultIndex;i<event.results.length;i++)transcript+=event.results[i][0].transcript;$('majalisAssistantInput').value=transcript.trim();if(event.results[event.results.length-1].isFinal&&transcript.trim()){showNotice('');sendMessage(transcript.trim())}};
+  recognition.onerror=event=>{if(event.error!=='aborted')showNotice(event.error==='not-allowed'?'اسمح للمتصفح باستخدام الميكروفون ثم حاول مرة أخرى.':'تعذر سماع الصوت. حاول مرة أخرى أو استخدم الكتابة.');stopListening()};
+  recognition.onend=()=>{speechRecognition=null;mic.classList.remove('listening');mic.setAttribute('aria-pressed','false')};
+  try{recognition.start()}catch{stopListening();showNotice('تعذر تشغيل الميكروفون. حاول مرة أخرى.')}
+}
+function installVoiceControls(){
+  const form=$('majalisAssistantForm');if(!form||$('majalisAssistantMic'))return;
+  const mic=document.createElement('button');mic.type='button';mic.id='majalisAssistantMic';mic.className='majalis-assistant-mic';mic.setAttribute('aria-label','تحدث مع مساعد مجالس');mic.setAttribute('aria-pressed','false');mic.title='تحدث مع مساعد مجالس';mic.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"></path></svg>';
+  mic.addEventListener('click',startVoiceInput);form.insertBefore(mic,$('majalisAssistantSend'));
+  const entryPrimary=document.querySelector('[data-assistant-start="new"]');if(entryPrimary){entryPrimary.innerHTML='<span class="assistant-start-mic" aria-hidden="true">●</span> إعداد اجتماع جديد';entryPrimary.title='يمكنك المتابعة بالكتابة أو الحديث'}
+}
 function nextMissing(){return getMeetingSummary().missing[0]||null}
 function detectEntity(text){const normalized=String(text||'');for(const [id,aliases] of Object.entries(ENTITY_ALIASES))if(aliases.some(alias=>normalized.includes(alias)))return id;return ''}
 function detectMeeting(text,entityId){
@@ -188,7 +219,8 @@ async function sendMessage(text){
 function smartSuggestions(){const summary=getMeetingSummary(),next=summary.missing[0];if(next)return [{label:`أكمل ${next.label}`,run:()=>focusField(next.field_id,next.label),primary:true},{label:'اعرض النواقص',message:'اعرض النواقص'}];return [{label:'راجع الجاهزية',message:'راجع الجاهزية',primary:true},{label:'افتح الوثائق',run:()=>navigateToSection('documents','الوثائق')}];}
 
 function bind(){
-  document.querySelectorAll('[data-assistant-start]').forEach(button=>button.addEventListener('click',()=>initialQuestion(button.dataset.assistantStart)));
+  installVoiceControls();
+  document.querySelectorAll('[data-assistant-start]').forEach(button=>button.addEventListener('click',()=>{const mode=button.dataset.assistantStart;if(mode==='new')voiceReplyEnabled=true;initialQuestion(mode);if(mode==='new')startVoiceInput()}));
   $('majalisAssistantSkip').addEventListener('click',dismissAssistant);$('majalisAssistantToggle').addEventListener('click',()=>$('majalisAssistantPanel').hidden?openPanel():closePanel());$('majalisAssistantPanelClose').addEventListener('click',closePanel);$('majalisAssistantDockClose').addEventListener('click',dismissAssistant);
   $('majalisAssistantNewChat').addEventListener('click',()=>{if(!confirm('بدء محادثة جديدة؟ ستبقى بيانات الاجتماع كما هي.'))return;makeConversation(true);$('majalisAssistantTranscript').innerHTML='';showNotice('');initialQuestion('new')});
   $('majalisAssistantForm').addEventListener('submit',event=>{event.preventDefault();sendMessage()});$('majalisAssistantInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}});$('majalisAssistantInput').addEventListener('input',event=>{event.target.style.height='auto';event.target.style.height=`${Math.min(115,event.target.scrollHeight)}px`});
