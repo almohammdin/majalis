@@ -1,10 +1,16 @@
-# تشغيل نقطة اتصال مساعد مجالس
+# تشغيل مساعد مجالس عبر Gemini
 
-الواجهة والمسار الإرشادي يعملان من GitHub Pages. لتشغيل الرد الذكي، تضبط قيمة سر OpenAI في مشروع Firebase `majalis-admin` ثم تنشر الدالة:
+يستخدم المساعد مسارين من Gemini:
 
-```bash
-firebase functions:secrets:set OPENAI_API_KEY
-firebase deploy --only functions:majalisAssistant
-```
+- المحادثة الكتابية عبر Firebase AI Logic والنموذج `gemini-3.5-flash-lite`.
+- المحادثة الصوتية عبر Gemini Live والنموذج `gemini-3.1-flash-live-preview`.
 
-مفتاح OpenAI يبقى داخل Firebase Secret Manager ولا يضاف إلى ملفات المستودع أو المتصفح.
+تستخدم النسخة الحالية مشروع Firebase واتصال الرموز المؤقتة المهيأ لمسراح. يحمي App Check الاتصال، ولا يوضع مفتاح Gemini دائم داخل `index.html` أو ملفات المتصفح.
+
+قبل النشر تأكد من الآتي:
+
+1. نطاق `almohammdin.github.io` مسجل في reCAPTCHA Enterprise وFirebase App Check.
+2. Firebase AI Logic مفعل في مشروع `mesraah-a2dfc`.
+3. عامل الرموز المؤقتة `mesraah-live-token` يقبل App Check من تطبيق الويب نفسه.
+
+مجلد `functions` يحوي تكامل OpenAI السابق فقط، ولا يستخدمه إصدار `v1.13.1`.
