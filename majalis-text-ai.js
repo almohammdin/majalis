@@ -7,12 +7,19 @@ const ACTIONS=['none','navigate','focus','propose_field','propose_agenda','propo
 const schema=Schema.object({properties:{reply:Schema.string(),action:Schema.enumString({enum:ACTIONS}),sectionId:Schema.string(),fieldId:Schema.string(),value:Schema.string(),message:Schema.string(),title:Schema.string(),purpose:Schema.string(),name:Schema.string(),role:Schema.string(),countsQuorum:Schema.boolean(),stageId:Schema.string(),requirementId:Schema.string()},optionalProperties:['sectionId','fieldId','value','message','title','purpose','name','role','countsQuorum','stageId','requirementId']});
 const app=window.MajalisVoiceFirebaseApp||getApps().find(item=>item.name===APP_NAME)||initializeApp(FIREBASE_CONFIG,APP_NAME);
 window.MajalisVoiceFirebaseApp=app;
+const RIYADH_TIME_ZONE='Asia/Riyadh';
+function getCurrentDateTime(){
+  const now=new Date(),gregorian=new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{timeZone:RIYADH_TIME_ZONE,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now),hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{timeZone:RIYADH_TIME_ZONE,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now),time=new Intl.DateTimeFormat('ar-SA-u-nu-latn',{timeZone:RIYADH_TIME_ZONE,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
+  return {timeZone:RIYADH_TIME_ZONE,gregorian,hijri,time,isoUtc:now.toISOString(),source:'user-device-clock'};
+}
 {
   const ai=getAI(app,{backend:new GoogleAIBackend()}),model=getGenerativeModel(ai,{model:'gemini-3.5-flash-lite',generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:.12,maxOutputTokens:700}});
   const waitForAppCheck=async()=>{for(let i=0;i<30&&!window.MajalisVoiceGetAppCheckToken;i++)await new Promise(resolve=>setTimeout(resolve,100))};
   const ask=async payload=>{
     const prompt=`أنت مساعد مجالس الذكي داخل منصة مجالس. لست بوت دردشة. افهم حالة الاجتماع ووجّه المستخدم ونفذ معه داخل الواجهة.
 تكلم بعربية سعودية سهلة ومهنية. اسأل سؤالا واحدا فقط. لا تسأل عن معلومة موجودة في السياق. لا تخترع قاعدة نظامية.
+التاريخ والوقت الحاليان من جهاز المستخدم بتوقيت الرياض (مصدر الحقيقة الوحيد): ${JSON.stringify(getCurrentDateTime())}
+إذا سئلت عن اليوم أو التاريخ أو الوقت فاستخدم هذه البيانات فقط، واذكر الميلادي والهجري بتقويم أم القرى عند طلب التاريخ. لا تعتمد على تاريخ النموذج أو الذاكرة ولا تخمن أبدا.
 اختر إجراء واحدا فقط عند الحاجة: navigate للانتقال، focus لإبراز حقل، propose_field لاقتراح قيمة تحتاج موافقة، propose_agenda لبند، propose_participant لمشارك، validate للفحص، explain لشرح قاعدة من محرك مجالس.
 لا تقل تم الحفظ قبل أن تنفذ الأداة في التطبيق وترجع ok=true وpersisted=true. أي تعديل يعرض للمستخدم للموافقة أولا.
 حالة مجالس: ${JSON.stringify(payload.context||{})}
