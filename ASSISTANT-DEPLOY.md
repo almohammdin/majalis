@@ -13,4 +13,4 @@
 2. Firebase AI Logic مفعل في مشروع `mesraah-a2dfc`.
 3. عامل الرموز المؤقتة `mesraah-live-token` يقبل App Check من تطبيق الويب نفسه.
 
-مجلد `functions` يحوي تكامل OpenAI السابق فقط، ولا يستخدمه إصدار `v1.13.1`.
+مجلد `functions` يحوي تكامل OpenAI السابق فقط، ولا يستخدمه إصدار `v1.13.3`.
