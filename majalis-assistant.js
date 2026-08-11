@@ -4,7 +4,6 @@
 const $=id=>document.getElementById(id);
 const HISTORY_STORE='majalis_assistant_conversations_v1';
 const ACTIVE_CONVERSATION='majalis_assistant_active_conversation_v1';
-const FIREBASE_CONFIG={apiKey:'AIzaSyCHefMzpFRZi6TQHMt7NTkqMAzPFQB3_6U',authDomain:'majalis-admin.firebaseapp.com',projectId:'majalis-admin',storageBucket:'majalis-admin.firebasestorage.app',messagingSenderId:'7816691347',appId:'1:7816691347:web:fdee56d2bc246ae262d766'};
 const SECTION_REGISTRY={
   meeting:{step:1,label:'إعدادات الاجتماع'},
   participants:{step:2,label:'المشاركون'},
@@ -18,10 +17,11 @@ const FIELD_REGISTRY={
   inviteCalendar:{step:3,label:'تقويم الدعوة'},meetingCalendar:{step:3,label:'تقويم الاجتماع'},meetingHour:{step:3,label:'ساعة الاجتماع'},meetingMinute:{step:3,label:'دقيقة الاجتماع'},meetingPeriod:{step:3,label:'فترة الاجتماع'},location:{step:3,label:'المكان أو رابط الاتصال'},invitationIntro:{step:3,label:'مقدمة الدعوة'},invitationClosing:{step:3,label:'خاتمة الدعوة'},aobInAgenda:{step:3,label:'ما يستجد من أعمال'},
   chairName:{step:4,label:'رئيس الاجتماع'},secretaryName:{step:4,label:'أمين السر أو المقرر'},quorumStatus:{step:4,label:'حالة النصاب',sensitive:true},minutesStatus:{step:4,label:'حالة المحضر',sensitive:true},minutesIntro:{step:4,label:'مقدمة المحضر'},closingNote:{step:4,label:'ملاحظة ختامية'}
 };
+const CONTEXT_FIELD_IDS=[...new Set([...Object.keys(FIELD_REGISTRY),'enableEntityRegistration','inviteGDay','inviteGMonth','inviteGYear','inviteHDay','inviteHMonth','inviteHYear','inviteUseBoth','meetingGDay','meetingGMonth','meetingGYear','meetingHDay','meetingHMonth','meetingHYear','meetingUseBoth','endHour','endMinute','endPeriod','inviteSenderSourceMode','inviteSenderParticipantId','inviteSenderManualName','inviteSenderManualPosition','inviteSenderName','inviteSenderPosition','enableAgendaAttachments','ownershipDocumentRequirement','enableOwnershipDocument','chairSourceMode','chairParticipantId','chairManualName','secretarySourceMode','secretaryParticipantId','secretaryManualName','enableAttendanceSheet','attendanceSheetMode','minutesParticipantNames','minutesParticipantSignatures','enableVotingCard','votingCardMode','enableVoteTallyDocument','minutesApprovalMode','minutesApprover','approvalDay','approvalMonth','approvalYear','approvalCalendar','approvalUseBoth'])];
 const ENTITY_ALIASES={
   jscListed:['مساهمة مدرجة','شركة مدرجة'],jscUnlisted:['مساهمة غير مدرجة','شركة مساهمة مقفلة','شركة مساهمة غير مدرجة'],sas:['مساهمة مبسطة'],llc:['ذات مسؤولية محدودة','مسؤولية محدودة'],association:['جمعية أهلية','جمعية اهليه','جمعية'],universityNew:['جامعة تطبق نظام الجامعات'],universityOld:['نظام مجلس التعليم العالي'],other:['جهة أخرى','جهه اخرى']
 };
-let chatBusy=false,aiUnavailable=false,currentConversationId='',history=[],speechRecognition=null,voiceReplyEnabled=false;
+let chatBusy=false,aiUnavailable=false,currentConversationId='',history=[];
 
 function escapeHtml(value=''){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function app(){return window.MajalisApp||null}
@@ -32,8 +32,8 @@ function saveHistory(){if(!currentConversationId)return;const store=readStore();
 function makeConversation(force=false){if(force||!currentConversationId)currentConversationId=`${Date.now()}-${Math.random().toString(36).slice(2,8)}`;history=[];saveHistory()}
 function restoreConversation(){const active=sessionStorage.getItem(ACTIVE_CONVERSATION)||'',store=readStore(),record=store[active];if(record&&record.fingerprint===meetingFingerprint()){currentConversationId=active;history=Array.isArray(record.messages)?record.messages:[]}else makeConversation(true)}
 function captureConversation(){return {conversation_id:currentConversationId,fingerprint:meetingFingerprint(),messages:history.slice(-20)}}
-function renderConversation(){const transcript=$('majalisAssistantTranscript');if(!transcript)return;transcript.innerHTML='';history.forEach(item=>appendMessage(item.role==='assistant'?'assistant':'user',item.text||''))}
-function applyConversation(value){if(value&&Array.isArray(value.messages)){currentConversationId=String(value.conversation_id||`${Date.now()}-${Math.random().toString(36).slice(2,8)}`);history=value.messages.slice(-20).map(item=>({role:item?.role==='assistant'?'assistant':'user',text:String(item?.text||'').slice(0,1200)})).filter(item=>item.text)}else makeConversation(true);renderConversation();saveHistory();return true}
+function renderConversation(){const last=[...history].reverse().find(item=>item.role==='assistant'&&item.text);if(last)setAnswer(last.text)}
+function applyConversation(value){if(value&&Array.isArray(value.messages)){currentConversationId=String(value.conversation_id||`${Date.now()}-${Math.random().toString(36).slice(2,8)}`);history=value.messages.slice(-20).map(item=>({role:item?.role==='assistant'?'assistant':'user',text:String(item?.text||'').slice(0,1200)})).filter(item=>item.text)}else makeConversation(true);renderConversation();saveHistory();refreshContext();return true}
 
 function getMeetingSummary(){
   const s=snapshot(),f=s.fields||{},progress=app()?.getProgress?.()||[0,0,0,0,0],missing=[];
@@ -49,11 +49,16 @@ function getMeetingSummary(){
   if((f.quorumStatus||'pending')==='pending')missing.push({field_id:'quorumStatus',label:'حالة النصاب',stage_id:'management'});
   return {platform:'مجالس',language:'ar-SA',current_stage:Object.keys(SECTION_REGISTRY).find(key=>SECTION_REGISTRY[key].step===(app()?.getCurrentStep?.()||1))||'meeting',entity_type:f.entityType||'',meeting_type:f.meetingType||'',entity_name:String(f.entityName||'').slice(0,160),meeting_title:String(f.meetingTitle||'').slice(0,200),completion:progress,participant_count:(s.attendees||[]).length,agenda_count:(s.agendaItems||[]).length,missing:missing.slice(0,14)};
 }
+function getPlatformContext(){
+  const s=snapshot(),summary=getMeetingSummary(),fields=s.fields||{};
+  const safeFields={};CONTEXT_FIELD_IDS.forEach(id=>{if(Object.prototype.hasOwnProperty.call(fields,id))safeFields[id]=fields[id]});
+  return {...summary,fields:safeFields,participants:(s.attendees||[]).slice(0,60).map(item=>({id:item.id||'',name:item.name||'',role:item.role||'',counts_quorum:item.countsQuorum!==false,attendance:item.attendance||item.status||'',ownership_class:item.ownershipClass||'',owned_units:item.ownedUnits||'',proxy_units:item.proxyUnits||'',owned_votes:item.ownedVotes||'',proxy_votes:item.proxyVotes||''})),agenda_items:(s.agendaItems||[]).slice(0,60).map(item=>({id:item.id||'',title:item.title||'',purpose:item.purpose||'',discussion:item.discussion||'',decision:item.decision||'',owner:item.owner||'',due_calendar:item.dueCalendar||'',due_day:item.dueDay||'',due_month:item.dueMonth||'',due_year:item.dueYear||'',vote:item.vote||'',include_in_ballot:item.includeInBallot===true,votes_for:item.votesFor||'',votes_against:item.votesAgainst||'',votes_abstain:item.votesAbstain||'',participant_votes:item.participantVotes||{},vote_tally_source:item.voteTallySource||''})),meeting_attachments:(s.meetingAttachments||[]).slice(0,60).map(item=>({id:item.id||'',name:item.name||''})),vote_tally_committee:(s.voteTallyCommittee||[]).slice(0,30).map(item=>({id:item.id||'',name:item.name||''})),ownership_snapshot:s.ownershipSnapshot||{}};
+}
 
 function navigateToSection(sectionId,reason=''){
   const section=SECTION_REGISTRY[sectionId]||Object.values(SECTION_REGISTRY).find(item=>String(item.step)===String(sectionId));
   if(!section)return {ok:false,error:'section_not_allowed'};
-  app()?.showStep?.(section.step,true);$('majalisAssistantDockStatus').textContent=reason||section.label;
+  app()?.showStep?.(section.step,true);setDockStatus(reason||section.label);activateDock();refreshContext();
   return {ok:true,section:section.label,step:section.step};
 }
 function fieldElement(fieldId){if(fieldId==='addAttendee')return $('addAttendee');if(fieldId==='addAgenda')return $('addAgenda');return $(fieldId)}
@@ -69,14 +74,14 @@ function focusField(fieldId,message=''){
   const def=FIELD_REGISTRY[fieldId];if(!def&&!['addAttendee','addAgenda'].includes(fieldId))return {ok:false,error:'field_not_allowed'};
   const step=def?.step||(fieldId==='addAttendee'?2:3);app()?.showStep?.(step,true);
   requestAnimationFrame(()=>{const el=focusTarget(fieldId);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('majalis-assistant-focus');setTimeout(()=>el.classList.remove('majalis-assistant-focus'),1900);el.focus?.({preventScroll:true})});
-  if(message)$('majalisAssistantDockStatus').textContent=message;
+  if(message)setDockStatus(message);activateDock();refreshContext();
   return {ok:true,field_id:fieldId,label:def?.label||fieldId};
 }
 function readField(fieldId){const def=FIELD_REGISTRY[fieldId],el=fieldElement(fieldId);if(!def||!el)return {ok:false,error:'field_not_allowed'};return {ok:true,field_id:fieldId,value:el.type==='checkbox'?el.checked:el.value,label:def.label}}
 function applyField(fieldId,value,confirmed=false){
   const def=FIELD_REGISTRY[fieldId],el=fieldElement(fieldId);if(!def||!el)return {ok:false,error:'field_not_allowed'};
   if(def.sensitive&&!confirmed)return {ok:false,error:'explicit_confirmation_required',preview:{field_id:fieldId,label:def.label,value}};
-  if(el.type==='checkbox')el.checked=Boolean(value);else el.value=String(value??'');
+  if(el.type==='checkbox'){const normalized=typeof value==='string'?value.trim().toLowerCase():value;el.checked=!['false','0','no','off','لا','إلغاء','الغاء',''].includes(normalized)&&Boolean(value)}else el.value=String(value??'');
   el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));app()?.save?.();focusField(fieldId,`تم تحديث ${def.label}`);
   return {ok:true,field_id:fieldId,label:def.label,value:el.type==='checkbox'?el.checked:el.value};
 }
@@ -88,30 +93,35 @@ function validateStage(stageId){
 }
 function explainRequirement(requirementId){const rule=app()?.getActiveRule?.();if(!rule)return {ok:false,error:'rule_not_available'};const map={notice:{title:'مدة وإجراء الدعوة',text:rule.notice,reference:rule.reference},quorum:{title:'النصاب',text:rule.quorum,reference:rule.reference},secretary:{title:'أمين السر أو المقرر',text:rule.secretaryLabel||rule.secretary,reference:rule.reference},frequency:{title:'دورية الاجتماع',text:rule.frequency,reference:rule.reference}};const result=map[requirementId];return result?{ok:true,...result}:{ok:false,error:'requirement_not_allowed'}}
 
-const MajalisAssistantBridge={getMeetingSummary,navigateToSection,focusField,readField,applyField,addAgendaItem,addParticipant,validateStage,explainRequirement,captureConversation,applyConversation,allowedSections:()=>Object.keys(SECTION_REGISTRY),allowedFields:()=>Object.keys(FIELD_REGISTRY)};
+const MajalisAssistantBridge={getMeetingSummary,getPlatformContext,navigateToSection,focusField,readField,applyField,addAgendaItem,addParticipant,validateStage,explainRequirement,captureConversation,applyConversation,allowedSections:()=>Object.keys(SECTION_REGISTRY),allowedFields:()=>Object.keys(FIELD_REGISTRY)};
 window.MajalisAssistantBridge=MajalisAssistantBridge;
 
-function appendMessage(role,text,extraHtml=''){
-  const wrap=document.createElement('div');wrap.className=`majalis-assistant-message ${role}`;wrap.innerHTML=`<div class="majalis-assistant-bubble">${escapeHtml(text).replace(/\n/g,'<br>')}${extraHtml}</div>`;$('majalisAssistantTranscript').appendChild(wrap);$('majalisAssistantTranscript').scrollTop=$('majalisAssistantTranscript').scrollHeight;return wrap;
+function setAnswer(text){const el=$('majalisAssistantAnswer');if(el)el.textContent=String(text||'')}
+function setDockStatus(text){const el=$('majalisAssistantDockStatus');if(el)el.textContent=String(text||'جاهز للخطوة التالية')}
+function refreshContext(){
+  const summary=getMeetingSummary(),stage=SECTION_REGISTRY[summary.current_stage],progress=summary.completion||[],current=Math.max(0,Math.min(100,Number(progress[(stage?.step||1)-1])||0)),next=summary.missing[0];
+  if($('majalisAssistantStage'))$('majalisAssistantStage').textContent=stage?.label||'بيانات الاجتماع';
+  if($('majalisAssistantCompletion'))$('majalisAssistantCompletion').textContent=`${current}%`;
+  if($('majalisAssistantNext'))$('majalisAssistantNext').textContent=next?.label||'مراجعة الجاهزية';
+  setDockStatus(next?`الخطوة التالية: ${next.label}`:'الاجتماع جاهز للمراجعة');
 }
-function appendThinking(){const wrap=document.createElement('div');wrap.className='majalis-assistant-message assistant thinking';wrap.innerHTML='<div class="majalis-assistant-bubble"><span class="majalis-assistant-thinking"><i></i><i></i><i></i></span></div>';$('majalisAssistantTranscript').appendChild(wrap);$('majalisAssistantTranscript').scrollTop=$('majalisAssistantTranscript').scrollHeight;return wrap}
+function appendThinking(){const previous=$('majalisAssistantAnswer')?.textContent||'';setAnswer('أفهم طلبك وأراجع بيانات الاجتماع…');$('majalisAssistantEntry')?.querySelector('.majalis-assistant-entry-card')?.classList.add('is-busy');return {remove(){if($('majalisAssistantAnswer')?.textContent==='أفهم طلبك وأراجع بيانات الاجتماع…')setAnswer(previous);$('majalisAssistantEntry')?.querySelector('.majalis-assistant-entry-card')?.classList.remove('is-busy')}}}
 function showSuggestions(items=[]){const box=$('majalisAssistantSuggestions');box.innerHTML='';items.slice(0,6).forEach((item,index)=>{const config=typeof item==='string'?{label:item,message:item}:item,button=document.createElement('button');button.type='button';button.className=`majalis-assistant-suggestion ${config.primary||index===0?'primary':''}`;button.textContent=config.label;button.addEventListener('click',()=>config.run?config.run():sendMessage(config.message||config.label));box.appendChild(button)})}
 function showNotice(text=''){
   const el=$('majalisAssistantNotice');el.hidden=!text;el.innerHTML='';if(!text)return;
   const copy=document.createElement('span');copy.textContent=text;const retry=document.createElement('button');retry.type='button';retry.textContent='إعادة المحاولة';retry.addEventListener('click',()=>{aiUnavailable=false;showNotice('');sendMessage('أعد المحاولة وأكمل من آخر خطوة')});el.append(copy,retry);
 }
 function renderProposal(title,description,onConfirm){
-  const html=`<div class="majalis-assistant-proposal"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(description)}</p><div class="majalis-assistant-proposal-actions"><button type="button" data-confirm>اعتماد</button><button type="button" data-reject>تجاهل</button></div></div>`;
-  const message=appendMessage('assistant','',html);message.querySelector('[data-confirm]').addEventListener('click',()=>{const result=onConfirm();message.querySelector('.majalis-assistant-proposal-actions').innerHTML=`<span>${result?.ok?'تم الاعتماد':'تعذر التنفيذ'}</span>`});message.querySelector('[data-reject]').addEventListener('click',()=>message.querySelector('.majalis-assistant-proposal-actions').innerHTML='<span>تم التجاهل</span>')
+  const host=$('majalisAssistantProposal');host.hidden=false;host.innerHTML=`<div class="majalis-assistant-proposal"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(description)}</p><div class="majalis-assistant-proposal-actions"><button type="button" data-confirm>اعتماد</button><button type="button" data-reject>تجاهل</button></div></div>`;
+  host.querySelector('[data-confirm]').addEventListener('click',()=>{const result=onConfirm();host.innerHTML=`<div class="majalis-assistant-proposal"><strong>${result?.ok?'تم الاعتماد':'تعذر التنفيذ'}</strong></div>`;refreshContext()});host.querySelector('[data-reject]').addEventListener('click',()=>{host.hidden=true;host.innerHTML=''})
 }
-function setBusy(value){chatBusy=value;$('majalisAssistantSend').disabled=value;$('majalisAssistantInput').disabled=value;const mic=$('majalisAssistantMic');if(mic)mic.disabled=value}
-function openPanel(){activateDock();$('majalisAssistantPanel').hidden=false;$('majalisAssistantToggle').setAttribute('aria-expanded','true');document.body.classList.add('majalis-assistant-open');setTimeout(()=>$('majalisAssistantInput').focus(),40)}
-function closePanel(){$('majalisAssistantPanel').hidden=true;$('majalisAssistantToggle').setAttribute('aria-expanded','false');document.body.classList.remove('majalis-assistant-open')}
+function setBusy(value){chatBusy=value;$('majalisAssistantSend').disabled=value;$('majalisAssistantInput').disabled=value}
+function openAssistant(scroll=true){$('majalisAssistantEntry').hidden=false;$('majalisAssistantDock').hidden=true;refreshContext();if(scroll)$('majalisAssistantEntry').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>$('majalisAssistantInput').focus(),40)}
 function activateDock(){$('majalisAssistantEntry').hidden=true;$('majalisAssistantDock').hidden=false}
-function dismissAssistant(){closePanel();$('majalisAssistantDock').hidden=true;$('majalisAssistantEntry').hidden=true;sessionStorage.setItem('majalis_assistant_skipped','1')}
+function dismissAssistant(){$('majalisAssistantDock').hidden=true;$('majalisAssistantEntry').hidden=true;sessionStorage.setItem('majalis_assistant_skipped','1')}
 
 function initialQuestion(mode='new'){
-  openPanel();if(!currentConversationId)restoreConversation();
+  openAssistant(false);if(!currentConversationId)restoreConversation();
   if(mode==='learn'){
     appendAssistant('مجالس يرتب عملك في خمس مراحل: بيانات الاجتماع، المشاركون، جدول الأعمال والدعوة، إدارة الاجتماع، ثم الوثائق. سأشرح لك كل مرحلة وأنقلك إليها.');
     showSuggestions([{label:'ابدأ من بيانات الاجتماع',message:'اشرح لي مرحلة بيانات الاجتماع',primary:true},{label:'اشرح المشاركين',message:'اشرح لي قسم المشاركين'},{label:'اشرح الوثائق',message:'اشرح لي قسم الوثائق'}]);return;
@@ -123,38 +133,7 @@ function initialQuestion(mode='new'){
   appendAssistant('ما الذي تريد إنجازه اليوم؟');
   showSuggestions(['إعداد اجتماع جديد','إكمال بيانات اجتماع','إعداد دعوة','إدارة اجتماع منعقد','إعداد محضر','أحتاج مساعدتك في الاختيار'].map((label,index)=>({label,message:label,primary:index===0})));
 }
-function speakReply(text){
-  if(!voiceReplyEnabled||!('speechSynthesis' in window))return;
-  window.speechSynthesis.cancel();
-  const utterance=new SpeechSynthesisUtterance(String(text||'').replace(/\n+/g,' ').slice(0,900));
-  utterance.lang='ar-SA';utterance.rate=.96;utterance.pitch=1;
-  const voices=window.speechSynthesis.getVoices(),arabic=voices.find(voice=>/^ar-SA/i.test(voice.lang))||voices.find(voice=>/^ar/i.test(voice.lang));
-  if(arabic)utterance.voice=arabic;
-  utterance.onend=()=>{const mic=$('majalisAssistantMic');if(mic)mic.classList.remove('speaking')};
-  const mic=$('majalisAssistantMic');if(mic)mic.classList.add('speaking');
-  window.speechSynthesis.speak(utterance);
-}
-function appendAssistant(text){appendMessage('assistant',text);history.push({role:'assistant',text:String(text).slice(0,1200)});saveHistory();speakReply(text)}
-
-function stopListening(){if(speechRecognition){try{speechRecognition.stop()}catch{}speechRecognition=null}const mic=$('majalisAssistantMic');if(mic){mic.classList.remove('listening');mic.setAttribute('aria-pressed','false')}}
-function startVoiceInput(){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition,mic=$('majalisAssistantMic');
-  if(!SR){showNotice('الحديث يحتاج متصفحا يدعم الميكروفون. يمكنك الاستمرار بالكتابة.');$('majalisAssistantInput').focus();return}
-  if(speechRecognition){stopListening();return}
-  openPanel();window.speechSynthesis?.cancel();voiceReplyEnabled=true;
-  const recognition=new SR();speechRecognition=recognition;recognition.lang='ar-SA';recognition.interimResults=true;recognition.continuous=false;
-  mic.classList.add('listening');mic.setAttribute('aria-pressed','true');showNotice('أسمعك الآن. تحدث، وسأكتب كلامك ثم أرسله.');
-  recognition.onresult=event=>{let transcript='';for(let i=event.resultIndex;i<event.results.length;i++)transcript+=event.results[i][0].transcript;$('majalisAssistantInput').value=transcript.trim();if(event.results[event.results.length-1].isFinal&&transcript.trim()){showNotice('');sendMessage(transcript.trim())}};
-  recognition.onerror=event=>{if(event.error!=='aborted')showNotice(event.error==='not-allowed'?'اسمح للمتصفح باستخدام الميكروفون ثم حاول مرة أخرى.':'تعذر سماع الصوت. حاول مرة أخرى أو استخدم الكتابة.');stopListening()};
-  recognition.onend=()=>{speechRecognition=null;mic.classList.remove('listening');mic.setAttribute('aria-pressed','false')};
-  try{recognition.start()}catch{stopListening();showNotice('تعذر تشغيل الميكروفون. حاول مرة أخرى.')}
-}
-function installVoiceControls(){
-  const form=$('majalisAssistantForm');if(!form||$('majalisAssistantMic'))return;
-  const mic=document.createElement('button');mic.type='button';mic.id='majalisAssistantMic';mic.className='majalis-assistant-mic';mic.setAttribute('aria-label','تحدث مع مساعد مجالس');mic.setAttribute('aria-pressed','false');mic.title='تحدث مع مساعد مجالس';mic.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"></path></svg>';
-  mic.addEventListener('click',startVoiceInput);form.insertBefore(mic,$('majalisAssistantSend'));
-  const entryPrimary=document.querySelector('[data-assistant-start="new"]');if(entryPrimary){entryPrimary.innerHTML='<span class="assistant-start-mic" aria-hidden="true">●</span> إعداد اجتماع جديد';entryPrimary.title='يمكنك المتابعة بالكتابة أو الحديث'}
-}
+function appendAssistant(text){setAnswer(text);history.push({role:'assistant',text:String(text).slice(0,1200)});saveHistory();refreshContext()}
 function nextMissing(){return getMeetingSummary().missing[0]||null}
 function detectEntity(text){const normalized=String(text||'');for(const [id,aliases] of Object.entries(ENTITY_ALIASES))if(aliases.some(alias=>normalized.includes(alias)))return id;return ''}
 function detectMeeting(text,entityId){
@@ -188,11 +167,11 @@ function localGuide(text){
 
 async function loadAiClient(){
   if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
-  const [{initializeApp,getApps},{getFunctions,httpsCallable}]=await Promise.all([import('https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/12.16.0/firebase-functions.js')]);
-  const firebaseApp=getApps().find(item=>item.name==='majalis-assistant')||initializeApp(FIREBASE_CONFIG,'majalis-assistant'),functions=getFunctions(firebaseApp,'us-central1'),call=httpsCallable(functions,'majalisAssistant',{timeout:12000});
-  window.MajalisAssistantAI={ask:async payload=>(await call(payload)).data};return window.MajalisAssistantAI;
+  await import('./majalis-text-ai.js?v=1.13.1');
+  if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
+  throw new Error('gemini-client-unavailable');
 }
-async function askAi(text){if(aiUnavailable)throw new Error('ai-unavailable');const client=await loadAiClient();return client.ask({message:String(text).slice(0,2000),context:getMeetingSummary(),history:history.slice(-8).map(item=>({role:item.role,text:item.text.slice(0,1000)})),conversation_id:currentConversationId})}
+async function askAi(text){if(aiUnavailable)throw new Error('ai-unavailable');const client=await loadAiClient();return client.ask({message:String(text).slice(0,2000),context:getPlatformContext(),history:history.slice(-8).map(item=>({role:item.role,text:item.text.slice(0,1000)})),conversation_id:currentConversationId})}
 async function executeToolCall(call){
   const name=call?.name,args=call?.arguments||{};
   if(name==='navigate_to_section')return navigateToSection(args.section_id,args.reason);
@@ -210,24 +189,24 @@ async function executeToolCall(call){
   return {ok:false,error:'tool_not_allowed'};
 }
 async function sendMessage(text){
-  const value=String(text??$('majalisAssistantInput').value).trim();if(!value||chatBusy)return;openPanel();$('majalisAssistantInput').value='';showSuggestions([]);appendMessage('user',value);history.push({role:'user',text:value.slice(0,1200)});saveHistory();setBusy(true);const thinking=appendThinking();
+  const value=String(text??$('majalisAssistantInput').value).trim();if(!value||chatBusy)return;openAssistant(false);$('majalisAssistantInput').value='';showSuggestions([]);history.push({role:'user',text:value.slice(0,1200)});saveHistory();setBusy(true);const thinking=appendThinking();
   try{
     let result;try{result=await askAi(value)}catch(error){aiUnavailable=true;showNotice('تعذر تشغيل المساعد الذكي الآن. يمكنك متابعة إعداد الاجتماع، وسأبقي الإرشادات الأساسية متاحة.');result=localGuide(value)}
     thinking.remove();if(result?.action)result.action();if(result?.proposal)renderProposal(result.proposal.title,result.proposal.description,result.proposal.confirm);if(result?.reply)appendAssistant(result.reply);for(const call of result?.tool_calls||[])await executeToolCall(call);showSuggestions(result?.suggestions||smartSuggestions());
-  }catch(error){thinking.remove();console.error('Majalis assistant:',error);appendAssistant('تعذر إكمال هذه الخطوة. يمكنك متابعة العمل في مجالس، ولم تتغير بيانات الاجتماع.');showSuggestions(smartSuggestions())}finally{setBusy(false);$('majalisAssistantInput').focus()}
+  }catch(error){thinking.remove();console.error('Majalis assistant:',error);appendAssistant('تعذر إكمال هذه الخطوة. بقيت بيانات الاجتماع كما هي.');showSuggestions(smartSuggestions())}finally{setBusy(false);refreshContext();$('majalisAssistantInput').focus()}
 }
 function smartSuggestions(){const summary=getMeetingSummary(),next=summary.missing[0];if(next)return [{label:`أكمل ${next.label}`,run:()=>focusField(next.field_id,next.label),primary:true},{label:'اعرض النواقص',message:'اعرض النواقص'}];return [{label:'راجع الجاهزية',message:'راجع الجاهزية',primary:true},{label:'افتح الوثائق',run:()=>navigateToSection('documents','الوثائق')}];}
 
 function bind(){
-  installVoiceControls();
-  document.querySelectorAll('[data-assistant-start]').forEach(button=>button.addEventListener('click',()=>{const mode=button.dataset.assistantStart;if(mode==='new')voiceReplyEnabled=true;initialQuestion(mode);if(mode==='new')startVoiceInput()}));
-  $('majalisAssistantSkip').addEventListener('click',dismissAssistant);$('majalisAssistantToggle').addEventListener('click',()=>$('majalisAssistantPanel').hidden?openPanel():closePanel());$('majalisAssistantPanelClose').addEventListener('click',closePanel);$('majalisAssistantDockClose').addEventListener('click',dismissAssistant);
-  $('majalisAssistantNewChat').addEventListener('click',()=>{if(!confirm('بدء محادثة جديدة؟ ستبقى بيانات الاجتماع كما هي.'))return;makeConversation(true);$('majalisAssistantTranscript').innerHTML='';showNotice('');initialQuestion('new')});
-  $('majalisAssistantForm').addEventListener('submit',event=>{event.preventDefault();sendMessage()});$('majalisAssistantInput').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}});$('majalisAssistantInput').addEventListener('input',event=>{event.target.style.height='auto';event.target.style.height=`${Math.min(115,event.target.scrollHeight)}px`});
+  $('majalisAssistantSkip').addEventListener('click',dismissAssistant);$('majalisAssistantToggle').addEventListener('click',()=>openAssistant());$('majalisAssistantDockClose').addEventListener('click',dismissAssistant);
+  $('majalisAssistantForm').addEventListener('submit',event=>{event.preventDefault();sendMessage()});$('majalisAssistantInput').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();sendMessage()}});
+  const startVoice=()=>window.MajalisVoice?.start?.();$('majalisAssistantVoiceStart').addEventListener('click',startVoice);$('majalisAssistantMic').addEventListener('click',startVoice);$('majalisAssistantDockMic').addEventListener('click',startVoice);
   window.addEventListener('online',()=>{aiUnavailable=false;showNotice('')});
   window.addEventListener('majalis:assistant-conversation',event=>applyConversation(event.detail));
   window.addEventListener('majalis:assistant-new-meeting',()=>{makeConversation(true);renderConversation();showNotice('')});
+  window.addEventListener('majalis:voice-state',event=>{const listening=event.detail?.state==='listening';[$('majalisAssistantVoiceStart'),$('majalisAssistantMic'),$('majalisAssistantDockMic')].forEach(el=>el?.classList.toggle('is-listening',listening));if($('majalisAssistantVoiceStatus'))$('majalisAssistantVoiceStatus').textContent=event.detail?.label||'اضغط وقل ما تريد'});
+  document.addEventListener('input',event=>{if(event.target?.matches?.('input,select,textarea'))setTimeout(refreshContext,80)},true);document.addEventListener('change',()=>setTimeout(refreshContext,80),true);
 }
-function init(){if(!app())return setTimeout(init,50);restoreConversation();bind();if(sessionStorage.getItem('majalis_assistant_skipped')==='1')$('majalisAssistantEntry').hidden=true}
+function init(){if(!app())return setTimeout(init,50);restoreConversation();bind();refreshContext();showSuggestions([{label:'إعداد اجتماع جديد',message:'إعداد اجتماع جديد',primary:true},{label:'إكمال الاجتماع الحالي',message:'إكمال الاجتماع الحالي'},{label:'اشرح لي المنصة',message:'أريد فهم المنصة'}]);if(sessionStorage.getItem('majalis_assistant_skipped')==='1')$('majalisAssistantEntry').hidden=true}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
