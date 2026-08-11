@@ -176,7 +176,7 @@ function localGuide(text){
 
 async function loadAiClient(){
   if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
-  await import('./majalis-text-ai.js?v=1.13.3');
+  await import('./majalis-text-ai.js?v=1.13.5');
   if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
   throw new Error('gemini-client-unavailable');
 }
