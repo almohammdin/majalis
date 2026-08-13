@@ -43,3 +43,4 @@ jobs:
           git add majalis-upgrade.js .github/workflows/majalis-finalize.yml .github/scripts/majalis-finalize.py
           git commit -m 'Complete Majalis voting percentage coverage'
           git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
+# rerun after correcting acceptance assertion
