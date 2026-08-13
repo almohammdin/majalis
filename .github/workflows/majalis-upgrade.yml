@@ -1,0 +1,123 @@
+name: Apply Majalis v1.13.7 upgrade
+
+on:
+  push:
+    branches:
+      - agent/majalis-documents-voting-waqqe-assistant
+    paths:
+      - .github/workflows/majalis-upgrade.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-documents-voting-waqqe-assistant
+          fetch-depth: 0
+
+      - name: Patch current Majalis files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text, old, new, label):
+              if old not in text:
+                  raise SystemExit(f'Missing patch anchor: {label}')
+              return text.replace(old, new, 1)
+
+          # index.html: keep the current platform, preserve legacy attachments, load the integrated upgrade.
+          p=Path('index.html')
+          s=p.read_text()
+          s=s.replace('v=1.13.6','v=1.13.7')
+          s=s.replace("const TOOL_VERSION='v1.13.6';","const TOOL_VERSION='v1.13.7';")
+          old="function normalizeMeetingAttachment(item){return {id:item?.id??Date.now()+Math.floor(Math.random()*1000),name:String(item?.name||'')}}"
+          new="function normalizeMeetingAttachment(item){const source=item||{};return {id:source.id??Date.now()+Math.floor(Math.random()*1000),name:String(source.name||''),originalName:String(source.originalName||source.fileName||''),mimeType:String(source.mimeType||source.type||''),size:Number(source.size||0)||0,uploadedAt:String(source.uploadedAt||''),storagePath:String(source.storagePath||'')}}"
+          s=replace_once(s,old,new,'attachment metadata compatibility')
+          anchor='<script src="./majalis-assistant.js?v=1.13.7" defer></script>'
+          if './majalis-upgrade.js?v=1.13.7' not in s:
+              s=replace_once(s,anchor,'<script type="module" src="./majalis-upgrade.js?v=1.13.7"></script>\n'+anchor,'upgrade module loader')
+          p.write_text(s)
+
+          # Text assistant: direct target navigation and allowlisted external tools.
+          p=Path('majalis-assistant.js')
+          s=p.read_text().replace("./majalis-text-ai.js?v=1.13.6","./majalis-text-ai.js?v=1.13.7")
+          anchor="  if(name==='focus_field')return focusField(args.field_id,args.message);\n"
+          addition="  if(name==='navigate_to_target')return window.MajalisAssistantBridge?.navigateToTarget?.(args.target_id,args.message||args.reason||'')||{ok:false,error:'target_navigation_unavailable'};\n  if(name==='open_external_tool')return window.MajalisAssistantBridge?.openExternalTool?.(args.tool_id)||{ok:false,error:'external_tool_unavailable'};\n"
+          s=replace_once(s,anchor,anchor+addition,'assistant executive tools')
+          anchor="function localGuide(text){\n  const value=String(text||'').trim(),summary=getMeetingSummary(),f=snapshot().fields||{};\n"
+          addition="  if(/افتح\\s*وق[ّ]?ع|كيف.*أوقع.*pdf|كيف.*اوقع.*pdf|أوقع المحضر|اوقع المحضر|أحط توقيعي|احط توقيعي/i.test(value))return {reply:'أفتح لك وقّع لتوقيع ملف PDF.',action:()=>window.MajalisAssistantBridge?.openExternalTool?.('waqqe'),suggestions:[]};\n  if(/مرفقات? الدعوة|أضيف مرفق.*دعوة|اضيف مرفق.*دعوة/i.test(value))return {reply:'فتحت لك مرفقات الدعوة.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('invitation_attachments','مرفقات الدعوة'),suggestions:[]};\n  if(/المحضر الموقع|رفع المحضر بعد التوقيع|أرفق المحضر الموقع|ارفق المحضر الموقع/i.test(value))return {reply:'فتحت لك مكان إرفاق المحضر الموقع.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('signed_minutes','المحضر الموقع'),suggestions:[]};\n  if(/متابعة التوقيع|تابع التوقيع/i.test(value))return {reply:'فتحت لك متابعة توقيع المحضر.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('signature_tracking','متابعة التوقيع'),suggestions:[]};\n  if(/نسبة التصويت|نتيجة التصويت|وديني للتصويت|افتح التصويت|أبغى.*التصويت|ابغى.*التصويت/i.test(value))return {reply:'فتحت لك منطقة التصويت والنتيجة.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('voting','التصويت'),suggestions:[]};\n"
+          s=replace_once(s,anchor,anchor+addition,'assistant local executive routing')
+          p.write_text(s)
+
+          # Gemini text planning: add granular targets and allowlisted external-tool action.
+          p=Path('majalis-text-ai.js')
+          s=p.read_text()
+          s=replace_once(s,"const ACTIONS=['none','navigate','focus','propose_field','propose_agenda','propose_participant','validate','explain'];","const ACTIONS=['none','navigate','focus','target','external','propose_field','propose_agenda','propose_participant','validate','explain'];",'text ai actions')
+          s=replace_once(s,"requirementId:Schema.string()},optionalProperties:['sectionId','fieldId','value','message','title','purpose','name','role','countsQuorum','stageId','requirementId']","requirementId:Schema.string(),targetId:Schema.string(),toolId:Schema.string()},optionalProperties:['sectionId','fieldId','value','message','title','purpose','name','role','countsQuorum','stageId','requirementId','targetId','toolId']",'text ai schema')
+          old="اختر إجراء واحدا فقط عند الحاجة: navigate للانتقال، focus لإبراز حقل، propose_field لاقتراح قيمة تحتاج موافقة، propose_agenda لبند، propose_participant لمشارك، validate للفحص، explain لشرح قاعدة من محرك مجالس."
+          new="إذا كانت الوظيفة موجودة داخل مجالس فنفذ الوصول إليها بدلا من شرح الطريق للمستخدم. استخدم target للوصول المباشر إلى عنصر دقيق. targetId المسموحة: meeting_data, participants, agenda, invitation_attachments, management, attendance, voting, vote_result, minutes, documents, signed_minutes, signature_tracking, waqqe. استخدم external فقط لفتح خدمة مرتبطة ومسموحة، وحاليا toolId الوحيدة هي waqqe. التنقل وفتح الأقسام والأدوات لا يحتاج تأكيدا. استخدم navigate للقسم العام وfocus لحقل بعينه، وpropose_field لاقتراح قيمة تحتاج موافقة، propose_agenda لبند، propose_participant لمشارك، validate للفحص، explain لشرح قاعدة من محرك مجالس."
+          s=replace_once(s,old,new,'text ai executive instruction')
+          anchor="    if(raw.action==='focus')toolCalls.push({name:'focus_field',arguments:{field_id:raw.fieldId,message:raw.message||raw.reply||''}});\n"
+          addition="    if(raw.action==='target')toolCalls.push({name:'navigate_to_target',arguments:{target_id:raw.targetId,message:raw.message||raw.reply||''}});\n    if(raw.action==='external')toolCalls.push({name:'open_external_tool',arguments:{tool_id:raw.toolId||'waqqe'}});\n"
+          s=replace_once(s,anchor,anchor+addition,'text ai tool mapping')
+          p.write_text(s)
+
+          # Gemini Live tools: share the same granular targets and external allowlist.
+          p=Path('majalis-voice-tools.js')
+          s=p.read_text()
+          s=replace_once(s,"const SECTION_IDS=['meeting','participants','agenda','management','documents'];","const SECTION_IDS=['meeting','participants','agenda','management','documents'];\nconst TARGET_IDS=['meeting_data','participants','agenda','invitation_attachments','management','attendance','voting','vote_result','minutes','documents','signed_minutes','signature_tracking','waqqe'];",'voice target ids')
+          anchor="  {name:'navigate_to_section',description:'انتقل فعليا إلى قسم في مجالس.',parametersJsonSchema:{type:'object',properties:{section_id:{type:'string',enum:SECTION_IDS},reason:{type:'string'}},required:['section_id','reason'],additionalProperties:false}},\n"
+          addition="  {name:'navigate_to_target',description:'انتقل مباشرة إلى وظيفة أو عنصر دقيق داخل مجالس وافتحه أو ركز عليه. استخدمها بدلا من شرح مكان العنصر.',parametersJsonSchema:{type:'object',properties:{target_id:{type:'string',enum:TARGET_IDS},message:{type:'string'}},required:['target_id','message'],additionalProperties:false}},\n  {name:'open_external_tool',description:'افتح خدمة خارجية معتمدة مرتبطة بمجالس. لا تقبل رابطا حرا؛ معرف الخدمة المسموح حاليا waqqe فقط.',parametersJsonSchema:{type:'object',properties:{tool_id:{type:'string',enum:['waqqe']}},required:['tool_id'],additionalProperties:false}},\n"
+          s=replace_once(s,anchor,anchor+addition,'voice declarations')
+          anchor="  if(name==='navigate_to_section')return bridge.navigateToSection(args.section_id,args.reason);\n"
+          addition="  if(name==='navigate_to_target')return bridge.navigateToTarget?.(args.target_id,args.message)||{ok:false,error:'target-navigation-unavailable'};\n  if(name==='open_external_tool')return bridge.openExternalTool?.(args.tool_id)||{ok:false,error:'external-tool-unavailable'};\n"
+          s=replace_once(s,anchor,anchor+addition,'voice tool execution')
+          p.write_text(s)
+
+          # Gemini Live runtime: direct-execution instruction + Screen Wake Lock lifecycle.
+          p=Path('majalis-voice.js')
+          s=p.read_text().replace("./majalis-voice-tools.js?v=1.13.6","./majalis-voice-tools.js?v=1.13.7").replace("./majalis-voice-playback.worklet.js?v=1.13.6","./majalis-voice-playback.worklet.js?v=1.13.7")
+          s=replace_once(s,"let active=false,session=null,micStream=null,micContext=null,outputContext=null,micSource=null,micProcessor=null,silentGain=null,outputWorklet=null,outputGain=null,micSuppressed=false,outputQueuedUntil=0,resumeMicTimer=null,streamEndSent=false;","let active=false,session=null,micStream=null,micContext=null,outputContext=null,micSource=null,micProcessor=null,silentGain=null,outputWorklet=null,outputGain=null,micSuppressed=false,outputQueuedUntil=0,resumeMicTimer=null,streamEndSent=false,wakeLockSentinel=null;",'wake lock state')
+          anchor="const emitState=(state,label)=>window.dispatchEvent(new CustomEvent('majalis:voice-state',{detail:{state,label}}));\n"
+          addition="\nasync function requestWakeLock(){if(!active||document.visibilityState!=='visible'||!navigator.wakeLock||wakeLockSentinel)return;try{const sentinel=await navigator.wakeLock.request('screen');wakeLockSentinel=sentinel;sentinel.addEventListener('release',()=>{if(wakeLockSentinel===sentinel)wakeLockSentinel=null},{once:true})}catch{wakeLockSentinel=null}}\nasync function releaseWakeLock(){const sentinel=wakeLockSentinel;wakeLockSentinel=null;if(!sentinel)return;try{await sentinel.release()}catch{}}\ndocument.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&active&&!wakeLockSentinel)requestWakeLock().catch(()=>{})});\n"
+          s=replace_once(s,anchor,anchor+addition,'wake lock helpers')
+          old="استخدم أدوات مجالس للتنقل والتركيز والفحص والتنفيذ. عندما تنتقل إلى حقل، اشرح للمستخدم باختصار ماذا يكتب فيه ولماذا."
+          new="استخدم أدوات مجالس للتنقل والتركيز والفحص والتنفيذ. إذا كان المستخدم يريد وظيفة موجودة داخل مجالس، نفذ الانتقال أو الفتح مباشرة ولا تكتف بشرح أين يذهب. استخدم navigate_to_target للوصول إلى مرفقات الدعوة أو التصويت أو المحضر الموقع أو متابعة التوقيع أو بطاقة وقّع. استخدم open_external_tool لفتح وقّع عند طلب توقيع PDF أو فتح وقّع. التنقل وفتح الأدوات لا يحتاج تأكيدا. عندما تنتقل إلى حقل إدخال، اشرح باختصار ماذا يكتب فيه ولماذا."
+          s=replace_once(s,old,new,'voice executive instruction')
+          s=replace_once(s,"ensureUi();injectStyles();document.getElementById('majalisVoiceOverlay').hidden=false;active=true;setStatus('أجهز المحادثة…','connecting');setDetail('لحظات وأسمعك.');\n  try{\n    await prepareAudio();","ensureUi();injectStyles();document.getElementById('majalisVoiceOverlay').hidden=false;active=true;setStatus('أجهز المحادثة…','connecting');setDetail('لحظات وأسمعك.');\n  try{\n    await requestWakeLock();\n    await prepareAudio();",'wake lock start')
+          s=replace_once(s,"async function shutdown(){clearTimeout(resumeMicTimer);","async function shutdown(){await releaseWakeLock();clearTimeout(resumeMicTimer);",'wake lock shutdown')
+          old="onclose:()=>{if(active){setStatus('انقطع الاتصال','error');setDetail('انقطع الاتصال الصوتي. حاول مرة أخرى.')}}"
+          new="onclose:()=>{releaseWakeLock().catch(()=>{});if(active){active=false;setStatus('انقطع الاتصال','error');setDetail('انقطع الاتصال الصوتي. حاول مرة أخرى.')}}"
+          s=replace_once(s,old,new,'wake lock session close')
+          p.write_text(s)
+          PY
+
+      - name: Validate JavaScript and integration anchors
+        shell: bash
+        run: |
+          node --check majalis-assistant.js
+          node --input-type=module --check < majalis-text-ai.js
+          node --input-type=module --check < majalis-voice-tools.js
+          node --input-type=module --check < majalis-voice.js
+          node --input-type=module --check < majalis-upgrade.js
+          grep -q 'majalis-upgrade.js?v=1.13.7' index.html
+          grep -q "const TOOL_VERSION='v1.13.7'" index.html
+          grep -q 'storagePath:String(source.storagePath' index.html
+          grep -q 'navigate_to_target' majalis-assistant.js
+          grep -q 'open_external_tool' majalis-voice-tools.js
+          grep -q 'wakeLockSentinel' majalis-voice.js
+
+      - name: Commit patched files and remove one-time workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/majalis-upgrade.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html majalis-assistant.js majalis-text-ai.js majalis-voice.js majalis-voice-tools.js majalis-upgrade.js firebase.json storage.rules .github/workflows/majalis-upgrade.yml
+          git commit -m 'Develop Majalis documents voting Waqqe and executive assistant'
+          git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
