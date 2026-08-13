@@ -1,0 +1,89 @@
+name: Hotfix Majalis v1.13.9 admin mobile login
+
+on:
+  push:
+    branches:
+      - agent/majalis-documents-voting-waqqe-assistant
+    paths:
+      - .github/workflows/majalis-v1139-admin-mobile.yml
+
+permissions:
+  contents: write
+
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-documents-voting-waqqe-assistant
+          fetch-depth: 0
+      - name: Patch admin mobile fallback
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('majalis-assistant.js')
+          s=p.read_text()
+          anchor="function init(){if(!app())return setTimeout(init,50);restoreConversation();bind();refreshContext();"
+          if anchor not in s:
+              raise SystemExit('assistant init anchor missing')
+          patch=r'''
+function bindAdminLoginFallback(){
+  const openButton=$('adminAccessButton'),modal=$('adminLoginModal'),form=$('adminLoginForm'),message=$('adminLoginMessage'),submit=$('adminLoginSubmit');
+  if(!openButton||!modal||!form||!submit)return;
+  const forceOpen=()=>{modal.hidden=false;document.body.style.overflow='hidden';setTimeout(()=>$('adminEmail')?.focus(),40)};
+  openButton.addEventListener('click',()=>setTimeout(()=>{if(modal.hidden)forceOpen()},0));
+  document.querySelectorAll('[data-close-admin-modal="login"]').forEach(button=>button.addEventListener('click',()=>{modal.hidden=true;document.body.style.overflow=''}));
+  form.addEventListener('submit',event=>{
+    event.preventDefault();
+    if(submit.disabled){
+      const pending=String(message?.textContent||'').includes('جاري');
+      if(pending)setTimeout(()=>{if(submit.disabled&&String(message?.textContent||'').includes('جاري')){submit.disabled=false;if(message)message.textContent='استغرق الاتصال وقتا أطول من المتوقع. حاول مرة أخرى.'}},12000);
+      return;
+    }
+    fallbackAdminSignIn().catch(console.error);
+  });
+  async function fallbackAdminSignIn(){
+    const email=String($('adminEmail')?.value||'').trim(),password=String($('adminPassword')?.value||'');
+    if(!email||!password){if(message)message.textContent='أدخل البريد الإلكتروني وكلمة المرور.';return}
+    submit.disabled=true;if(message)message.textContent='جاري الاتصال بحساب الإدارة...';
+    const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('firebase_timeout')),12000));
+    try{
+      const modules=await Promise.race([Promise.all([import('https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js')]),timeout]);
+      const appMod=modules[0],authMod=modules[1],config={apiKey:'AIzaSyCHefMzpFRZi6TQHMt7NTkqMAzPFQB3_6U',authDomain:'majalis-admin.firebaseapp.com',projectId:'majalis-admin',storageBucket:'majalis-admin.firebasestorage.app',messagingSenderId:'7816691347',appId:'1:7816691347:web:fdee56d2bc246ae262d766',measurementId:'G-GT45S5QZSN'},fbApp=appMod.getApps().find(item=>item.options?.projectId==='majalis-admin')||appMod.initializeApp(config,'majalis-admin-fallback'),auth=authMod.getAuth(fbApp);
+      await authMod.setPersistence(auth,authMod.browserLocalPersistence).catch(()=>{});
+      const result=await Promise.race([authMod.signInWithEmailAndPassword(auth,email,password),timeout]);
+      if(result.user.uid!=='KvM4dx24l0VNRC2ueBgOL9tanlW2'){await authMod.signOut(auth);throw new Error('unauthorized_admin')}
+      if(message)message.textContent='تم تسجيل الدخول. جاري فتح الإدارة...';
+      setTimeout(()=>location.reload(),250);
+    }catch(error){
+      console.error('Majalis admin fallback:',error);
+      const code=String(error?.code||error?.message||'');
+      if(message)message.textContent=code.includes('invalid-credential')||code.includes('wrong-password')?'البريد أو كلمة المرور غير صحيحة.':code.includes('too-many-requests')?'تم تقييد المحاولات مؤقتا. حاول لاحقا.':code.includes('network')||code.includes('timeout')?'تعذر الاتصال بخدمة تسجيل الدخول. تحقق من الإنترنت ثم أعد المحاولة.':code.includes('unauthorized_admin')?'هذا الحساب غير مصرح له بإدارة مجالس.':'تعذر تسجيل الدخول الآن. أعد المحاولة.';
+    }finally{submit.disabled=false}
+  }
+}
+'''
+          s=s.replace(anchor,patch+"\n"+anchor.replace("restoreConversation();","restoreConversation();bindAdminLoginFallback();"),1)
+          s=s.replace("./majalis-text-ai.js?v=1.13.8","./majalis-text-ai.js?v=1.13.9")
+          p.write_text(s)
+
+          i=Path('index.html')
+          html=i.read_text().replace('1.13.8','1.13.9')
+          i.write_text(html)
+          PY
+      - name: Validate hotfix
+        run: |
+          node --check majalis-assistant.js
+          grep -q 'bindAdminLoginFallback' majalis-assistant.js
+          grep -q 'firebase_timeout' majalis-assistant.js
+          grep -q 'majalis-assistant.js?v=1.13.9' index.html
+      - name: Commit and remove workflow
+        run: |
+          rm -f .github/workflows/majalis-v1139-admin-mobile.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add majalis-assistant.js index.html .github/workflows/majalis-v1139-admin-mobile.yml
+          git commit -m 'Fix mobile admin login responsiveness in Majalis v1.13.9'
+          git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
