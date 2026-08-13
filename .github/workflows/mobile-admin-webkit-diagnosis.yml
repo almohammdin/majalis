@@ -1,0 +1,20 @@
+name: Safari WebKit admin diagnosis
+
+on:
+  push:
+    branches:
+      - agent/admin-mobile-diagnosis
+    paths:
+      - .github/workflows/mobile-admin-webkit-diagnosis.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright
+        run: npm install playwright@1.55 --no-save
+      - name: Install WebKit
+        run: npx playwright install --with-deps webkit
+      - name: Test published Safari-like mobile admin login
+        run: node .github/scripts/mobile-admin-webkit-test.mjs
