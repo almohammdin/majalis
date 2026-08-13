@@ -1,0 +1,35 @@
+name: Majalis v1.14.0 UI acceptance
+on:
+  push:
+    branches:
+      - agent/majalis-v1140-footer-ballot-closing-voice
+    paths:
+      - .github/workflows/v1140-ui-acceptance.yml
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-v1140-footer-ballot-closing-voice
+          fetch-depth: 0
+      - name: Install browser test dependency
+        run: |
+          npm install playwright@1.55 --no-save
+          npx playwright install --with-deps chromium
+      - name: Run local UI acceptance
+        run: |
+          python -m http.server 4173 >/tmp/majalis-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          node .github/scripts/v1140-ui-test.mjs
+      - name: Remove temporary acceptance files
+        run: |
+          rm -f .github/scripts/v1140-ui-test.mjs .github/workflows/v1140-ui-acceptance.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/scripts/v1140-ui-test.mjs .github/workflows/v1140-ui-acceptance.yml
+          git commit -m 'Remove v1.14.0 acceptance harness'
+          git push origin HEAD:agent/majalis-v1140-footer-ballot-closing-voice
