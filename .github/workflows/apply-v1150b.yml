@@ -1,0 +1,38 @@
+name: Apply Majalis v1.15.0 retry
+on:
+  push:
+    branches: [agent/majalis-decision-card-v1150]
+    paths: [.github/workflows/apply-v1150b.yml]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-decision-card-v1150
+          fetch-depth: 0
+      - run: python .github/scripts/apply-v1150.py
+      - name: Validate
+        run: |
+          node --check majalis-decision-card.js
+          node --check majalis-upgrade.js
+          grep -q 'majalis-decision-card.js?v=1.15.0' index.html
+          grep -q 'إنشاء بطاقة قرار' majalis-decision-card.js
+          grep -q 'اعتماد نتيجة الفرز' majalis-decision-card.js
+          grep -q 'جميع المشاركين في مستند واحد' majalis-decision-card.js
+          grep -q 'صفحة مستقلة لكل مشارك' majalis-decision-card.js
+          grep -q 'أكثر من 50% من رأس المال' majalis-decision-card.js
+          grep -q 'grid-column:1/-1!important' majalis-upgrade.js
+          grep -q 'majalis-attach-file-button' majalis-upgrade.js
+          grep -q '\${inputId}' majalis-upgrade.js
+          echo V1150_STATIC_OK
+      - name: Commit clean result
+        run: |
+          rm -f .github/scripts/apply-v1150.py .github/workflows/apply-v1150.yml .github/workflows/apply-v1150b.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Add decision card and fix invitation attachments'
+          git push origin HEAD:agent/majalis-decision-card-v1150
