@@ -1,0 +1,18 @@
+name: Mobile admin diagnosis
+
+on:
+  push:
+    branches:
+      - agent/admin-mobile-diagnosis
+    paths:
+      - .github/workflows/mobile-admin-diagnosis.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install puppeteer core
+        run: npm install puppeteer-core@24 --no-save
+      - name: Test published mobile admin login
+        run: node .github/scripts/mobile-admin-test.mjs
