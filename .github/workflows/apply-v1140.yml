@@ -1,0 +1,36 @@
+name: Apply Majalis v1.14.0
+on:
+  push:
+    branches:
+      - agent/majalis-v1140-footer-ballot-closing-voice
+    paths:
+      - .github/workflows/apply-v1140.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-v1140-footer-ballot-closing-voice
+          fetch-depth: 0
+      - name: Apply patch
+        run: python .github/scripts/apply-v1140.py
+      - name: Validate JavaScript and anchors
+        run: |
+          node --check majalis-voice.js
+          node --check majalis-upgrade.js
+          grep -q 'VOICE_IDLE_TIMEOUT_MS=30000' majalis-voice.js
+          grep -q 'minutesClosingName' index.html
+          grep -q 'والله الموفق' index.html
+          grep -q 'blank-ballot-card' index.html
+          grep -q 'v1.14.0' index.html
+      - name: Commit result and remove temporary files
+        run: |
+          rm -f .github/scripts/apply-v1140.py .github/workflows/apply-v1140.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html majalis-voice.js .github/scripts/apply-v1140.py .github/workflows/apply-v1140.yml
+          git commit -m 'Improve footer ballots minutes closing and voice idle timeout'
+          git push origin HEAD:agent/majalis-v1140-footer-ballot-closing-voice
