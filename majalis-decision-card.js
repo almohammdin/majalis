@@ -25,13 +25,13 @@ function applyPatch(){
 
   window.participantIsPresentForVoting=present;
   window.votingParticipants=function(){
-    return (window.attendees||[]).map(normalizeParticipant).filter(person=>present(person)&&participantVotingWeight(person)>0);
+    return attendees.map(normalizeParticipant).filter(person=>present(person)&&participantVotingWeight(person)>0);
   };
   window.representedVotingRights=function(){
     return votingParticipants().reduce((sum,person)=>sum+participantVotingWeight(person),0);
   };
   window.representedOwnershipTotals=function(){
-    return (window.attendees||[]).map(normalizeParticipant).filter(present).reduce((a,p)=>{
+    return attendees.map(normalizeParticipant).filter(present).reduce((a,p)=>{
       a.ownedUnits+=cleanNumber(p.ownedUnits);
       a.proxyUnits+=cleanNumber(p.proxyUnits);
       a.votes+=participantVoteTotal(p);
@@ -44,7 +44,7 @@ function applyPatch(){
     window.buildOwnershipSnapshot=function(){
       const snap=originalBuildOwnershipSnapshot();
       if(!snap||!Array.isArray(snap.participants))return snap;
-      const attendance=new Map((window.attendees||[]).map(p=>[String(p?.id??''),String(p?.attendance||p?.status||'')]));
+      const attendance=new Map(attendees.map(p=>[String(p?.id??''),String(p?.attendance||p?.status||'')]));
       snap.participants=snap.participants.map(p=>{
         const isPresent=['inperson','remote'].includes(attendance.get(String(p?.id??''))||'');
         return isPresent?p:{...p,representedUnits:0,representedVotes:0};
@@ -78,12 +78,11 @@ function applyPatch(){
     }
   };
 
-  // يمنع أي إدخال يدوي يتجاوز الحقوق الممثلة قبل أن يصل إلى معالج الحفظ الأصلي.
   document.addEventListener('input',event=>{
     const input=event.target.closest?.('.agenda-result-input[data-key="votesFor"],.agenda-result-input[data-key="votesAgainst"],.agenda-result-input[data-key="votesAbstain"]');
     if(!input)return;
     const card=input.closest('[data-management-agenda-id]');
-    const item=(window.agendaItems||[]).find(x=>String(x.id)===String(card?.dataset.managementAgendaId));
+    const item=agendaItems.find(x=>String(x.id)===String(card?.dataset.managementAgendaId));
     if(!item)return;
     const key=input.dataset.key,previous=item[key]??'',candidate=typeof numericFieldValue==='function'?numericFieldValue(input.value):String(input.value||'').replace(/\D/g,''),available=ownershipRegisterEnabled()?representedVotingRights():votingParticipants().length;
     const next={votesFor:item.votesFor||'',votesAgainst:item.votesAgainst||'',votesAbstain:item.votesAbstain||'',[key]:candidate};
@@ -99,14 +98,13 @@ function applyPatch(){
     }
   },true);
 
-  // إذا تغير الحضور إلى غائب أو معتذر أو لم يسجل، تزال أي ورقة تصويت فردية محفوظة له.
   document.addEventListener('change',event=>{
     if(!event.target.classList?.contains('attendance-input'))return;
     setTimeout(()=>{
-      const row=event.target.closest('[data-attendance-id]'),person=(window.attendees||[]).find(x=>String(x.id)===String(row?.dataset.attendanceId));
+      const row=event.target.closest('[data-attendance-id]'),person=attendees.find(x=>String(x.id)===String(row?.dataset.attendanceId));
       if(!person)return;
       if(!present(person)){
-        (window.agendaItems||[]).forEach(item=>{
+        agendaItems.forEach(item=>{
           if(item.participantVotes&&Object.prototype.hasOwnProperty.call(item.participantVotes,String(person.id)))delete item.participantVotes[String(person.id)];
           if(item.voteTallySource==='participants'&&typeof applyParticipantVoteTally==='function')applyParticipantVoteTally(item);
         });
@@ -193,5 +191,5 @@ function decorateRepresentedRights(){
   }catch(error){console.error('Majalis represented-rights decoration:',error)}
 }
 
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadBase,{once:true});else loadBase();
+loadBase();
 })();
