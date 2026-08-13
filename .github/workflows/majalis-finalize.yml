@@ -1,0 +1,45 @@
+name: Finalize Majalis v1.13.7 acceptance
+
+on:
+  push:
+    branches:
+      - agent/majalis-documents-voting-waqqe-assistant
+    paths:
+      - .github/workflows/majalis-finalize.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-documents-voting-waqqe-assistant
+          fetch-depth: 0
+      - name: Add voting results to voting cards
+        run: python .github/scripts/majalis-finalize.py
+      - name: Validate JavaScript and acceptance anchors
+        run: |
+          node --check majalis-assistant.js
+          node --input-type=module --check < majalis-text-ai.js
+          node --input-type=module --check < majalis-voice-tools.js
+          node --input-type=module --check < majalis-voice.js
+          node --input-type=module --check < majalis-upgrade.js
+          grep -q 'majalis-ballot-results' majalis-upgrade.js
+          grep -q 'navigate_to_target' majalis-assistant.js
+          grep -q 'open_external_tool' majalis-voice-tools.js
+          grep -q 'wakeLockSentinel' majalis-voice.js
+          grep -q 'signedMinutesDocument' majalis-upgrade.js
+          grep -q 'invitation-attachments' majalis-upgrade.js
+      - name: Validate Firebase Storage rules with emulator
+        run: npx -y firebase-tools@latest emulators:exec --only storage --project demo-majalis "echo storage-rules-ok"
+      - name: Commit final acceptance fix and remove temporary files
+        run: |
+          rm -f .github/workflows/majalis-finalize.yml .github/scripts/majalis-finalize.py
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add majalis-upgrade.js .github/workflows/majalis-finalize.yml .github/scripts/majalis-finalize.py
+          git commit -m 'Complete Majalis voting percentage coverage'
+          git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
