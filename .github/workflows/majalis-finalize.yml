@@ -18,6 +18,10 @@ jobs:
         with:
           ref: agent/majalis-documents-voting-waqqe-assistant
           fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Add voting results to voting cards
         run: python .github/scripts/majalis-finalize.py
       - name: Validate JavaScript and acceptance anchors
@@ -43,4 +47,3 @@ jobs:
           git add majalis-upgrade.js .github/workflows/majalis-finalize.yml .github/scripts/majalis-finalize.py
           git commit -m 'Complete Majalis voting percentage coverage'
           git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
-# rerun after correcting acceptance assertion
