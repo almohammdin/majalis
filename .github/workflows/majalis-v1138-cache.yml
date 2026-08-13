@@ -1,0 +1,43 @@
+name: Finalize Majalis v1.13.8 cache bust
+on:
+  push:
+    branches:
+      - agent/majalis-documents-voting-waqqe-assistant
+    paths:
+      - .github/workflows/majalis-v1138-cache.yml
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/majalis-documents-voting-waqqe-assistant
+          fetch-depth: 0
+      - name: Bump browser cache keys
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text().replace('?v=1.13.7','?v=1.13.8')
+          s=s.replace("const TOOL_VERSION='v1.13.7';","const TOOL_VERSION='v1.13.8';")
+          s=s.replace('<span class="version">v1.13.6</span>','<span class="version">v1.13.8</span>')
+          p.write_text(s)
+          p=Path('majalis-assistant.js');s=p.read_text().replace("./majalis-text-ai.js?v=1.13.7","./majalis-text-ai.js?v=1.13.8");p.write_text(s)
+          p=Path('majalis-voice.js');s=p.read_text().replace("./majalis-voice-tools.js?v=1.13.7","./majalis-voice-tools.js?v=1.13.8").replace("./majalis-voice-playback.worklet.js?v=1.13.7","./majalis-voice-playback.worklet.js?v=1.13.8");p.write_text(s)
+          PY
+          node --check majalis-assistant.js
+          node --input-type=module --check < majalis-text-ai.js
+          node --input-type=module --check < majalis-upgrade.js
+          node --input-type=module --check < majalis-voice.js
+          grep -q "TOOL_VERSION='v1.13.8'" index.html
+          grep -q 'majalis-text-ai.js?v=1.13.8' index.html
+      - name: Commit and remove workflow
+        run: |
+          rm -f .github/workflows/majalis-v1138-cache.yml
+          git config user.name 'OpenAI Majalis Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html majalis-assistant.js majalis-voice.js .github/workflows/majalis-v1138-cache.yml
+          git commit -m 'Release Majalis v1.13.8 hotfix'
+          git push origin HEAD:agent/majalis-documents-voting-waqqe-assistant
