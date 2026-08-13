@@ -15,7 +15,7 @@ if css_anchor not in s:
     raise SystemExit('Missing ballot CSS anchor')
 s=s.replace(css_anchor,css_add,1)
 
-for token in ['majalis-ballot-results','ملخص نتيجة التصويت','الحصر فقط']:
+for token in ['majalis-ballot-results','ملخص نتيجة التصويت','للحصر فقط']:
     if token not in s:
         raise SystemExit(f'Missing final token {token}')
 p.write_text(s)
