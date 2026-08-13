@@ -14,7 +14,23 @@ function getCurrentDateTime(){
 }
 {
   const ai=getAI(app,{backend:new GoogleAIBackend()}),model=getGenerativeModel(ai,{model:'gemini-3.5-flash-lite',generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:.12,maxOutputTokens:700}});
-  const waitForAppCheck=async()=>{for(let i=0;i<30&&!window.MajalisVoiceGetAppCheckToken;i++)await new Promise(resolve=>setTimeout(resolve,100))};
+  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const ensureAppCheck=async(forceRefresh=false)=>{
+    for(let i=0;i<80&&typeof window.MajalisVoiceGetAppCheckToken!=='function';i++)await sleep(100);
+    if(typeof window.MajalisVoiceGetAppCheckToken!=='function')throw new Error('app-check-not-ready');
+    const token=await window.MajalisVoiceGetAppCheckToken({forceRefresh});
+    if(!token)throw new Error('app-check-token-missing');
+    return token;
+  };
+  const generate=async prompt=>{
+    await ensureAppCheck(false);
+    try{return await model.generateContent(prompt)}catch(error){
+      const message=String(error?.message||error||'');
+      if(!/app.?check|401|403|unauth|attest/i.test(message))throw error;
+      await ensureAppCheck(true);
+      return model.generateContent(prompt);
+    }
+  };
   const ask=async payload=>{
     const prompt=`أنت مساعد مجالس الذكي داخل منصة مجالس. لست بوت دردشة. افهم حالة الاجتماع ووجّه المستخدم ونفذ معه داخل الواجهة.
 تكلم بعربية سعودية سهلة ومهنية. اسأل سؤالا واحدا فقط. لا تسأل عن معلومة موجودة في السياق. لا تخترع قاعدة نظامية.
@@ -25,8 +41,17 @@ function getCurrentDateTime(){
 حالة مجالس: ${JSON.stringify(payload.context||{})}
 آخر التفاعل: ${JSON.stringify(payload.history||[])}
 طلب المستخدم: ${String(payload.message||'').slice(0,2000)}`;
-    await waitForAppCheck();
-    const response=await model.generateContent(prompt),raw=JSON.parse(response?.response?.text?.()||'{}'),toolCalls=[];
+    let response;
+    try{response=await generate(prompt)}catch(firstError){
+      console.warn('Majalis text AI first attempt:',firstError);
+      await sleep(350);
+      try{await ensureAppCheck(true)}catch{}
+      try{response=await model.generateContent(prompt)}catch(error){
+        console.error('Majalis text AI:',error);
+        return {reply:'تعذر الاتصال بالمساعد الذكي لهذه الرسالة. حاول مرة أخرى مباشرة.',tool_calls:[],suggestions:[],temporary_error:true};
+      }
+    }
+    const raw=JSON.parse(response?.response?.text?.()||'{}'),toolCalls=[];
     if(raw.action==='navigate')toolCalls.push({name:'navigate_to_section',arguments:{section_id:raw.sectionId,reason:raw.message||raw.reply||''}});
     if(raw.action==='focus')toolCalls.push({name:'focus_field',arguments:{field_id:raw.fieldId,message:raw.message||raw.reply||''}});
     if(raw.action==='target')toolCalls.push({name:'navigate_to_target',arguments:{target_id:raw.targetId,message:raw.message||raw.reply||''}});
