@@ -1,0 +1,26 @@
+import { webkit, devices } from 'playwright';
+
+const browser=await webkit.launch({headless:true});
+const context=await browser.newContext({...devices['iPhone 15']});
+const page=await context.newPage();
+const consoleErrors=[];const pageErrors=[];
+page.on('console',msg=>{if(msg.type()==='error')consoleErrors.push(msg.text())});
+page.on('pageerror',err=>pageErrors.push(String(err)));
+await page.goto('https://almohammdin.github.io/majalis/?webkit-admin-test=1',{waitUntil:'domcontentloaded',timeout:60000});
+await page.waitForSelector('#adminAccessButton',{timeout:15000});
+await page.locator('#adminAccessButton').click();
+await page.waitForTimeout(500);
+const after=await page.locator('#adminLoginModal').evaluate(el=>({hidden:el.hidden,display:getComputedStyle(el).display}));
+console.log('WEBKIT_MODAL_AFTER',JSON.stringify(after));
+if(after.hidden||after.display==='none')throw new Error('Safari/WebKit admin modal did not open');
+await page.locator('#adminEmail').fill('mobile-test@example.com');
+await page.locator('#adminPassword').fill('wrong-password-123');
+await page.locator('#adminLoginSubmit').click();
+await page.waitForTimeout(4000);
+const result=await page.evaluate(()=>({message:document.getElementById('adminLoginMessage')?.textContent||'',disabled:document.getElementById('adminLoginSubmit')?.disabled||false,modalHidden:document.getElementById('adminLoginModal')?.hidden||false}));
+console.log('WEBKIT_LOGIN_RESULT',JSON.stringify(result));
+console.log('WEBKIT_PAGE_ERRORS',JSON.stringify(pageErrors));
+console.log('WEBKIT_CONSOLE_ERRORS',JSON.stringify(consoleErrors.slice(-20)));
+if(!result.message.trim())throw new Error('Safari/WebKit login submit produced no user feedback');
+if(result.disabled)throw new Error('Safari/WebKit login submit remained disabled');
+await browser.close();
