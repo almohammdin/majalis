@@ -1,5 +1,6 @@
 const FIELD_IDS=['entityName','entityType','meetingType','meetingNo','meetingYear','meetingTitle','meetingMode','entityRegistrationNo','entityHeaderNote','enableOwnershipRegister','capitalTotalUnits','votingRightsBasis','capitalTotalVotes','capitalClassesNote','inviteCalendar','meetingCalendar','meetingHour','meetingMinute','meetingPeriod','location','invitationIntro','invitationClosing','aobInAgenda','chairName','secretaryName','quorumStatus','minutesStatus','minutesIntro','closingNote'];
 const SECTION_IDS=['meeting','participants','agenda','management','documents'];
+const TARGET_IDS=['meeting_data','participants','agenda','invitation_attachments','management','attendance','voting','vote_result','minutes','documents','signed_minutes','signature_tracking','waqqe'];
 const RIYADH_TIME_ZONE='Asia/Riyadh';
 function getCurrentDateTime(){
   const now=new Date(),gregorian=new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{timeZone:RIYADH_TIME_ZONE,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now),hijri=new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{timeZone:RIYADH_TIME_ZONE,weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(now),time=new Intl.DateTimeFormat('ar-SA-u-nu-latn',{timeZone:RIYADH_TIME_ZONE,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(now);
@@ -9,6 +10,8 @@ function getCurrentDateTime(){
 export const MAJALIS_TOOL_DECLARATIONS=[
   {name:'get_meeting_context',description:'اقرأ التاريخ والوقت الحاليين بتوقيت الرياض والحالة الحالية للاجتماع بما فيها الحقول والمشاركون والبنود والنواقص قبل الإجابة أو الاقتراح.',parametersJsonSchema:{type:'object',properties:{},additionalProperties:false}},
   {name:'navigate_to_section',description:'انتقل فعليا إلى قسم في مجالس.',parametersJsonSchema:{type:'object',properties:{section_id:{type:'string',enum:SECTION_IDS},reason:{type:'string'}},required:['section_id','reason'],additionalProperties:false}},
+  {name:'navigate_to_target',description:'انتقل مباشرة إلى وظيفة أو عنصر دقيق داخل مجالس وافتحه أو ركز عليه. استخدمها بدلا من شرح مكان العنصر.',parametersJsonSchema:{type:'object',properties:{target_id:{type:'string',enum:TARGET_IDS},message:{type:'string'}},required:['target_id','message'],additionalProperties:false}},
+  {name:'open_external_tool',description:'افتح خدمة خارجية معتمدة مرتبطة بمجالس. لا تقبل رابطا حرا؛ معرف الخدمة المسموح حاليا waqqe فقط.',parametersJsonSchema:{type:'object',properties:{tool_id:{type:'string',enum:['waqqe']}},required:['tool_id'],additionalProperties:false}},
   {name:'focus_field',description:'انتقل إلى حقل أو زر فعلي وميزه للمستخدم.',parametersJsonSchema:{type:'object',properties:{field_id:{type:'string',enum:[...FIELD_IDS,'addAttendee','addAgenda']},message:{type:'string'}},required:['field_id','message'],additionalProperties:false}},
   {name:'set_field_value',description:'طبق قيمة في حقل بعد موافقة المستخدم الصريحة في المحادثة الصوتية. لا تستخدمه لمجرد الاقتراح.',parametersJsonSchema:{type:'object',properties:{field_id:{type:'string',enum:FIELD_IDS},value:{anyOf:[{type:'string'},{type:'number'},{type:'boolean'}]},confirmed:{type:'boolean'}},required:['field_id','value','confirmed'],additionalProperties:false}},
   {name:'add_agenda_item',description:'أضف بندا بعد موافقة المستخدم الصريحة.',parametersJsonSchema:{type:'object',properties:{title:{type:'string'},purpose:{type:'string',enum:['إحاطة','مناقشة','اعتماد','تصويت']},confirmed:{type:'boolean'}},required:['title','purpose','confirmed'],additionalProperties:false}},
@@ -21,6 +24,8 @@ export async function executeMajalisTool(name,args={}){
   const bridge=window.MajalisAssistantBridge;if(!bridge)return {ok:false,error:'majalis-bridge-unavailable'};
   if(name==='get_meeting_context')return {ok:true,currentDateTime:getCurrentDateTime(),context:bridge.getPlatformContext()};
   if(name==='navigate_to_section')return bridge.navigateToSection(args.section_id,args.reason);
+  if(name==='navigate_to_target')return bridge.navigateToTarget?.(args.target_id,args.message)||{ok:false,error:'target-navigation-unavailable'};
+  if(name==='open_external_tool')return bridge.openExternalTool?.(args.tool_id)||{ok:false,error:'external-tool-unavailable'};
   if(name==='focus_field')return bridge.focusField(args.field_id,args.message);
   if(name==='set_field_value'){if(args.confirmed!==true)return {ok:false,error:'explicit-confirmation-required'};return bridge.applyField(args.field_id,args.value,true)}
   if(name==='add_agenda_item'){if(args.confirmed!==true)return {ok:false,error:'explicit-confirmation-required'};return bridge.addAgendaItem(args)}

@@ -159,6 +159,11 @@ function entityOptions(){return app()?.getEntityOptions?.()||[]}
 function meetingOptions(entityId){const labels=app()?.getMeetingLabels?.()||{},map=app()?.getMeetingsByEntity?.()||{};return (map[entityId]||[]).map(id=>({id,label:labels[id]||id}))}
 function localGuide(text){
   const value=String(text||'').trim(),summary=getMeetingSummary(),f=snapshot().fields||{};
+  if(/افتح\s*وق[ّ]?ع|كيف.*أوقع.*pdf|كيف.*اوقع.*pdf|أوقع المحضر|اوقع المحضر|أحط توقيعي|احط توقيعي/i.test(value))return {reply:'أفتح لك وقّع لتوقيع ملف PDF.',action:()=>window.MajalisAssistantBridge?.openExternalTool?.('waqqe'),suggestions:[]};
+  if(/مرفقات? الدعوة|أضيف مرفق.*دعوة|اضيف مرفق.*دعوة/i.test(value))return {reply:'فتحت لك مرفقات الدعوة.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('invitation_attachments','مرفقات الدعوة'),suggestions:[]};
+  if(/المحضر الموقع|رفع المحضر بعد التوقيع|أرفق المحضر الموقع|ارفق المحضر الموقع/i.test(value))return {reply:'فتحت لك مكان إرفاق المحضر الموقع.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('signed_minutes','المحضر الموقع'),suggestions:[]};
+  if(/متابعة التوقيع|تابع التوقيع/i.test(value))return {reply:'فتحت لك متابعة توقيع المحضر.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('signature_tracking','متابعة التوقيع'),suggestions:[]};
+  if(/نسبة التصويت|نتيجة التصويت|وديني للتصويت|افتح التصويت|أبغى.*التصويت|ابغى.*التصويت/i.test(value))return {reply:'فتحت لك منطقة التصويت والنتيجة.',action:()=>window.MajalisAssistantBridge?.navigateToTarget?.('voting','التصويت'),suggestions:[]};
   if(/فهم المنصة|اشرح.*منصة|كيف.*تعمل/.test(value))return {reply:'مجالس يقودك عبر خمس مراحل مترابطة. تبدأ بتعريف الجهة والاجتماع، ثم المشاركين، ثم الدعوة وجدول الأعمال، ثم تسجيل الحضور والمداولات والقرارات، وأخيرا إصدار الوثائق.',suggestions:['ابدأ اجتماع جديد','اشرح قسم المشاركين','اشرح الوثائق']};
   if(/قسم المشاركين|المشاركين/.test(value)&&/اشرح|افتح|انتقل/.test(value))return {reply:'في المشاركين تضيف الاسم والصفة، وتحدد من يدخل في النصاب. وعند تفعيل سجل الملكية تظهر الحصص أو الأسهم وحقوق التصويت دون تغيير القيم المخصصة.',action:()=>navigateToSection('participants','قسم المشاركين'),suggestions:['أضف المشاركين','ما البيانات الناقصة؟']};
   if(/قسم الوثائق|افتح الوثائق|إصدار الوثائق/.test(value))return {reply:'قسم الوثائق يجمع الدعوة وجدول الأعمال والمحضر وسجل القرارات والخيارات الإضافية المتاحة حسب الاجتماع.',action:()=>navigateToSection('documents','الوثائق'),suggestions:['راجع الجاهزية','ما البيانات الناقصة؟']};
@@ -176,7 +181,7 @@ function localGuide(text){
 
 async function loadAiClient(){
   if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
-  await import('./majalis-text-ai.js?v=1.13.6');
+  await import('./majalis-text-ai.js?v=1.13.7');
   if(window.MajalisAssistantAI)return window.MajalisAssistantAI;
   throw new Error('gemini-client-unavailable');
 }
@@ -185,6 +190,8 @@ async function executeToolCall(call){
   const name=call?.name,args=call?.arguments||{};
   if(name==='navigate_to_section')return navigateToSection(args.section_id,args.reason);
   if(name==='focus_field')return focusField(args.field_id,args.message);
+  if(name==='navigate_to_target')return window.MajalisAssistantBridge?.navigateToTarget?.(args.target_id,args.message||args.reason||'')||{ok:false,error:'target_navigation_unavailable'};
+  if(name==='open_external_tool')return window.MajalisAssistantBridge?.openExternalTool?.(args.tool_id)||{ok:false,error:'external_tool_unavailable'};
   if(name==='get_meeting_summary')return getMeetingSummary();
   if(name==='validate_stage')return validateStage(args.stage_id);
   if(name==='explain_requirement'){const result=explainRequirement(args.requirement_id);if(result.ok)appendAssistant(`${result.title}: ${result.text}\nالمرجع: ${result.reference}`);return result}
