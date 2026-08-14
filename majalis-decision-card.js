@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='1.15.0';
+const VERSION='1.15.1';
 const BASE_SRC='./majalis-decision-card-base.js?v=1.15.0';
 const $P=id=>document.getElementById(id);
 const pctP=(value,total)=>Number(total)>0?`${Number((((Number(value)||0)*100)/Number(total)).toFixed(2))}%`:'—';
@@ -78,6 +78,7 @@ function applyPatch(){
     }
   };
 
+  // سقف الأصوات المدلى بها هو الحقوق الممثلة فعليا، وليس إجمالي رأس المال.
   document.addEventListener('input',event=>{
     const input=event.target.closest?.('.agenda-result-input[data-key="votesFor"],.agenda-result-input[data-key="votesAgainst"],.agenda-result-input[data-key="votesAbstain"]');
     if(!input)return;
@@ -98,6 +99,7 @@ function applyPatch(){
     }
   },true);
 
+  // الغائب غير الممثل لا يدلي بصوت، لكن حصته تبقى ضمن إجمالي رأس المال عند كون القرار مقاسا عليه.
   document.addEventListener('change',event=>{
     if(!event.target.classList?.contains('attendance-input'))return;
     setTimeout(()=>{
@@ -133,7 +135,7 @@ function applyPatch(){
       const current=baseStats();
       if(!current)return current;
       const represented=representedVotingRights(),total=ownershipRegisterEnabled()?capitalVotesTotal():votingParticipants().length;
-      return {...current,representedRights:represented,totalRights:total,approvalOfRepresented:pctP(current.t?.votesFor||0,represented),approvalOfTotal:pctP(current.t?.votesFor||0,total)};
+      return {...current,representedRights:represented,totalRights:total,approvalBasis:ownershipRegisterEnabled()?'totalRights':'participants',approvalOfRepresented:pctP(current.t?.votesFor||0,represented),approvalOfTotal:pctP(current.t?.votesFor||0,total)};
     };
   }
 
@@ -150,7 +152,8 @@ function injectWrapStyles(){
   .main-card p,.main-card .hint,.main-card .info-help span:last-child,.management-agenda-title strong,.agenda-ballot-option span,.document .doc-body,.document .doc-table th,.document .doc-table td,.decision-text,.majalis-file-row small{word-break:normal!important;overflow-wrap:break-word!important;hyphens:none!important}
   .btn,.date-picker-open-btn,.majalis-attach-file-button,.majalis-attachment-file-meta.muted,.vote-state-chip,.required-tag,.optional-tag{word-break:keep-all!important;white-space:nowrap!important}
   .majalis-attachment-file-slot{grid-column:1/-1!important;width:100%!important}
-  .decision-represented-note{margin:8px 0;padding:8px 10px;border-right:3px solid var(--gold);border-radius:8px;background:#FFF9E9;color:#514823;font-size:9.5px;line-height:1.7}
+  .decision-represented-note,.decision-basis-note{margin:8px 0;padding:8px 10px;border-right:3px solid var(--gold);border-radius:8px;background:#FFF9E9;color:#514823;font-size:9.5px;line-height:1.7}
+  .decision-basis-note{border-right-color:var(--navy);background:#F4F7FA;color:#314052}
   @media(max-width:680px){.agenda-attachment-row{grid-template-columns:30px minmax(0,1fr) auto!important}.majalis-attachment-file-slot{padding-inline-start:0!important;padding-inline-end:0!important}.document .doc-table th,.document .doc-table td{overflow-wrap:break-word!important}}
   `;
   document.head.appendChild(style);
@@ -176,16 +179,23 @@ function decorateRepresentedRights(){
     if(decision&&ownershipRegisterEnabled()){
       const representedRights=representedVotingRights(),yes=Number(decision.t?.votesFor)||0,total=capitalVotesTotal();
       const text=`حقوق التصويت الممثلة في الاجتماع: ${representedRights} من ${total||0}. تمثل الموافقة ${pctP(yes,representedRights)} من الحقوق الممثلة و${pctP(yes,total)} من إجمالي حقوق التصويت.`;
+      const basisText='أساس اعتماد النتيجة في بطاقة القرار عند تفعيل سجل رأس المال هو إجمالي حقوق التصويت/رأس المال، وليس نسبة الحاضرين. الحقوق الممثلة تستخدم كسقف للأصوات التي يمكن الإدلاء بها فعليا.';
       const tally=$P('decisionTally');
       if(tally){
         let note=tally.querySelector('.decision-represented-note');
         if(!note){note=document.createElement('div');note.className='decision-represented-note';const summary=tally.querySelector('.decision-card-summary');summary?.insertAdjacentElement('afterend',note)}
         if(note)note.textContent=text;
+        let basis=tally.querySelector('.decision-basis-note');
+        if(!basis){basis=document.createElement('div');basis.className='decision-basis-note';note?.insertAdjacentElement('afterend',basis)}
+        if(basis)basis.textContent=basisText;
       }
       document.querySelectorAll('#docDecisionCard .decision-result').forEach(result=>{
         let note=result.querySelector('.decision-represented-note');
         if(!note){note=document.createElement('div');note.className='decision-represented-note';const stats=result.querySelector('.decision-result-stats');stats?.insertAdjacentElement('afterend',note)}
         if(note)note.textContent=text;
+        let basis=result.querySelector('.decision-basis-note');
+        if(!basis){basis=document.createElement('div');basis.className='decision-basis-note';note?.insertAdjacentElement('afterend',basis)}
+        if(basis)basis.textContent=basisText;
       });
     }
   }catch(error){console.error('Majalis represented-rights decoration:',error)}
