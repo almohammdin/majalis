@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><title>Majalis v1.15.15 closing race test</title></head>
+<body>
+<div class="main-card">
+  <textarea id="closingNote"></textarea>
+  <button id="saveAdminMeeting" type="button">حفظ الاجتماع</button>
+</div>
+<article id="docMinutes"></article>
+<pre id="result">RUNNING</pre>
+<script>
+const customText='مرفق بهذا المحضر بطاقات التصويت الموقعة من الشركاء، والمالكين مجتمعين (380) حصة تمثل نسبة (76%) من إجمالي رأس مال الشركة.';
+const oldPayload={
+  fields:{entityName:'شركة ريادة الدولية للفنادق والمنتجعات السياحية المحدودة',meetingTitle:'جمعية الشركاء',entityType:'llc',meetingType:'partners',closingNote:'الخاتمة القديمة',capitalTotalUnits:'500'},
+  attendees:[
+    {id:1,attendance:'inperson',ownedUnits:'100'},
+    {id:2,attendance:'inperson',ownedUnits:'80'},
+    {id:3,attendance:'inperson',ownedUnits:'70'},
+    {id:4,attendance:'remote',ownedUnits:'70'},
+    {id:5,attendance:'inperson',ownedUnits:'60'},
+    {id:6,attendance:'absent',ownedUnits:'120'}
+  ],
+  agendaItems:[{id:1,decision:'قرار 1'},{id:2,decision:'قرار 2'},{id:3,decision:'قرار 3'}]
+};
+localStorage.setItem('majalis_tool_draft_v1_9_6',JSON.stringify(oldPayload));
+let current=JSON.parse(JSON.stringify(oldPayload));
+const clone=v=>JSON.parse(JSON.stringify(v));
+function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+window.renderDocuments=function(){
+  const text=document.getElementById('closingNote').value;
+  document.getElementById('docMinutes').innerHTML=`<div class="minutes-doc-body">${text?`<p class="free-paragraph">${esc(text)}</p>`:''}<p class="llc-ballot-note">تُرفق بهذا المحضر بطاقات التصويت الموقعة من الشركاء الخمسة…</p></div>`;
+};
+window.MajalisApp={
+  captureSnapshot(){
+    const out=clone(current);out.fields={...(out.fields||{}),closingNote:document.getElementById('closingNote').value};
+    const mode=document.getElementById('minutesClosingMode');if(mode)out.fields.minutesClosingMode=mode.value;else delete out.fields.minutesClosingMode;
+    return out;
+  },
+  applySnapshot(payload){current=clone(payload);document.getElementById('closingNote').value=payload.fields?.closingNote||'';window.renderDocuments();return true},
+  startNewMeetingFromOrganization(){current={fields:{},attendees:[],agendaItems:[]};document.getElementById('closingNote').value='';window.renderDocuments();return true}
+};
+document.getElementById('closingNote').value=oldPayload.fields.closingNote;
+document.getElementById('saveAdminMeeting').addEventListener('click',()=>{window.__saved=window.MajalisApp.captureSnapshot();current=clone(window.__saved);localStorage.setItem('majalis_tool_draft_v1_9_6',JSON.stringify(window.__saved))});
+</script>
+<script type="module" src="../majalis-minutes-closing-v11515.js?v=1.15.15"></script>
+<script>
+(async()=>{
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+  const countManual=()=>Array.from(document.querySelectorAll('#docMinutes .free-paragraph')).filter(n=>n.textContent.trim()===customText).length;
+  const noAuto=()=>document.querySelectorAll('#docMinutes .llc-ballot-note').length===0;
+  async function forceLateRenders(){for(const ms of [40,120,280,550,900]){await wait(ms);window.renderDocuments();await wait(30);assert(noAuto(),'automatic paragraph returned after delayed rerender')}}
+  try{
+    renderDocuments();await wait(120);
+    assert(window.MajalisMinutesClosingMode.getMode()==='legacy','old record must start legacy');
+    assert(document.querySelectorAll('#docMinutes .llc-ballot-note').length===1,'legacy paragraph must exist before edit');
+
+    window.MajalisMinutesClosingMode._test.edit(customText);await wait(120);
+    assert(window.MajalisMinutesClosingMode.isPreviewCustom()===true,'preview must switch immediately');
+    assert(countManual()===1,'manual closing must appear once before save');
+    assert(noAuto(),'automatic paragraph must disappear before save');
+    await forceLateRenders();
+
+    document.getElementById('saveAdminMeeting').click();await wait(120);
+    assert(window.__saved?.fields?.minutesClosingMode==='custom-only','save must persist custom-only');
+    assert(noAuto(),'automatic paragraph must stay hidden after save');
+    await forceLateRenders();
+
+    window.MajalisApp.applySnapshot(window.__saved);await wait(120);
+    assert(window.MajalisMinutesClosingMode.getMode()==='custom-only','reopen must restore custom-only');
+    assert(countManual()===1,'manual closing must remain once after reopen');
+    assert(noAuto(),'automatic paragraph must not return after reopen');
+    await forceLateRenders();
+
+    const represented=window.__saved.attendees.filter(p=>['inperson','remote'].includes(p.attendance)).reduce((s,p)=>s+Number(p.ownedUnits||0),0);
+    assert(represented===380,'represented must remain 380');
+    assert(Number((represented/500*100).toFixed(2))===76,'percent must remain 76%');
+    assert(window.__saved.agendaItems.length===3,'three decisions must remain');
+
+    document.getElementById('result').textContent='PASS v1.15.15: manual-only survives repeated delayed rerenders before save, after save, and after reopen; 380/500 = 76% preserved.';
+    document.body.dataset.test='pass';
+  }catch(err){
+    document.getElementById('result').textContent='FAIL: '+err.message;
+    document.body.dataset.test='fail';
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
