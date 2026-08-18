@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='1.15.7';
+const VERSION='1.15.8';
 window.MAJALIS_VERSION=VERSION;
 window.MAJALIS_VERSION_LABEL=`v${VERSION}`;
 const stamp=()=>document.querySelectorAll('[data-majalis-version],.site-footer-wrap .version,.doc-footer-version').forEach(el=>el.textContent=window.MAJALIS_VERSION_LABEL);

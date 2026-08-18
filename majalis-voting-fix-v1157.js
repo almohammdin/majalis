@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const V=window.MAJALIS_VERSION||'1.15.7';
+const V=window.MAJALIS_VERSION||'1.15.8';
 const $=id=>document.getElementById(id);
 const num=v=>Number(v)||0;
 const pct=(v,t)=>num(t)>0?Number((num(v)*100/num(t)).toFixed(2)):0;
@@ -73,7 +73,7 @@ function reinforceRepresentedRights(){
 function applyResults(){
   if(!isLlcPartners())return;
   const minuteRows=Array.from(document.querySelectorAll('#docMinutes .minutes-table tbody tr'));
-  agendaItems.forEach((item,i)=>{const r=result(item),row=minuteRows[i];if(!r||!row||!(r.yes+r.no+r.abs))return;let n=row.querySelector('.decision-minutes-summary');if(!n){n=document.createElement('div');n.className='decision-minutes-summary';row.cells?.[2]?.appendChild(n)}n.textContent=r.sentence});
+  agendaItems.forEach((item,i)=>{const r=result(item),row=minuteRows[i];if(!r||!row||!(r.yes+r.no+r.abs))return;let n=row.querySelector('.decision-minutes-summary');if(!n){n=document.createElement('div');n.className='decision-minutes-summary';row.cells?.[2]?.appendChild(n)}n.textContent=String(r.sentence||'').replace(/،\s*(?:واعتمد القرار لتحقق|ولم يعتمد القرار لعدم تحقق)\s+النسبة المطلوبة البالغة.*?\.$/u,'.')});
   const decisionItems=agendaItems.filter(x=>x.decision||x.owner||x.dueDay||x.dueMonth||x.dueYear),decisionRows=Array.from(document.querySelectorAll('#docDecisions table tbody tr'));
   decisionItems.forEach((item,i)=>{const r=result(item),cell=decisionRows[i]?.cells?.[1];if(!r||!cell||!(r.yes+r.no+r.abs))return;let n=cell.querySelector('.llc-v1157-decision-summary');if(!n){n=document.createElement('div');n.className='llc-v1157-decision-summary';cell.appendChild(n)}n.textContent=r.sentence});
   const tallyItems=agendaItems.filter(x=>x.vote&&x.vote!=='لم يجر تصويت'),tallyRows=Array.from(document.querySelectorAll('#docTally .vote-tally-table tbody tr'));
