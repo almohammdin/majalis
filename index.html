@@ -1144,7 +1144,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
       <span class="admin-entry-icon" aria-hidden="true">⌾</span>
       <span id="adminAccessLabel">دخول الإدارة</span>
     </button>
-    <span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.15.3</span><span class="privacy-note">يحفظ الزائر بياناته على جهازه، ويحفظ الوضع الإداري بياناته في Firestore. عند استخدام المساعد يعالج Gemini سياق الاجتماع لتنفيذ الطلب.</span>
+    <span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.15.4</span><span class="privacy-note">يحفظ الزائر بياناته على جهازه، ويحفظ الوضع الإداري بياناته في Firestore. عند استخدام المساعد يعالج Gemini سياق الاجتماع لتنفيذ الطلب.</span>
   </footer>
   <span class="social-username">almohammdin</span>
   <nav class="site-socials" aria-label="حسابات نايف المحمدي">
@@ -1243,7 +1243,7 @@ const STORAGE_KEY='majalis_tool_draft_v1_9_6';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_4','majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
 const TOOL_NAME='منظومة أعمال المجالس | أداة مجالس';
-const TOOL_VERSION='v1.15.3';
+const TOOL_VERSION='v1.15.4';
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -2384,8 +2384,8 @@ onAuthStateChanged(auth,async user=>{
   if(user){setAdminStatus('متصل بقاعدة البيانات.','success');try{await loadOrganizations()}catch(err){console.error(err);setAdminStatus('تعذر تحميل الجهات. راجع الاتصال وقواعد Firestore.','error');toast('تعذر تحميل الجهات.','error')}}else{adminState.organizations=[];adminState.meetings=[];renderOrganizations();renderMeetings()}
 });
 </script>
-<script src="./majalis-decision-card.js?v=1.15.3"></script>
-<script type="module" src="./majalis-upgrade.js?v=1.15.3"></script>
+<script src="./majalis-decision-card.js?v=1.15.4"></script>
+<script type="module" src="./majalis-upgrade.js?v=1.15.4"></script>
 <script src="./majalis-assistant.js?v=1.15.0" defer></script>
 <script type="module" src="./majalis-voice-appcheck.js?v=1.15.0"></script>
 <script type="module" src="./majalis-text-ai.js?v=1.15.0"></script>
