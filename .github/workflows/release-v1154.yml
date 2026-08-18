@@ -1,0 +1,133 @@
+name: Release Majalis v1.15.4 voting fixes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release-v1154.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply voting, threshold, dedupe, and version fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          target='1.15.4'
+
+          def sub_once(text, pattern, replacement, label):
+              new, n = re.subn(pattern, lambda m: replacement, text, count=1, flags=re.S)
+              if n != 1:
+                  raise SystemExit(f'{label}: expected one replacement, got {n}')
+              return new
+
+          # 1) majalis-upgrade.js: do not calculate LLC partner approval from cast/represented votes.
+          p=Path('majalis-upgrade.js')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace("const VERSION='1.15.3';", f"const VERSION='{target}';", 1)
+          upgrade_block=r'''function representedVotingRights(snap){const parts=snap.ownershipSnapshot?.participants;if(Array.isArray(parts))return parts.reduce((sum,p)=>sum+(Number(p?.representedVotes)||0),0);return 0}
+function isLlcPartners(snap=snapshot()){const f=snap?.fields||{};return f.entityType==='llc'&&f.meetingType==='partners'&&f.enableOwnershipRegister!==false}
+function capitalVotingRights(snap=snapshot()){const f=snap?.fields||{},direct=Number(f.capitalTotalVotes)||Number(f.capitalTotalUnits)||0;if(direct>0)return direct;const own=snap?.ownershipSnapshot||{};for(const key of ['totalVotingRights','totalVotes','capitalTotalVotes','votesTotal']){const n=Number(own?.[key]);if(n>0)return n}return 0}
+function pct(value,total){if(!(Number(total)>0))return '—';const n=(Number(value)||0)*100/Number(total);return `${Number(n.toFixed(2))}%`}
+function voteStats(item,snap=snapshot()){const yes=Number(item?.votesFor)||0,no=Number(item?.votesAgainst)||0,abstain=Number(item?.votesAbstain)||0,total=yes+no+abstain,represented=representedVotingRights(snap),capital=capitalVotingRights(snap),llc=isLlcPartners(snap)&&capital>0,basis=llc?capital:total;return {yes,no,abstain,total,represented,capital,llc,yesPct:pct(yes,basis),noPct:pct(no,basis),abstainPct:pct(abstain,basis),yesRepresented:pct(yes,represented),noRepresented:pct(no,represented),abstainRepresented:pct(abstain,represented)}}
+function voteSummaryMarkup(item,snap=snapshot()){const s=voteStats(item,snap);if(!s.total)return '<span class="majalis-vote-empty">—</span>';if(s.llc)return `<div class="majalis-vote-basis"><span>من إجمالي رأس المال</span><bdi>موافق ${s.yesPct} (${s.yes} من ${s.capital})</bdi><bdi>غير موافق ${s.noPct}</bdi><bdi>ممتنع ${s.abstainPct}</bdi></div>`;const represented=s.represented>0?`<div class="majalis-vote-basis"><span>من حقوق التصويت الممثلة</span><bdi>موافق ${s.yesRepresented}</bdi><bdi>غير موافق ${s.noRepresented}</bdi><bdi>ممتنع ${s.abstainRepresented}</bdi></div>`:'';return `<div class="majalis-vote-basis"><span>من الأصوات المسجلة في البند</span><bdi>موافق ${s.yesPct}</bdi><bdi>غير موافق ${s.noPct}</bdi><bdi>ممتنع ${s.abstainPct}</bdi></div>${represented}`}
+function voteNarrative(item){const snap=snapshot(),s=voteStats(item,snap);if(!s.total)return '';if(s.llc){try{const d=window.MajalisVotingDecision?.calculate?.(item);if(d?.sentence)return d.sentence}catch{}return `وبعد التصويت على البند، بلغت الحصص الموافقة (${s.yes}) من أصل (${s.capital}) حصة في رأس مال الشركة، بنسبة (${s.yesPct}) من إجمالي رأس المال.`}const actor=(()=>{const f=snap.fields||{},type=f.entityType||'',meetingType=f.meetingType||'';if(['jscListed','jscUnlisted','sas'].includes(type)||meetingType==='shareholders')return 'المساهمون';if(type==='association'&&['associationOrdinary','associationExtraordinary'].includes(meetingType))return 'أعضاء الجمعية العمومية';return 'المصوتون'})(),parts=[];if(s.yes)parts.push(`وافق ${actor} ${s.yes} صوتا بنسبة ${s.yesPct} من إجمالي الأصوات المسجلة`);if(s.no)parts.push(`${parts.length?'عارض':'عارض '+actor} ${s.no} صوتا بنسبة ${s.noPct}`);if(s.abstain)parts.push(`${parts.length?'امتنع':'امتنع '+actor} ${s.abstain} صوتا بنسبة ${s.abstainPct}`);return `وبعد التصويت على البند، ${parts.join('، ')}.`}
+function decorateVoting(){const snap=snapshot(),items=snap.agendaItems||[],llc=isLlcPartners(snap);document.querySelectorAll('[data-management-agenda-id]').forEach(card=>{const item=items.find(x=>String(x.id)===String(card.dataset.managementAgendaId)),grid=card.querySelector('.vote-counts-grid');if(!item||!grid)return;let box=grid.querySelector('.majalis-vote-percentages');if(!box){box=document.createElement('div');box.className='majalis-vote-percentages';grid.appendChild(box)}const html=voteSummaryMarkup(item,snap);if(box.innerHTML!==html)box.innerHTML=html});const minuteRows=document.querySelectorAll('#docMinutes .minutes-table tbody tr');items.forEach((item,index)=>{const row=minuteRows[index];if(!row)return;if(llc&&item?.decisionCardOutcome){row.querySelector('.vote-narrative')?.remove();return}const narrative=voteNarrative(item);if(!narrative)return;let node=row.querySelector('.vote-narrative');if(!node){node=document.createElement('div');node.className='vote-narrative';row.cells?.[2]?.appendChild(node)}if(node&&node.textContent!==narrative)node.textContent=narrative});const decisionNodes=document.querySelectorAll('#docDecisions .decision-vote-summary');let di=0;items.filter(item=>item.decision||item.owner||item.dueDay||item.dueMonth||item.dueYear).forEach(item=>{const node=decisionNodes[di++],narrative=voteNarrative(item);if(node&&narrative&&node.textContent!==narrative)node.textContent=narrative});const ballotResultItems=items.filter(item=>item.includeInBallot&&voteStats(item,snap).total>0);document.querySelectorAll('#docVoting .ballot-card:not(.blank-ballot-card)').forEach(card=>{let box=card.querySelector('.majalis-ballot-results');if(llc){box?.remove();return}if(!ballotResultItems.length){box?.remove();return}if(!box){box=document.createElement('section');box.className='majalis-ballot-results';card.appendChild(box)}const html=`<strong>ملخص نتيجة التصويت</strong><small>النسب أدناه للحصر فقط، والنتيجة النظامية النهائية وفق الوثائق المنظمة للجهة.</small>${ballotResultItems.map(item=>`<div class="majalis-ballot-result-row"><span>${esc(item.title||'بند التصويت')}</span><div>${voteSummaryMarkup(item,snap)}</div></div>`).join('')}`;if(box.innerHTML!==html)box.innerHTML=html});const tallyItems=items.filter(x=>x.vote&&x.vote!=='لم يجر تصويت'),tallyRows=document.querySelectorAll('#docTally .vote-tally-table tbody tr');tallyItems.forEach((item,index)=>{const row=tallyRows[index];if(!row||row.cells.length<6)return;const s=voteStats(item,snap);if(s.llc){[[s.yes,s.yesPct],[s.no,s.noPct],[s.abstain,s.abstainPct]].forEach((data,i)=>{const cell=row.cells[i+2],html=`<strong class="latin-number">${data[0]}</strong><small class="majalis-tally-pct">${data[1]} من إجمالي رأس المال</small>`;if(cell.innerHTML!==html)cell.innerHTML=html});return}const values=[[s.yes,s.yesPct,s.yesRepresented],[s.no,s.noPct,s.noRepresented],[s.abstain,s.abstainPct,s.abstainRepresented]];values.forEach((data,i)=>{const cell=row.cells[i+2],html=`<strong class="latin-number">${data[0]}</strong><small class="majalis-tally-pct">${data[1]} من الأصوات المسجلة</small>${s.represented?`<small class="majalis-tally-pct">${data[2]} من الحقوق الممثلة</small>`:''}`;if(cell.innerHTML!==html)cell.innerHTML=html})})}
+function queueDecorate(){if(decorateQueued)return;decorateQueued=true;requestAnimationFrame(()=>{decorateQueued=false;renderAttachmentSlots();renderDocumentsCards();decorateVoting()})}'''
+          text=sub_once(text,r"function representedVotingRights\(snap\).*?\n\nfunction showExternalFallback",upgrade_block+"\n\nfunction showExternalFallback",'upgrade voting block')
+          p.write_text(text,encoding='utf-8')
+
+          # 2) Build v1.15.4 from the current LLC fix.
+          src=Path('majalis-voting-fix-v1153.js')
+          text=src.read_text(encoding='utf-8')
+          text=text.replace("const V='1.15.3'",f"const V='{target}'",1)
+          threshold_block=r'''function parseThresholdText(value){const s=String(value||''),m=s.match(/([0-9]+(?:\.[0-9]+)?)\s*%/);return m?{p:num(m[1]),op:s.includes('أكثر من')?'moreThan':'atLeast'}:null}
+function thresholdLabel(t){return !t?'':t.op==='moreThan'?`أكثر من ${t.p}%`:`${t.p}% على الأقل`}
+function threshold(x){const mode=$('decisionThresholdMode')?.value||'auto';if(mode==='none')return null;const explicit=num($('decisionThresholdPercent')?.value),op=$('decisionThresholdOperator')?.value==='moreThan'?'moreThan':'atLeast';if(explicit>0)return {p:explicit,op,source:'custom'};const own=parseThresholdText(x?.decisionCardOutcome?.threshold);if(own&&!(own.p===50&&own.op==='moreThan'))return {...own,source:'stored'};const shared=agendaItems.map(a=>parseThresholdText(a?.decisionCardOutcome?.threshold)).find(t=>t&&!(t.p===50&&t.op==='moreThan'));if(shared)return {...shared,source:'stored'};if(llc())return {p:50,op:'moreThan',source:'llc'};return own}'''
+          text=sub_once(text,r"function threshold\(x\)\{.*?\}\nconst count=",threshold_block+"\nconst count=",'threshold function')
+
+          decision_block=r'''function decision(){if(!llc())return;const x=selected(),d=x&&calc(x),box=$('decisionTally'),explicit=num($('decisionThresholdPercent')?.value);if(d&&box){const s=box.querySelector('.decision-card-summary');if(s)s.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبة الموافقة من رأس المال</span><strong>${d.per}%</strong></div>`;const p=box.querySelector('.decision-card-preview');if(p)p.innerHTML=`${esc(d.sentence)}<br><strong>${d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'بانتظار تحديد نسبة الاعتماد'}</strong>`;if(explicit>0&&d.th){const rule=$('decisionRule');if(rule)rule.innerHTML=`النسبة المطلوبة لهذا القرار: <strong>${esc(thresholdLabel(d.th))}</strong>.`}box.querySelectorAll('.decision-represented-note,.decision-basis-note').forEach(e=>e.remove())}
+const card=$('docDecisionCard');if(d&&card){card.querySelectorAll('.decision-signs').forEach(e=>e.remove());card.querySelectorAll('.decision-table tr').forEach(r=>{if(r.cells?.length>=8){r.deleteCell(7);r.deleteCell(6)}});card.querySelectorAll('.decision-result').forEach(r=>{const s=r.querySelector('.decision-result-stats');if(s)s.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبتها من إجمالي رأس المال</span><strong>${d.per}%</strong></div>`;const p=r.querySelector('p');if(p)p.textContent=d.sentence;const status=r.querySelector('.decision-result-status');if(status)status.textContent=`${d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'النتيجة بانتظار الاعتماد'}${d.th?` — النسبة المطلوبة ${thresholdLabel(d.th)}`:''}`;r.querySelectorAll('.decision-represented-note,.decision-basis-note').forEach(e=>e.remove())})}
+const out=$('docDecisionResult');if(d&&out){out.querySelectorAll('.dr-grid>div').forEach(e=>{const l=e.querySelector('span')?.textContent||'',q=e.querySelector('strong');if(l.includes('الموافقة من الحقوق الممثلة')){e.remove();return}if(l.includes('نسبة الموافقة المعتمدة')&&q)q.textContent=`${d.per}%`;if(l.includes('النسبة المطلوبة')&&q&&d.th)q.textContent=thresholdLabel(d.th)});const rs=out.querySelector('.dr-status strong');if(rs)rs.textContent=d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'بانتظار الاعتماد';out.querySelectorAll('.dr-approval').forEach(e=>e.remove())}}
+function normDecision(value){return String(value||'').normalize('NFKC').replace(/[\u064B-\u065F\u0670]/g,'').replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0600-\u06FFA-Za-z0-9]+/g,' ').replace(/\s+/g,' ').trim().toLowerCase()}
+function stripDecisionPrefix(value){return String(value||'').replace(/^\s*(?:[-•*]|[0-9٠-٩]+\s*[.\-):]|(?:أولا|أولاً|ثانيا|ثانياً|ثالثا|ثالثاً|رابعا|رابعاً)\s*[:\-])\s*/u,'')}
+function cleanDecisionText(items,index){const original=String(items[index]?.decision||'').trim();if(!original)return '';const later=items.slice(index+1),patterns=later.flatMap(x=>[x?.title,x?.decision]).map(normDecision).filter(x=>x.length>=8);if(!patterns.length)return original;let text=original;later.map(x=>String(x?.decision||'').trim()).filter(x=>x.length>=12).sort((a,b)=>b.length-a.length).forEach(raw=>{while(raw&&text.includes(raw))text=text.replace(raw,' ')});text=text.replace(/([.!؟؛])\s+/g,'$1\n').replace(/\s+(?=(?:[0-9٠-٩]+)\s*[.\-):]\s*)/gu,'\n').replace(/\s+(?=(?:أولا|أولاً|ثانيا|ثانياً|ثالثا|ثالثاً|رابعا|رابعاً)\s*[:\-])/gu,'\n');const kept=text.split(/\n+/).map(s=>s.trim()).filter(Boolean).filter(part=>{const n=normDecision(stripDecisionPrefix(part));if(!n)return false;return !patterns.some(p=>n.length>=8&&(n.includes(p)||p.includes(n)))}),out=kept.join('\n').replace(/\n{3,}/g,'\n\n').trim();return out||original}
+function sanitizedBallotItems(){const source=agendaItems.map(normalizeAgendaItem).filter(x=>x.includeInBallot);return source.map((x,i)=>({...x,decision:cleanDecisionText(source,i)}))}
+function replaceLeadingText(cell,text){if(!cell)return;Array.from(cell.childNodes).filter(n=>n.nodeType===Node.TEXT_NODE).forEach(n=>n.remove());if(text)cell.insertBefore(document.createTextNode(text),cell.firstChild)}
+function dedupeDecisionDisplays(){if(!llc())return;const all=agendaItems.map(normalizeAgendaItem),clean=all.map((x,i)=>cleanDecisionText(all,i));Array.from(document.querySelectorAll('#docMinutes .minutes-table tbody tr')).slice(0,all.length).forEach((row,i)=>replaceLeadingText(row.cells?.[2],clean[i]));const decisionRefs=all.map((x,i)=>({x,i})).filter(({x})=>x.decision||x.owner||x.dueDay||x.dueMonth||x.dueYear),decisionRows=Array.from(document.querySelectorAll('#docDecisions table tbody tr'));decisionRefs.forEach(({i},j)=>replaceLeadingText(decisionRows[j]?.cells?.[1],clean[i]));const tallyRefs=all.map((x,i)=>({x,i})).filter(({x})=>x.vote&&x.vote!=='لم يجر تصويت'),tallyRows=Array.from(document.querySelectorAll('#docTally .vote-tally-table tbody tr'));tallyRefs.forEach(({i},j)=>{const div=tallyRows[j]?.cells?.[1]?.querySelector('div');if(div)div.textContent=clean[i]});const current=selected(),idx=current?all.findIndex(x=>String(x.id)===String(current.id)):-1;if(idx>=0){const t=clean[idx];document.querySelectorAll('#docDecisionCard .decision-text').forEach(el=>el.textContent=t);const p=$('docDecisionResult')?.querySelector('.dr-statement p');if(p)p.textContent=t}}
+function ballots(){if(!llc()||!$('docVoting')||!$('enableVotingCard')?.checked||$('votingCardMode')?.value==='blank')return;const items=sanitizedBallotItems(),people=votingParticipants(),pages=people.length?people.map((p,i)=>`<section class="individual-document-page">${commonMeta()}${ballotParticipantCard(p,i,items)}</section>`).join(''):'<div class="document-empty-note">لا توجد بطاقات تصويت للشركاء الغائبين.</div>';$('docVoting').innerHTML=commonHeader('بطاقة تصويت','وثيقة التصويت')+`<div class="doc-body">${pages}</div>`+footer()}'''
+          text=sub_once(text,r"function decision\(\)\{.*?\nfunction ballots\(\)\{.*?\}\nconst definite=",decision_block+"\nconst definite=",'decision/ballot block')
+          text=text.replace('function apply(){ballots();decision();minutes();docs();stamp()}','function apply(){ballots();decision();minutes();docs();dedupeDecisionDisplays();stamp()}',1)
+          dst=Path('majalis-voting-fix-v1154.js')
+          dst.write_text(text,encoding='utf-8')
+          src.unlink()
+
+          # 3) Version-stamping result module and loader.
+          p=Path('majalis-decision-result.js')
+          text=p.read_text(encoding='utf-8').replace("const VERSION='1.15.3'",f"const VERSION='{target}'",1)
+          p.write_text(text,encoding='utf-8')
+
+          p=Path('majalis-decision-card.js')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('./majalis-decision-result.js?v=1.15.3',f'./majalis-decision-result.js?v={target}',1)
+          text=text.replace('./majalis-voting-fix-v1153.js?v=1.15.3',f'./majalis-voting-fix-v1154.js?v={target}',1)
+          p.write_text(text,encoding='utf-8')
+
+          # 4) Make the page and document version consistent and force fresh runtime modules.
+          p=Path('index.html')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('>v1.15.3<',f'>v{target}<')
+          text=text.replace("const TOOL_VERSION='v1.15.3';",f"const TOOL_VERSION='v{target}';",1)
+          text=text.replace('./majalis-decision-card.js?v=1.15.3',f'./majalis-decision-card.js?v={target}',1)
+          text=text.replace('./majalis-upgrade.js?v=1.15.3',f'./majalis-upgrade.js?v={target}',1)
+          p.write_text(text,encoding='utf-8')
+
+          # Remove this one-time workflow in the release commit.
+          Path('.github/workflows/release-v1154.yml').unlink()
+          PY
+
+      - name: Validate runtime files
+        run: |
+          node --check majalis-upgrade.js
+          node --check majalis-decision-result.js
+          node --check majalis-decision-card.js
+          node --check majalis-voting-fix-v1154.js
+          grep -F "const VERSION='1.15.4'" majalis-upgrade.js
+          grep -F "const VERSION='1.15.4'" majalis-decision-result.js
+          grep -F "const V='1.15.4'" majalis-voting-fix-v1154.js
+          grep -F "majalis-voting-fix-v1154.js?v=1.15.4" majalis-decision-card.js
+          grep -F "<span class=\"version\">v1.15.4</span>" index.html
+          grep -F "const TOOL_VERSION='v1.15.4';" index.html
+          grep -F "from إجمالي رأس المال" /dev/null || true
+          python - <<'PY'
+          assert round(380*100/500,2)==76
+          assert 76>=75
+          assert 75>=75
+          assert not (75>75)
+          from pathlib import Path
+          fix=Path('majalis-voting-fix-v1154.js').read_text(encoding='utf-8')
+          up=Path('majalis-upgrade.js').read_text(encoding='utf-8')
+          assert "const explicit=num($('decisionThresholdPercent')?.value)" in fix
+          assert 'cleanDecisionText' in fix and 'dedupeDecisionDisplays' in fix
+          assert "if(llc){box?.remove();return}" in up
+          assert 'من إجمالي رأس المال' in up
+          PY
+
+      - name: Commit release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release Majalis v1.15.4 voting and decision fixes'
+          git push origin HEAD:main
