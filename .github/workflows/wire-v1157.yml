@@ -1,0 +1,71 @@
+name: Wire Majalis v1.15.7
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/wire-v1157.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Wire central version and cache bust
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('index.html')
+          t=p.read_text(encoding='utf-8')
+          old='<link rel="stylesheet" href="./majalis-assistant.css?v=1.15.0">'
+          new='<script src="./majalis-version.js?v=1.15.7"></script>\n<link rel="stylesheet" href="./majalis-assistant.css?v=1.15.7">'
+          if old in t:t=t.replace(old,new,1)
+          elif '<script src="./majalis-version.js?v=1.15.7"></script>' not in t:
+              t=t.replace('</head>','<script src="./majalis-version.js?v=1.15.7"></script>\n</head>',1)
+          t=t.replace('<span class="version">v1.15.6</span>','<span class="version" data-majalis-version></span>')
+          t=t.replace("const TOOL_VERSION='v1.15.6';","const TOOL_VERSION=window.MAJALIS_VERSION_LABEL;")
+          t=t.replace('./majalis-decision-card.js?v=1.15.6','./majalis-decision-card.js?v=1.15.7')
+          t=t.replace('./majalis-upgrade.js?v=1.15.6','./majalis-upgrade.js?v=1.15.7')
+          for f in ['majalis-assistant.js','majalis-voice-appcheck.js','majalis-text-ai.js','majalis-voice.js']:
+              t=t.replace(f+'?v=1.15.0',f+'?v=1.15.7')
+          p.write_text(t,encoding='utf-8')
+
+          files={
+            'majalis-upgrade.js':[("const VERSION='1.15.3';","const VERSION=window.MAJALIS_VERSION||'1.15.7';")],
+            'majalis-decision-result.js':[("const VERSION='1.15.3'","const VERSION=window.MAJALIS_VERSION||'1.15.7'")],
+            'majalis-decision-card-base.js':[("const VERSION='1.15.0'","const VERSION=window.MAJALIS_VERSION||'1.15.7'")],
+            'majalis-decision-card-v1151.js':[("const VERSION='1.15.1';","const VERSION=window.MAJALIS_VERSION||'1.15.7';"),("const BASE_SRC='./majalis-decision-card-base.js?v=1.15.0';","const BASE_SRC='./majalis-decision-card-base.js?v=1.15.7';")],
+            'majalis-voting-fix-v1153.js':[("const V='1.15.3'","const V=window.MAJALIS_VERSION||'1.15.7'")]
+          }
+          for name,repls in files.items():
+              p=Path(name);data=p.read_text(encoding='utf-8')
+              for a,b in repls:data=data.replace(a,b,1)
+              p.write_text(data,encoding='utf-8')
+
+          for wf in ['.github/workflows/release-v1157.yml','.github/workflows/wire-v1157.yml']:
+              q=Path(wf)
+              if q.exists():q.unlink()
+          PY
+      - name: Basic validation
+        run: |
+          node --check majalis-version.js
+          node --check majalis-voting-fix-v1157.js
+          node --check majalis-decision-card.js
+          grep -F 'majalis-version.js?v=1.15.7' index.html
+          grep -F 'data-majalis-version' index.html
+          grep -F "const TOOL_VERSION=window.MAJALIS_VERSION_LABEL;" index.html
+          grep -F 'majalis-voting-fix-v1157.js?v=1.15.7' majalis-decision-card.js
+      - name: Commit wiring
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Wire Majalis v1.15.7 central version and cache bust'
+          git push origin HEAD:main
