@@ -1,12 +1,12 @@
 (()=>{
 'use strict';
-const VERSION='1.15.12';
+const VERSION='1.15.13';
 window.MAJALIS_VERSION=VERSION;
 window.MAJALIS_VERSION_LABEL=`v${VERSION}`;
 const scriptSrc=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
-if(scriptSrc?.set&&!window.__majalisVersionCacheRewrite11512){
-  Object.defineProperty(HTMLScriptElement.prototype,'src',{...scriptSrc,set(value){let next=String(value||'');if(next.includes('majalis-')&&/[?&]v=1\.15\.(?:7|8|9|10|11)(?:&|$)/.test(next))next=next.replace(/([?&]v=)1\.15\.(?:7|8|9|10|11)(?=&|$)/,'$1'+VERSION);scriptSrc.set.call(this,next)}});
-  window.__majalisVersionCacheRewrite11512=true;
+if(scriptSrc?.set&&!window.__majalisVersionCacheRewrite11513){
+  Object.defineProperty(HTMLScriptElement.prototype,'src',{...scriptSrc,set(value){let next=String(value||'');if(next.includes('majalis-')&&/[?&]v=1\.15\.(?:7|8|9|10|11|12)(?:&|$)/.test(next))next=next.replace(/([?&]v=)1\.15\.(?:7|8|9|10|11|12)(?=&|$)/,'$1'+VERSION);scriptSrc.set.call(this,next)}});
+  window.__majalisVersionCacheRewrite11513=true;
 }
 const stamp=()=>document.querySelectorAll('[data-majalis-version],.site-footer-wrap .version,.doc-footer-version').forEach(el=>el.textContent=window.MAJALIS_VERSION_LABEL);
 const addModule=(src,key,onload)=>{if(window[key]||document.querySelector(`script[data-majalis-module="${key}"]`)){onload?.();return}const s=document.createElement('script');s.type='module';s.src=src;s.dataset.majalisModule=key;if(onload)s.addEventListener('load',onload,{once:true});document.body.appendChild(s)};
