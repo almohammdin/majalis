@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const V='1.15.5';
+const V='1.15.6';
 const $=id=>document.getElementById(id);
 const num=v=>Number(v)||0;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
@@ -74,39 +74,46 @@ function cleanDecisionDisplays(){
   if(idx>=0){document.querySelectorAll('#docDecisionCard .decision-text').forEach(el=>el.textContent=clean[idx]);const p=$('docDecisionResult')?.querySelector('.dr-statement p');if(p)p.textContent=clean[idx]}
 }
 function ensureStyles(){
-  if($('majalisVotingFix1155Styles'))return;
-  const s=document.createElement('style');s.id='majalisVotingFix1155Styles';s.textContent=`
-body.majalis-llc-partners-v1155 .majalis-vote-percentages,
-body.majalis-llc-partners-v1155 .majalis-ballot-results,
-body.majalis-llc-partners-v1155 .vote-narrative,
-body.majalis-llc-partners-v1155 #docTally .majalis-tally-pct,
-body.majalis-llc-partners-v1155 #docDecisions .decision-vote-summary,
-body.majalis-llc-partners-v1155 .decision-represented-note,
-body.majalis-llc-partners-v1155 .decision-basis-note{display:none!important}
-.llc-v1155-management-summary,.llc-v1155-decision-summary{margin-top:7px;padding:7px 9px;border-right:3px solid var(--gold);background:#FFF9E9;border-radius:7px;font-size:10px;line-height:1.75;color:#514823}
+  if($('majalisVotingFix1156Styles'))return;
+  const s=document.createElement('style');s.id='majalisVotingFix1156Styles';s.textContent=`
+body.majalis-llc-partners-v1156 .majalis-vote-percentages,
+body.majalis-llc-partners-v1156 .majalis-ballot-results,
+body.majalis-llc-partners-v1156 .vote-narrative,
+body.majalis-llc-partners-v1156 #docTally .majalis-tally-pct,
+body.majalis-llc-partners-v1156 #docDecisions .decision-vote-summary,
+body.majalis-llc-partners-v1156 .decision-represented-note,
+body.majalis-llc-partners-v1156 .decision-basis-note{display:none!important}
+.llc-v1156-management-summary,.llc-v1156-decision-summary{margin-top:7px;padding:7px 9px;border-right:3px solid var(--gold);background:#FFF9E9;border-radius:7px;font-size:10px;line-height:1.75;color:#514823}
 `;
   document.head.appendChild(s);
 }
+function patchPrint(){
+  const base=window.printStylesheet;
+  if(typeof base!=='function'||base.__v1156)return;
+  const wrapped=function(){return base()+(llc()?`\n.majalis-vote-percentages,.majalis-ballot-results,.vote-narrative,#docTally .majalis-tally-pct,#docDecisions .decision-vote-summary,.decision-represented-note,.decision-basis-note{display:none!important}`:'')};
+  wrapped.__v1156=true;
+  window.printStylesheet=wrapped;
+}
 function stamp(){document.querySelectorAll('.site-footer-wrap .version,.doc-footer-version').forEach(e=>e.textContent=`v${V}`);if(window.MajalisDecisionCard)window.MajalisDecisionCard.version=V}
 function applySummaries(){
-  const active=llc();document.body.classList.toggle('majalis-llc-partners-v1155',active);stamp();if(!active)return;
+  const active=llc();document.body.classList.toggle('majalis-llc-partners-v1156',active);stamp();if(!active)return;
   const items=agendaItems;
-  document.querySelectorAll('[data-management-agenda-id]').forEach(card=>{const item=items.find(x=>String(x.id)===String(card.dataset.managementAgendaId)),d=calc(item),grid=card.querySelector('.vote-counts-grid');if(!d||!grid)return;let n=grid.querySelector('.llc-v1155-management-summary');if(!n){n=document.createElement('div');n.className='llc-v1155-management-summary';grid.appendChild(n)}n.textContent=`الحصص الموافقة: ${d.r.yes} من ${d.total}، بنسبة ${d.per}% من إجمالي رأس المال${d.th?`، والنسبة المطلوبة ${thresholdLabel(d.th)}`:''}.`});
+  document.querySelectorAll('[data-management-agenda-id]').forEach(card=>{const item=items.find(x=>String(x.id)===String(card.dataset.managementAgendaId)),d=calc(item),grid=card.querySelector('.vote-counts-grid');if(!d||!grid)return;let n=grid.querySelector('.llc-v1156-management-summary');if(!n){n=document.createElement('div');n.className='llc-v1156-management-summary';grid.appendChild(n)}n.textContent=`الحصص الموافقة: ${d.r.yes} من ${d.total}، بنسبة ${d.per}% من إجمالي رأس المال${d.th?`، والنسبة المطلوبة ${thresholdLabel(d.th)}`:''}.`});
   const minuteRows=Array.from(document.querySelectorAll('#docMinutes .minutes-table tbody tr'));
   items.forEach((item,i)=>{const d=calc(item),row=minuteRows[i];if(!d||!row||!d.selected)return;let n=row.querySelector('.decision-minutes-summary');if(!n){n=document.createElement('div');n.className='decision-minutes-summary';row.cells?.[2]?.appendChild(n)}n.textContent=d.sentence});
   const decisionRefs=items.map((x,i)=>({x,i})).filter(({x})=>x.decision||x.owner||x.dueDay||x.dueMonth||x.dueYear),decisionRows=Array.from(document.querySelectorAll('#docDecisions table tbody tr'));
-  decisionRefs.forEach(({x},j)=>{const d=calc(x),cell=decisionRows[j]?.cells?.[1];if(!d||!cell||!d.selected)return;let n=cell.querySelector('.llc-v1155-decision-summary');if(!n){n=document.createElement('div');n.className='llc-v1155-decision-summary';cell.appendChild(n)}n.textContent=d.sentence});
+  decisionRefs.forEach(({x},j)=>{const d=calc(x),cell=decisionRows[j]?.cells?.[1];if(!d||!cell||!d.selected)return;let n=cell.querySelector('.llc-v1156-decision-summary');if(!n){n=document.createElement('div');n.className='llc-v1156-decision-summary';cell.appendChild(n)}n.textContent=d.sentence});
   const tallyRefs=items.filter(x=>x.vote&&x.vote!=='لم يجر تصويت'),tallyRows=Array.from(document.querySelectorAll('#docTally .vote-tally-table tbody tr'));
   tallyRefs.forEach((item,i)=>{const d=calc(item),cell=tallyRows[i]?.cells?.[6];if(!d||!cell)return;cell.innerHTML=`${esc(d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':item.vote||'')}<small style="display:block">${d.per}% من إجمالي رأس المال (${d.r.yes} من ${d.total})${d.th?` — المطلوب ${esc(thresholdLabel(d.th))}`:''}</small>`});
   const cur=selected(),d=calc(cur),box=$('decisionTally');
   if(d&&box){const sum=box.querySelector('.decision-card-summary');if(sum)sum.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبة الموافقة من رأس المال</span><strong>${d.per}%</strong></div>`;const prev=box.querySelector('.decision-card-preview');if(prev)prev.innerHTML=`${esc(d.sentence)}<br><strong>${d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'بانتظار تحديد نسبة الاعتماد'}</strong>`;if(d.th&&num($('decisionThresholdPercent')?.value)>0){const rule=$('decisionRule');if(rule)rule.innerHTML=`النسبة المطلوبة لهذا القرار: <strong>${esc(thresholdLabel(d.th))}</strong>.`}}
   if(d){document.querySelectorAll('#docDecisionCard .decision-result').forEach(r=>{const stats=r.querySelector('.decision-result-stats');if(stats)stats.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبتها من إجمالي رأس المال</span><strong>${d.per}%</strong></div>`;const p=r.querySelector('p');if(p)p.textContent=d.sentence;const st=r.querySelector('.decision-result-status');if(st)st.textContent=`${d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'النتيجة بانتظار الاعتماد'}${d.th?` — النسبة المطلوبة ${thresholdLabel(d.th)}`:''}`});const out=$('docDecisionResult');out?.querySelectorAll('.dr-grid>div').forEach(e=>{const label=e.querySelector('span')?.textContent||'',strong=e.querySelector('strong');if(label.includes('الموافقة من الحقوق الممثلة')){e.remove();return}if(label.includes('نسبة الموافقة المعتمدة')&&strong)strong.textContent=`${d.per}%`;if(label.includes('النسبة المطلوبة')&&strong&&d.th)strong.textContent=thresholdLabel(d.th)});const rs=out?.querySelector('.dr-status strong');if(rs)rs.textContent=d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'بانتظار الاعتماد';out?.querySelectorAll('.dr-approval').forEach(e=>e.remove())}
 }
-function apply(){ensureStyles();cleanDecisionDisplays();applySummaries();stamp()}
-const base=window.renderDocuments;if(typeof base==='function'&&!base.__v1155){const wrapped=function(){const r=base.apply(this,arguments);apply();return r};wrapped.__v1155=true;window.renderDocuments=wrapped}
+function apply(){ensureStyles();patchPrint();cleanDecisionDisplays();applySummaries();stamp()}
+const base=window.renderDocuments;if(typeof base==='function'&&!base.__v1156){const wrapped=function(){const r=base.apply(this,arguments);apply();return r};wrapped.__v1156=true;window.renderDocuments=wrapped}
 document.addEventListener('input',e=>{if(['decisionThresholdPercent'].includes(e.target.id)||e.target.classList?.contains('agenda-result-input'))setTimeout(apply,0)},true);
 document.addEventListener('change',e=>{if(['entityType','meetingType','enableOwnershipRegister','votingRightsBasis','decisionThresholdMode','decisionThresholdOperator','decisionThresholdPercent','decisionCardAgendaId'].includes(e.target.id)||e.target.classList?.contains('participant-vote-input')||e.target.classList?.contains('decision-vote')||e.target.classList?.contains('attendance-input'))setTimeout(apply,0)},true);
-window.MajalisVotingFix1155={version:V,calculate:calc,cleanDecision,apply};
+window.MajalisVotingFix1156={version:V,calculate:calc,cleanDecision,apply};
 window.MajalisVotingFixSelfTest=()=>({approvalPercent:pct(380,500),approvedAtLeast75:pct(380,500)>=75,exact75AtLeast:75>=75,exact75MoreThan:75>75});
 apply();
 })();
