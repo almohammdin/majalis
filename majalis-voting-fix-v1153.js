@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const V='1.15.3',$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),num=v=>Number(v)||0,pct=(v,t)=>t>0?Number((num(v)*100/num(t)).toFixed(2)):0;
+const V=window.MAJALIS_VERSION||'1.15.7',$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),num=v=>Number(v)||0,pct=(v,t)=>t>0?Number((num(v)*100/num(t)).toFixed(2)):0;
 const present=p=>['inperson','remote'].includes(String(normalizeParticipant(p)?.attendance||''));
 const llc=()=>$('entityType')?.value==='llc'&&$('meetingType')?.value==='partners'&&ownershipRegisterEnabled()&&ownershipVotingBasis()!=='none';
 window.votingParticipants=()=>attendees.map(normalizeParticipant).filter(p=>present(p)&&participantVotingWeight(p)>0);

@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
-const VERSION='1.15.1';
-const BASE_SRC='./majalis-decision-card-base.js?v=1.15.0';
+const VERSION=window.MAJALIS_VERSION||'1.15.7';
+const BASE_SRC='./majalis-decision-card-base.js?v=1.15.7';
 const $P=id=>document.getElementById(id);
 const pctP=(value,total)=>Number(total)>0?`${Number((((Number(value)||0)*100)/Number(total)).toFixed(2))}%`:'—';
 
