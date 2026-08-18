@@ -17,12 +17,12 @@ function meaningfulDraft(payload){
 function initialState(){
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw)return {mode:MODE_CUSTOM,hadField:true,isNew:true};
-    const payload=JSON.parse(raw),fields=payload?.fields||{},stored=normalizeMode(fields.minutesClosingMode);
-    if(stored)return {mode:stored,hadField:true,isNew:false};
-    if(meaningfulDraft(payload))return {mode:MODE_LEGACY,hadField:false,isNew:false};
+    if(!raw)return {mode:MODE_CUSTOM,hadField:true,isNew:true,originalClosingValue:''};
+    const payload=JSON.parse(raw),fields=payload?.fields||{},stored=normalizeMode(fields.minutesClosingMode),originalClosingValue=String(fields.closingNote||'');
+    if(stored)return {mode:stored,hadField:true,isNew:false,originalClosingValue};
+    if(meaningfulDraft(payload))return {mode:MODE_LEGACY,hadField:false,isNew:false,originalClosingValue};
   }catch{}
-  return {mode:MODE_CUSTOM,hadField:true,isNew:true};
+  return {mode:MODE_CUSTOM,hadField:true,isNew:true,originalClosingValue:''};
 }
 
 let state={...initialState(),closingEdited:false,explicitSave:false};
@@ -33,6 +33,7 @@ function setFromSnapshot(payload){
   state.mode=stored||MODE_LEGACY;
   state.hadField=!!stored;
   state.isNew=false;
+  state.originalClosingValue=String(fields.closingNote||'');
   state.closingEdited=false;
   state.explicitSave=false;
 }
@@ -40,6 +41,7 @@ function setNewMeeting(){
   state.mode=MODE_CUSTOM;
   state.hadField=true;
   state.isNew=true;
+  state.originalClosingValue='';
   state.closingEdited=false;
   state.explicitSave=false;
 }
@@ -133,10 +135,10 @@ if(typeof currentRender==='function'&&!currentRender.__minutesClosing11513){
   window.renderDocuments=wrapped;
 }
 
-// Only a trusted user edit of the closing field can arm a legacy meeting for conversion.
+// Only a trusted user edit that changes the saved closing text can arm a legacy meeting for conversion.
 document.addEventListener('input',event=>{
   if(event.target?.id!=='closingNote'||!event.isTrusted)return;
-  state.closingEdited=true;
+  state.closingEdited=String(event.target.value||'')!==state.originalClosingValue;
 },{capture:true});
 
 // Conversion happens only on the explicit cloud meeting save button.
@@ -147,6 +149,8 @@ document.addEventListener('click',event=>{
     state.mode=MODE_CUSTOM;
     state.hadField=true;
     state.isNew=false;
+    state.originalClosingValue=String(closingInput()?.value||'');
+    state.closingEdited=false;
     applyClosingMode();
   }
 },{capture:true});
