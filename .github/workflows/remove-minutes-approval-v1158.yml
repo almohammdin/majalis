@@ -1,0 +1,62 @@
+name: Remove approval sentence from Majalis minutes v1.15.8
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/remove-minutes-approval-v1158.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove approval clause from minutes only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('majalis-voting-fix-v1157.js')
+          t=p.read_text(encoding='utf-8')
+          old="n.textContent=r.sentence});"
+          new="n.textContent=String(r.sentence||'').replace(/،\\s*(?:واعتمد القرار لتحقق|ولم يعتمد القرار لعدم تحقق)\\s+النسبة المطلوبة البالغة.*?\\.$/u,'.')});"
+          if old not in t:
+              raise SystemExit('minutes sentence target not found')
+          t=t.replace(old,new,1)
+          t=t.replace("||'1.15.7'","||'1.15.8'")
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-version.js')
+          t=p.read_text(encoding='utf-8').replace("const VERSION='1.15.7';","const VERSION='1.15.8';",1)
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-decision-card.js')
+          t=p.read_text(encoding='utf-8').replace('?v=1.15.7','?v=1.15.8')
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('index.html')
+          t=p.read_text(encoding='utf-8').replace('?v=1.15.7','?v=1.15.8')
+          p.write_text(t,encoding='utf-8')
+
+          Path('.github/workflows/remove-minutes-approval-v1158.yml').unlink()
+          PY
+      - name: Validate
+        run: |
+          node --check majalis-voting-fix-v1157.js
+          node --check majalis-version.js
+          grep -F "const VERSION='1.15.8';" majalis-version.js
+          grep -F "واعتمد القرار لتحقق|ولم يعتمد القرار لعدم تحقق" majalis-voting-fix-v1157.js
+          grep -F 'majalis-voting-fix-v1157.js?v=1.15.8' majalis-decision-card.js
+          grep -F 'majalis-decision-card.js?v=1.15.8' index.html
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Remove approval clause from Majalis minutes'
+          git push origin HEAD:main
