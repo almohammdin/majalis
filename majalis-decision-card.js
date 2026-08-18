@@ -1,10 +1,10 @@
 (()=>{
 'use strict';
-const VERSION='1.15.12';
+const VERSION='1.15.13';
 const descriptor=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
-if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11512){
+if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11513){
   Object.defineProperty(HTMLScriptElement.prototype,'src',{...descriptor,set(value){let next=String(value||'');if(next.includes('majalis-decision-card-base.js'))next=next.replace(/([?&]v=)[^&]+/,'$1'+VERSION);descriptor.set.call(this,next)}});
-  window.__majalisBaseCacheRewriteV11512=true;
+  window.__majalisBaseCacheRewriteV11513=true;
 }
 const load=(src,onload)=>{const s=document.createElement('script');s.src=src;s.async=false;if(onload)s.onload=onload;s.onerror=()=>console.error('Majalis script failed:',src);document.head.appendChild(s)};
 const loadPatchedVotingFix=async onload=>{
@@ -16,7 +16,7 @@ const loadPatchedVotingFix=async onload=>{
     const broken="note.textContent=text,close=doc.querySelector('.minutes-default-closing'),body=doc.querySelector('.minutes-doc-body');";
     const fixed="note.textContent=text;const close=doc.querySelector('.minutes-default-closing');const body=doc.querySelector('.minutes-doc-body');";
     if(code.includes(broken))code=code.replace(broken,fixed);
-    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.12'");
+    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.13'");
     if(!code.includes("const body=doc.querySelector('.minutes-doc-body');"))throw new Error('Majalis v1153 minutes scope patch was not applied.');
     const s=document.createElement('script');
     s.dataset.majalisPatchedVotingFix=VERSION;
