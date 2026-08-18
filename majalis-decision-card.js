@@ -1,10 +1,10 @@
 (()=>{
 'use strict';
-const VERSION='1.15.14';
+const VERSION='1.15.15';
 const descriptor=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
-if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11514){
+if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11515){
   Object.defineProperty(HTMLScriptElement.prototype,'src',{...descriptor,set(value){let next=String(value||'');if(next.includes('majalis-decision-card-base.js'))next=next.replace(/([?&]v=)[^&]+/,'$1'+VERSION);descriptor.set.call(this,next)}});
-  window.__majalisBaseCacheRewriteV11514=true;
+  window.__majalisBaseCacheRewriteV11515=true;
 }
 const load=(src,onload)=>{const s=document.createElement('script');s.src=src;s.async=false;if(onload)s.onload=onload;s.onerror=()=>console.error('Majalis script failed:',src);document.head.appendChild(s)};
 const loadPatchedVotingFix=async onload=>{
@@ -15,9 +15,15 @@ const loadPatchedVotingFix=async onload=>{
     let code=await response.text();
     const broken="note.textContent=text,close=doc.querySelector('.minutes-default-closing'),body=doc.querySelector('.minutes-doc-body');";
     const fixed="note.textContent=text;const close=doc.querySelector('.minutes-default-closing');const body=doc.querySelector('.minutes-doc-body');";
+    const guarded="note.textContent=text;const close=doc.querySelector('.minutes-default-closing');const body=doc.querySelector('.minutes-doc-body');if(!window.MajalisMinutesClosingMode?.isPreviewCustom?.()){close?close.insertAdjacentElement('beforebegin',note):body?.appendChild(note)};";
     if(code.includes(broken))code=code.replace(broken,fixed);
-    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.14'");
-    if(!code.includes("const body=doc.querySelector('.minutes-doc-body');"))throw new Error('Majalis v1153 minutes scope patch was not applied.');
+    if(code.includes(fixed+"close?close.insertAdjacentElement('beforebegin',note):body?.appendChild(note);")){
+      code=code.replace(fixed+"close?close.insertAdjacentElement('beforebegin',note):body?.appendChild(note);",guarded);
+    }else if(code.includes(fixed)){
+      code=code.replace(fixed,guarded);
+    }
+    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.15'");
+    if(!code.includes("MajalisMinutesClosingMode?.isPreviewCustom?.()"))throw new Error('Majalis v1153 closing guard was not applied.');
     const s=document.createElement('script');
     s.dataset.majalisPatchedVotingFix=VERSION;
     s.textContent=code+`\n//# sourceURL=majalis-voting-fix-v1153.js?v=${VERSION}`;
