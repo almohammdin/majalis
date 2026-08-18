@@ -19,12 +19,29 @@ html,body{margin:0;min-height:100%;background:#F3F5F7;font-family:Tahoma,Arial,s
 <div class="boot" id="boot"><div><strong>مجالس</strong><span>جاري تحميل المنصة...</span></div></div>
 <script>
 (async()=>{
-  const VERSION='1.15.11';
+  const VERSION='1.15.12';
+  const DRAFT_KEY='majalis_tool_draft_v1_9_6';
+  const TEST_MARKER='majalis_riada_test_draft_v11512_seeded';
   try{
+    const url=new URL(window.location.href);
+    const seedMode=url.searchParams.get('seed_test');
+    if(seedMode==='1'||seedMode==='reset'){
+      const shouldSeed=seedMode==='reset'||localStorage.getItem(TEST_MARKER)!=='1';
+      if(shouldSeed){
+        const draftResponse=await fetch(`./majalis-test-draft-v11512.json?v=${VERSION}`,{cache:'no-store'});
+        if(!draftResponse.ok)throw new Error(`Test draft HTTP ${draftResponse.status}`);
+        const draft=await draftResponse.json();
+        localStorage.setItem(DRAFT_KEY,JSON.stringify(draft));
+        localStorage.setItem(TEST_MARKER,'1');
+      }
+      url.searchParams.delete('seed_test');
+      history.replaceState(null,'',url.pathname+url.search+url.hash);
+    }
+
     const response=await fetch(`./majalis-app-v1159.html?v=${VERSION}`,{cache:'no-store'});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     let html=await response.text();
-    html=html.replace(/([?&]v=)1\.15\.(?:7|8|9|10)(?=["'&<])/g,`$1${VERSION}`);
+    html=html.replace(/([?&]v=)1\.15\.(?:7|8|9|10|11)(?=["'&<])/g,`$1${VERSION}`);
     const upgrade=`<script type="module" src="./majalis-upgrade.js?v=${VERSION}"><\/script>`;
     const final9=`<script type="module" src="./majalis-final-v1159.js?v=${VERSION}"><\/script>`;
     const final10=`<script type="module" src="./majalis-final-v11510.js?v=${VERSION}"><\/script>`;
