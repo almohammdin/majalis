@@ -1,0 +1,171 @@
+(()=>{
+'use strict';
+const V=window.MAJALIS_VERSION||'1.15.17';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>Number(v)||0;
+const pct=(v,t)=>t>0?Number((num(v)*100/num(t)).toFixed(2)):0;
+const present=p=>['inperson','remote'].includes(String(normalizeParticipant(p)?.attendance||''));
+const llc=()=>$('entityType')?.value==='llc'&&$('meetingType')?.value==='partners'&&ownershipRegisterEnabled()&&ownershipVotingBasis()!=='none';
+
+window.votingParticipants=()=>attendees.map(normalizeParticipant).filter(p=>present(p)&&participantVotingWeight(p)>0);
+window.representedVotingRights=()=>votingParticipants().reduce((s,p)=>s+num(participantVotingWeight(p)),0);
+
+const selected=()=>agendaItems.find(x=>String(x.id)===String($('decisionCardAgendaId')?.value||''))||null;
+const choice=(x,p)=>normalizeParticipantVoteChoice(x?.participantVotes?.[String(p.id)]);
+
+function threshold(x){
+  const cur=selected();
+  if(cur&&x&&String(cur.id)===String(x.id)){
+    const m=$('decisionThresholdMode')?.value||'auto';
+    if(m==='custom'){
+      const p=num($('decisionThresholdPercent')?.value);
+      if(p)return {p,op:$('decisionThresholdOperator')?.value==='moreThan'?'moreThan':'atLeast'};
+    }
+    if(m==='auto'&&llc())return {p:50,op:'moreThan'};
+    if(m==='none')return null;
+  }
+  const s=String(x?.decisionCardOutcome?.threshold||'');
+  const m=s.match(/([0-9]+(?:\.[0-9]+)?)\s*%/);
+  return m?{p:num(m[1]),op:s.includes('أكثر من')?'moreThan':'atLeast'}:null;
+}
+
+const count=n=>({1:'شريك واحد',2:'شريكان',3:'ثلاثة شركاء',4:'أربعة شركاء',5:'خمسة شركاء',6:'ستة شركاء',7:'سبعة شركاء',8:'ثمانية شركاء',9:'تسعة شركاء',10:'عشرة شركاء'}[n]||`${n} شريكا`);
+const verb=n=>n===1?'يملك':n===2?'يملكان':'يملكون';
+
+function calc(x){
+  const people=votingParticipants();
+  const total=llc()?num(capitalVotesTotal()):people.length;
+  const rep=llc()?representedVotingRights():people.length;
+  const c={yes:0,no:0,abs:0,none:0};
+  const r={yes:0,no:0,abs:0,none:0};
+  people.forEach(p=>{
+    const q=choice(x,p),w=llc()?num(participantVotingWeight(p)):1;
+    const k=q==='موافق'?'yes':q==='غير موافق'?'no':q==='ممتنع'?'abs':'none';
+    c[k]++;r[k]+=w;
+  });
+  const per=pct(r.yes,total),th=threshold(x),ok=th&&total>0?(th.op==='moreThan'?per>th.p:per>=th.p):null;
+  const need=th?(th.op==='moreThan'?`أكثر من (${th.p}%)`:`(${th.p}%) على الأقل`):'';
+  let sentence='';
+  if(llc()&&total){
+    sentence=c.yes
+      ?`صوّت بالموافقة ${count(c.yes)} ${verb(c.yes)} (${r.yes}) حصة من أصل (${total}) حصة في رأس مال الشركة، تمثل نسبة (${per}%) من إجمالي رأس المال`
+      :`لم يصوّت أي شريك بالموافقة، وتمثل الحصص الموافقة (0) حصة من أصل (${total}) حصة في رأس مال الشركة، بنسبة (0%) من إجمالي رأس المال`;
+    sentence+=th?(ok?`، واعتمد القرار لتحقق النسبة المطلوبة البالغة ${need}.`:`، ولم يعتمد القرار لعدم تحقق النسبة المطلوبة البالغة ${need}.`):'.';
+  }
+  return {people,c,r,total,rep,per,th,ok,selected:c.yes+c.no+c.abs,sentence};
+}
+
+window.MajalisVotingDecision={version:V,calculate:calc};
+
+const oldNarrative=window.voteNarrative;
+if(typeof oldNarrative==='function')window.voteNarrative=x=>llc()&&calc(x).selected?calc(x).sentence:oldNarrative(x);
+
+const oldStats=window.MajalisDecisionCard?.stats?.bind(window.MajalisDecisionCard);
+if(oldStats)window.MajalisDecisionCard.stats=()=>{
+  if(!llc())return oldStats();
+  const x=selected();if(!x)return oldStats();
+  const d=calc(x);
+  return {people:d.people,t:{votesFor:d.r.yes,votesAgainst:d.r.no,votesAbstain:d.r.abs,votesNotCast:Math.max(0,d.rep-d.r.yes-d.r.no-d.r.abs),selectedPeople:d.selected},c:d.c,own:true,den:d.total,th:d.th,calc:d.ok,representedRights:d.rep,totalRights:d.total};
+};
+
+function decision(){
+  if(!llc())return;
+  const x=selected(),d=x&&calc(x),box=$('decisionTally');
+  if(d&&box){
+    const s=box.querySelector('.decision-card-summary');
+    if(s)s.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبة الموافقة من رأس المال</span><strong>${d.per}%</strong></div>`;
+    const p=box.querySelector('.decision-card-preview');
+    if(p)p.innerHTML=`${esc(d.sentence)}<br><strong>${d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':'بانتظار تحديد نسبة الاعتماد'}</strong>`;
+    box.querySelectorAll('.decision-represented-note,.decision-basis-note').forEach(e=>e.remove());
+  }
+  const card=$('docDecisionCard');
+  if(d&&card){
+    card.querySelectorAll('.decision-signs').forEach(e=>e.remove());
+    card.querySelectorAll('.decision-table tr').forEach(r=>{if(r.cells?.length>=8){r.deleteCell(7);r.deleteCell(6)}});
+    card.querySelectorAll('.decision-result').forEach(r=>{
+      const s=r.querySelector('.decision-result-stats');
+      if(s)s.innerHTML=`<div><span>الشركاء الموافقون</span><strong>${d.c.yes}</strong></div><div><span>الحصص الموافقة</span><strong>${d.r.yes}</strong></div><div><span>إجمالي رأس المال</span><strong>${d.total}</strong></div><div><span>نسبتها من إجمالي رأس المال</span><strong>${d.per}%</strong></div>`;
+      const p=r.querySelector('p');if(p)p.textContent=d.sentence;
+      r.querySelectorAll('.decision-represented-note,.decision-basis-note').forEach(e=>e.remove());
+    });
+  }
+  const out=$('docDecisionResult');
+  if(d&&out){
+    out.querySelectorAll('.dr-grid>div').forEach(e=>{
+      const l=e.querySelector('span')?.textContent||'';
+      if(l.includes('الموافقة من الحقوق الممثلة'))e.remove();
+      if(l.includes('نسبة الموافقة المعتمدة')){const q=e.querySelector('strong');if(q)q.textContent=`${d.per}%`;}
+    });
+    out.querySelectorAll('.dr-approval').forEach(e=>e.remove());
+  }
+}
+
+function ballots(){
+  if(!llc()||!$('docVoting')||!$('enableVotingCard')?.checked||$('votingCardMode')?.value==='blank')return;
+  const items=agendaItems.map(normalizeAgendaItem).filter(x=>x.includeInBallot),people=votingParticipants();
+  const pages=people.length?people.map((p,i)=>`<section class="individual-document-page">${commonMeta()}${ballotParticipantCard(p,i,items)}</section>`).join(''):'<div class="document-empty-note">لا توجد بطاقات تصويت للشركاء الغائبين.</div>';
+  $('docVoting').innerHTML=commonHeader('بطاقة تصويت','وثيقة التصويت')+`<div class="doc-body">${pages}</div>`+footer();
+}
+
+function minutes(){
+  if(!llc())return;
+  const doc=$('docMinutes');
+  const rows=Array.from(doc?.querySelectorAll('.minutes-table tbody tr')||[]);
+  agendaItems.forEach((x,i)=>{
+    const d=calc(x),r=rows[i];
+    if(!r||!d.selected)return;
+    r.querySelectorAll('.vote-narrative,.decision-minutes-summary').forEach(e=>e.remove());
+    const s=document.createElement('div');
+    s.className='decision-minutes-summary';
+    s.textContent=d.sentence;
+    r.cells?.[2]?.appendChild(s);
+  });
+  if(!doc)return;
+  doc.querySelectorAll('.doc-table:not(.minutes-table)').forEach(t=>{
+    const h=Array.from(t.querySelectorAll('thead th'));
+    const i=h.findIndex(e=>e.textContent.trim()==='التوقيع');
+    if(i>=0)t.querySelectorAll('tr').forEach(r=>{if(r.cells?.[i])r.deleteCell(i)});
+  });
+  doc.querySelectorAll('.minutes-final-block').forEach(e=>e.remove());
+  const manager=String($('chairName')?.value||$('minutesClosingName')?.value||'').trim();
+  if(manager){
+    const close=doc.querySelector('.minutes-default-closing');
+    const body=doc.querySelector('.minutes-doc-body');
+    const s=document.createElement('section');
+    s.className='minutes-final-block';
+    s.innerHTML=`<div class="minutes-final-grid"><div class="minutes-final-item"><span>الاسم</span><strong>${esc(manager)}</strong></div><div class="minutes-final-item"><span>المنصب</span><strong>مدير الاجتماع</strong></div><div class="minutes-final-item minutes-final-signature"><span>التوقيع</span><span class="sign-pad"></span></div></div>`;
+    close?close.insertAdjacentElement('beforebegin',s):body?.appendChild(s);
+  }
+}
+
+function docs(){
+  if(!llc())return;
+  const tally=$('docTally'),rows=Array.from(tally?.querySelectorAll('.vote-tally-table tbody tr')||[]),items=agendaItems.filter(x=>x.vote&&x.vote!=='لم يجر تصويت');
+  items.forEach((x,i)=>{
+    const r=rows[i],d=calc(x);
+    if(r?.cells?.[6])r.cells[6].innerHTML=`${esc(d.ok===true?'اعتمد القرار':d.ok===false?'لم يعتمد القرار':x.vote||'')}<small style="display:block">${d.per}% من إجمالي رأس المال (${d.r.yes} من ${d.total})</small>`;
+  });
+  const own=$('docOwnership'),rep=representedVotingRights(),total=num(capitalVotesTotal());
+  own?.querySelectorAll('.ownership-doc-summary>div').forEach(c=>{
+    if((c.querySelector('span')?.textContent||'').includes('حقوق التصويت الممثلة')){
+      const a=c.querySelector('strong'),b=c.querySelector('small');
+      if(a)a.textContent=rep;
+      if(b)b.textContent=`من إجمالي ${total} (${pct(rep,total)}%)`;
+    }
+  });
+}
+
+function stamp(){
+  document.querySelectorAll('.site-footer-wrap .version,.doc-footer-version').forEach(e=>e.textContent=`v${V}`);
+  if(window.MajalisDecisionCard)window.MajalisDecisionCard.version=V;
+}
+
+function apply(){ballots();decision();minutes();docs();stamp();}
+
+const oldRender=window.renderDocuments;
+if(typeof oldRender==='function')window.renderDocuments=function(){const r=oldRender.apply(this,arguments);apply();return r;};
+
+window.MajalisVotingFixSelfTest=()=>({approvalPercent:pct(380,500),approvedAtLeast75:pct(380,500)>=75,exact75AtLeast:75>=75,exact75MoreThan:75>75});
+apply();
+})();
