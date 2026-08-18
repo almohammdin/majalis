@@ -1,0 +1,86 @@
+name: Release Majalis v1.15.9 root fix retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release-v1159b.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply root fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p=Path('index.html');t=p.read_text(encoding='utf-8')
+          t=t.replace('?v=1.15.8','?v=1.15.9')
+          final='<script type="module" src="./majalis-final-v1159.js?v=1.15.9"></script>'
+          upgrade='<script type="module" src="./majalis-upgrade.js?v=1.15.9"></script>'
+          if final not in t:
+              if upgrade not in t: raise SystemExit('upgrade tag missing')
+              t=t.replace(upgrade,upgrade+'\n'+final,1)
+          t=t.replace("function votingParticipants(){return attendees.map(normalizeParticipant).filter(person=>participantVotingWeight(person)>0)}","function votingParticipants(){return attendees.map(normalizeParticipant).filter(person=>['inperson','remote'].includes(person.attendance)&&participantVotingWeight(person)>0)}",1)
+          pattern=r"function buildOwnershipSnapshot\(\)\{.*?\}\nfunction saveWork"
+          replacement="""function buildOwnershipSnapshot(){
+ if(!ownershipRegisterEnabled())return null;
+ const participants=attendees.map(raw=>{const p=normalizeParticipant(raw),isPresent=['inperson','remote'].includes(p.attendance),units=participantUnitTotal(p),votes=participantVoteTotal(p);return {id:p.id,name:p.name||'',role:p.role||'',ownershipClass:p.ownershipClass||'',ownedUnits:cleanNumber(p.ownedUnits),proxyUnits:cleanNumber(p.proxyUnits),ownedVotes:participantOwnedVotesEffective(p),proxyVotes:participantProxyVotesEffective(p),storedCustomOwnedVotes:cleanNumber(p.ownedVotes),storedCustomProxyVotes:cleanNumber(p.proxyVotes),representedUnits:isPresent?units:0,representedVotes:isPresent?votes:0}});
+ return {capturedAt:new Date().toISOString(),meetingDate:cloudMeetingMetadata().meetingDateSort||'',entityType:$('entityType')?.value||'',unitLabel:ownershipUnitWord(),totalUnits:capitalUnitsTotal(),votingBasis:ownershipVotingBasis(),totalVotes:capitalVotesTotal(),representedUnits:participants.reduce((s,p)=>s+cleanNumber(p.representedUnits),0),representedVotes:participants.reduce((s,p)=>s+cleanNumber(p.representedVotes),0),classesNote:($('capitalClassesNote')?.value||'').trim(),participants}
+}
+function saveWork"""
+          t,c=re.subn(pattern,replacement,t,count=1,flags=re.S)
+          if c!=1: raise SystemExit(f'ownership snapshot replacement={c}')
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-decision-card-v1151.js');t=p.read_text(encoding='utf-8')
+          t=t.replace("const VERSION=window.MAJALIS_VERSION||'1.15.7';","const VERSION=window.MAJALIS_VERSION||'1.15.9';",1)
+          t=t.replace("const BASE_SRC='./majalis-decision-card-base.js?v=1.15.7';","const BASE_SRC='./majalis-decision-card-base.js?v=1.15.9';",1)
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-decision-card-base.js');t=p.read_text(encoding='utf-8')
+          t=t.replace("const VERSION=window.MAJALIS_VERSION||'1.15.7'","const VERSION=window.MAJALIS_VERSION||'1.15.9'",1)
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-upgrade.js');t=p.read_text(encoding='utf-8')
+          old="function decorateVoting(){const snap=snapshot(),items=snap.agendaItems||[];"
+          if old in t:
+              t=t.replace(old,"function decorateVoting(){const snap=snapshot(),items=snap.agendaItems||[],f=snap.fields||{};if(f.entityType==='llc'&&f.meetingType==='partners'){document.querySelectorAll('.majalis-vote-percentages,.majalis-ballot-results,.vote-narrative,#docTally .majalis-tally-pct,#docDecisions .decision-vote-summary,.decision-represented-note,.decision-basis-note').forEach(el=>el.remove());return;}",1)
+          elif "f.entityType==='llc'&&f.meetingType==='partners'" not in t:
+              raise SystemExit('upgrade decorate marker missing')
+          p.write_text(t,encoding='utf-8')
+
+          Path('tests').mkdir(exist_ok=True)
+          Path('tests/voting-refresh-v1159.mjs').write_text("""import assert from 'node:assert/strict';
+const people=[['inperson',100],['inperson',80],['inperson',70],['remote',70],['inperson',60],['absent',120]];
+const represented=people.filter(([a])=>['inperson','remote'].includes(a)).reduce((s,[,v])=>s+v,0);
+assert.equal(represented,380);assert.equal(Number((represented/500*100).toFixed(2)),76);assert.equal(JSON.parse(JSON.stringify({represented})).represented,380);console.log('refresh test passed');
+""",encoding='utf-8')
+          Path('.github/workflows/release-v1159b.yml').unlink()
+          PY
+      - name: Validate
+        run: |
+          node --check majalis-final-v1159.js
+          node --check majalis-decision-card.js
+          node --check majalis-decision-card-v1151.js
+          node --check majalis-decision-card-base.js
+          node tests/voting-refresh-v1159.mjs
+          grep -F 'majalis-final-v1159.js?v=1.15.9' index.html
+          grep -F 'majalis-decision-card-base.js?v=1.15.9' majalis-decision-card-v1151.js
+          grep -F 'representedVotes:isPresent?votes:0' index.html
+          grep -F "f.entityType==='llc'&&f.meetingType==='partners'" majalis-upgrade.js
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release Majalis v1.15.9 root voting refresh fix'
+          git push origin HEAD:main
