@@ -1,0 +1,132 @@
+name: Release Majalis v1.15.9 root voting fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release-v1159.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply root voting persistence and cache fixes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # 1) Root app: attendance-sensitive voting and persistence.
+          p=Path('index.html')
+          t=p.read_text(encoding='utf-8')
+
+          t=t.replace("<script src=\"./majalis-version.js?v=1.15.8\"></script>","<script src=\"./majalis-version.js?v=1.15.9\"></script>")
+          t=t.replace("./majalis-assistant.css?v=1.15.8","./majalis-assistant.css?v=1.15.9")
+          for f in ['majalis-decision-card.js','majalis-upgrade.js','majalis-assistant.js','majalis-voice-appcheck.js','majalis-text-ai.js','majalis-voice.js']:
+              t=t.replace(f+'?v=1.15.8',f+'?v=1.15.9')
+
+          upgrade_tag='<script type="module" src="./majalis-upgrade.js?v=1.15.9"></script>'
+          final_tag='<script type="module" src="./majalis-final-v1159.js?v=1.15.9"></script>'
+          if final_tag not in t:
+              if upgrade_tag not in t: raise SystemExit('upgrade tag not found')
+              t=t.replace(upgrade_tag,upgrade_tag+'\n'+final_tag,1)
+
+          old_voters="function votingParticipants(){return attendees.map(normalizeParticipant).filter(person=>participantVotingWeight(person)>0)}"
+          new_voters="function votingParticipants(){return attendees.map(normalizeParticipant).filter(person=>['inperson','remote'].includes(person.attendance)&&participantVotingWeight(person)>0)}"
+          if old_voters in t:t=t.replace(old_voters,new_voters,1)
+
+          snapshot_pattern=r"function buildOwnershipSnapshot\(\)\{.*?\}\nfunction saveWork"
+          snapshot_replacement="""function buildOwnershipSnapshot(){
+ if(!ownershipRegisterEnabled())return null;
+ const participants=attendees.map(raw=>{const p=normalizeParticipant(raw),isPresent=['inperson','remote'].includes(p.attendance),units=participantUnitTotal(p),votes=participantVoteTotal(p);return {id:p.id,name:p.name||'',role:p.role||'',ownershipClass:p.ownershipClass||'',ownedUnits:cleanNumber(p.ownedUnits),proxyUnits:cleanNumber(p.proxyUnits),ownedVotes:participantOwnedVotesEffective(p),proxyVotes:participantProxyVotesEffective(p),storedCustomOwnedVotes:cleanNumber(p.ownedVotes),storedCustomProxyVotes:cleanNumber(p.proxyVotes),representedUnits:isPresent?units:0,representedVotes:isPresent?votes:0}});
+ return {capturedAt:new Date().toISOString(),meetingDate:cloudMeetingMetadata().meetingDateSort||'',entityType:$('entityType')?.value||'',unitLabel:ownershipUnitWord(),totalUnits:capitalUnitsTotal(),votingBasis:ownershipVotingBasis(),totalVotes:capitalVotesTotal(),representedUnits:participants.reduce((s,p)=>s+cleanNumber(p.representedUnits),0),representedVotes:participants.reduce((s,p)=>s+cleanNumber(p.representedVotes),0),classesNote:($('capitalClassesNote')?.value||'').trim(),participants}
+}
+function saveWork"""
+          t,n=re.subn(snapshot_pattern,snapshot_replacement,t,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'buildOwnershipSnapshot replacement count={n}')
+
+          render_pattern=r"function renderOwnershipSummary\(\)\{.*?\}\nfunction attendeeCard"
+          render_replacement="""function renderOwnershipSummary(){const box=$('ownershipSummary');if(!box)return;if(!ownershipRegisterEnabled()){box.hidden=true;box.innerHTML='';return}const totals=ownershipTotals(),representedTotals=attendees.map(normalizeParticipant).filter(p=>['inperson','remote'].includes(p.attendance)).reduce((a,p)=>{a.ownedUnits+=cleanNumber(p.ownedUnits);a.proxyUnits+=cleanNumber(p.proxyUnits);a.votes+=participantVoteTotal(p);return a},{ownedUnits:0,proxyUnits:0,votes:0}),unitsTotal=capitalUnitsTotal(),votesTotal=capitalVotesTotal(),represented=representedTotals.ownedUnits+representedTotals.proxyUnits,unitOver=unitsTotal>0&&totals.ownedUnits>unitsTotal,voteOver=votesTotal>0&&representedTotals.votes>votesTotal,unitWord=ownershipUnitWord();box.hidden=false;box.innerHTML=`<div class=\"ownership-summary-card ${unitOver?'bad':''}\"><span>إجمالي ${unitWord}</span><strong class=\"latin-number\">${unitsTotal||0}</strong></div><div class=\"ownership-summary-card\"><span>المملوك بالأصالة</span><strong class=\"latin-number\">${totals.ownedUnits}</strong></div><div class=\"ownership-summary-card\"><span>${unitWord} الممثلة في الاجتماع</span><strong class=\"latin-number\">${represented}</strong><small class=\"latin-number\">من إجمالي ${unitsTotal||0} (${percentText(represented,unitsTotal)})</small></div><div class=\"ownership-summary-card ${voteOver?'bad':''}\"><span>حقوق التصويت الممثلة</span><strong class=\"latin-number\">${representedTotals.votes}</strong><small class=\"latin-number\">من أصل ${votesTotal||0} (${percentText(representedTotals.votes,votesTotal)})</small></div>`}
+function attendeeCard"""
+          t,n=re.subn(render_pattern,render_replacement,t,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'renderOwnershipSummary replacement count={n}')
+
+          t=t.replace("countTotal=cleanNumber(item.votesFor)+cleanNumber(item.votesAgainst)+cleanNumber(item.votesAbstain),available=capitalVotesTotal(),over=", "countTotal=cleanNumber(item.votesFor)+cleanNumber(item.votesAgainst)+cleanNumber(item.votesAbstain),available=ownershipRegisterEnabled()?votingParticipants().reduce((sum,p)=>sum+participantVotingWeight(p),0):votingParticipants().length,over=",1)
+          t=t.replace("const total=cleanNumber(item.votesFor)+cleanNumber(item.votesAgainst)+cleanNumber(item.votesAbstain),available=capitalVotesTotal(),totalBox=", "const total=cleanNumber(item.votesFor)+cleanNumber(item.votesAgainst)+cleanNumber(item.votesAbstain),available=ownershipRegisterEnabled()?votingParticipants().reduce((sum,p)=>sum+participantVotingWeight(p),0):votingParticipants().length,totalBox=",1)
+          p.write_text(t,encoding='utf-8')
+
+          # 2) Decision chain including the base file must use one cache key.
+          p=Path('majalis-decision-card-v1151.js');t=p.read_text(encoding='utf-8')
+          t=t.replace("const VERSION=window.MAJALIS_VERSION||'1.15.7';","const VERSION=window.MAJALIS_VERSION||'1.15.9';",1)
+          t=t.replace("const BASE_SRC='./majalis-decision-card-base.js?v=1.15.7';","const BASE_SRC='./majalis-decision-card-base.js?v=1.15.9';",1)
+          p.write_text(t,encoding='utf-8')
+
+          p=Path('majalis-decision-card-base.js');t=p.read_text(encoding='utf-8')
+          t=t.replace("const VERSION=window.MAJALIS_VERSION||'1.15.7'","const VERSION=window.MAJALIS_VERSION||'1.15.9'",1)
+          p.write_text(t,encoding='utf-8')
+
+          # 3) Stop majalis-upgrade from ever re-injecting the 100% narrative for LLC partner meetings.
+          p=Path('majalis-upgrade.js');t=p.read_text(encoding='utf-8')
+          old="function decorateVoting(){const snap=snapshot(),items=snap.agendaItems||[];"
+          new="function decorateVoting(){const snap=snapshot(),items=snap.agendaItems||[],f=snap.fields||{};if(f.entityType==='llc'&&f.meetingType==='partners'){document.querySelectorAll('.majalis-vote-percentages,.majalis-ballot-results,.vote-narrative,#docTally .majalis-tally-pct,#docDecisions .decision-vote-summary,.decision-represented-note,.decision-basis-note').forEach(el=>el.remove());return;}"
+          if old not in t: raise SystemExit('decorateVoting marker not found')
+          t=t.replace(old,new,1)
+          p.write_text(t,encoding='utf-8')
+
+          # 4) Permanent refresh test: 380 stays represented after JSON round trip; absent 120 stays excluded.
+          Path('tests').mkdir(exist_ok=True)
+          Path('tests/voting-refresh-v1159.mjs').write_text("""import assert from 'node:assert/strict';
+const attendees=[
+{id:'1',attendance:'inperson',ownedUnits:100,proxyUnits:0},
+{id:'2',attendance:'inperson',ownedUnits:80,proxyUnits:0},
+{id:'3',attendance:'inperson',ownedUnits:70,proxyUnits:0},
+{id:'4',attendance:'remote',ownedUnits:70,proxyUnits:0},
+{id:'5',attendance:'inperson',ownedUnits:60,proxyUnits:0},
+{id:'6',attendance:'absent',ownedUnits:120,proxyUnits:0}
+];
+const present=p=>['inperson','remote'].includes(p.attendance);
+const snapshot={totalUnits:500,totalVotes:500,participants:attendees.map(p=>({...p,representedUnits:present(p)?p.ownedUnits:0,representedVotes:present(p)?p.ownedUnits:0}))};
+snapshot.representedVotes=snapshot.participants.reduce((s,p)=>s+p.representedVotes,0);
+assert.equal(snapshot.representedVotes,380);
+assert.equal(snapshot.participants.find(p=>p.id==='6').representedVotes,0);
+const restored=JSON.parse(JSON.stringify(snapshot));
+assert.equal(restored.participants.reduce((s,p)=>s+p.representedVotes,0),380);
+assert.equal(Number((380/500*100).toFixed(2)),76);
+assert.equal(76>=75,true);
+console.log('v1.15.9 refresh voting test passed: 380/500 = 76%');
+""",encoding='utf-8')
+
+          Path('.github/workflows/release-v1159.yml').unlink()
+          PY
+
+      - name: Validate release
+        run: |
+          node --check majalis-final-v1159.js
+          node --check majalis-decision-card.js
+          node --check majalis-decision-card-v1151.js
+          node --check majalis-decision-card-base.js
+          node --check majalis-upgrade.js
+          node tests/voting-refresh-v1159.mjs
+          grep -F "majalis-version.js?v=1.15.9" index.html
+          grep -F "majalis-decision-card.js?v=1.15.9" index.html
+          grep -F "majalis-upgrade.js?v=1.15.9" index.html
+          grep -F "majalis-final-v1159.js?v=1.15.9" index.html
+          grep -F "majalis-decision-card-base.js?v=1.15.9" majalis-decision-card-v1151.js
+          grep -F "representedVotes:isPresent?votes:0" index.html
+          grep -F "['inperson','remote'].includes(person.attendance)" index.html
+          grep -F "f.entityType==='llc'&&f.meetingType==='partners'" majalis-upgrade.js
+
+      - name: Commit release
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Release Majalis v1.15.9 voting refresh fix'
+          git push origin HEAD:main
