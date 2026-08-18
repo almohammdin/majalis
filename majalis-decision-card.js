@@ -1,10 +1,10 @@
 (()=>{
 'use strict';
-const VERSION='1.15.15';
+const VERSION='1.15.16';
 const descriptor=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
-if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11515){
+if(descriptor?.set&&!window.__majalisBaseCacheRewriteV11516){
   Object.defineProperty(HTMLScriptElement.prototype,'src',{...descriptor,set(value){let next=String(value||'');if(next.includes('majalis-decision-card-base.js'))next=next.replace(/([?&]v=)[^&]+/,'$1'+VERSION);descriptor.set.call(this,next)}});
-  window.__majalisBaseCacheRewriteV11515=true;
+  window.__majalisBaseCacheRewriteV11516=true;
 }
 const load=(src,onload)=>{const s=document.createElement('script');s.src=src;s.async=false;if(onload)s.onload=onload;s.onerror=()=>console.error('Majalis script failed:',src);document.head.appendChild(s)};
 const loadPatchedVotingFix=async onload=>{
@@ -22,7 +22,7 @@ const loadPatchedVotingFix=async onload=>{
     }else if(code.includes(fixed)){
       code=code.replace(fixed,guarded);
     }
-    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.15'");
+    code=code.replace("const V=window.MAJALIS_VERSION||'1.15.7'","const V=window.MAJALIS_VERSION||'1.15.16'");
     if(!code.includes("MajalisMinutesClosingMode?.isPreviewCustom?.()"))throw new Error('Majalis v1153 closing guard was not applied.');
     const s=document.createElement('script');
     s.dataset.majalisPatchedVotingFix=VERSION;
