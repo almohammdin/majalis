@@ -2384,7 +2384,7 @@ onAuthStateChanged(auth,async user=>{
   if(user){setAdminStatus('متصل بقاعدة البيانات.','success');try{await loadOrganizations()}catch(err){console.error(err);setAdminStatus('تعذر تحميل الجهات. راجع الاتصال وقواعد Firestore.','error');toast('تعذر تحميل الجهات.','error')}}else{adminState.organizations=[];adminState.meetings=[];renderOrganizations();renderMeetings()}
 });
 </script>
-<script src="./majalis-decision-card.js?v=1.15.0"></script>
+<script src="./majalis-decision-card.js?v=1.15.3"></script>
 <script type="module" src="./majalis-upgrade.js?v=1.15.0"></script>
 <script src="./majalis-assistant.js?v=1.15.0" defer></script>
 <script type="module" src="./majalis-voice-appcheck.js?v=1.15.0"></script>
