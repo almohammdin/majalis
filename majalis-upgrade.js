@@ -3,7 +3,7 @@ import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.
 import {getFirestore,collection,query,where,getDocs,doc,getDoc,setDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js';
 import {getStorage,ref as storageRef,uploadBytes,getDownloadURL,deleteObject} from 'https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js';
 
-const VERSION='1.15.0';
+const VERSION='1.15.3';
 const ADMIN_PROJECT='majalis-admin';
 const FIREBASE_CONFIG={apiKey:'AIzaSyCHefMzpFRZi6TQHMt7NTkqMAzPFQB3_6U',authDomain:'majalis-admin.firebaseapp.com',projectId:'majalis-admin',storageBucket:'majalis-admin.firebasestorage.app',messagingSenderId:'7816691347',appId:'1:7816691347:web:fdee56d2bc246ae262d766',measurementId:'G-GT45S5QZSN'};
 const MAX_FILE_SIZE=25*1024*1024;

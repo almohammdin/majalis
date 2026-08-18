@@ -1,0 +1,34 @@
+index.html:37: <link rel="stylesheet" href="./majalis-assistant.css?v=1.15.0">
+index.html:69: .site-footer-wrap{max-width:1240px;margin:0 auto 28px;padding:0 18px;text-align:center}
+index.html:70: .site-footer-wrap .footer{margin:0;padding:0;color:#778292}
+index.html:81: @media print{.site-footer-wrap,.site-socials,.social-username{display:none!important}}
+index.html:196: .doc-footer-version{white-space:nowrap;direction:ltr}
+index.html:488:   .doc-footer-version{
+index.html:549: .site-footer-wrap{position:relative}
+index.html:550: .site-footer-wrap .footer{position:relative;display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;min-height:42px;padding-inline:118px}
+index.html:551: .site-footer-wrap .footer-admin-entry{position:absolute;inset-inline-start:14px;top:50%;transform:translateY(-50%);margin:0;white-space:nowrap}
+index.html:562: @media(max-width:760px){.site-footer-wrap .footer{padding-inline:92px 10px;min-height:38px;gap:6px 9px}.site-footer-wrap .footer-admin-entry{top:0;inset-inline-start:8px;transform:none;min-height:28px;padding:3px 7px;font-size:9px}.site-footer-wrap .footer-admin-entry .admin-entry-icon{font-size:11px}.minutes-closing-grid{grid-template-columns:1fr}}
+index.html:563: @media print{.site-footer-wrap{display:none!important}}
+index.html:1141: <div class="site-footer-wrap">
+index.html:1147:     <span>إعداد نايف المحمدي مستشار الحوكمة وتطوير الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version">v1.15.3</span><span class="privacy-note">يحفظ الزائر بياناته على جهازه، ويحفظ الوضع الإداري بياناته في Firestore. عند استخدام المساعد يعالج Gemini سياق الاجتماع لتنفيذ الطلب.</span>
+index.html:1246: const TOOL_VERSION='v1.15.3';
+index.html:1468: function footer(){return `<div class="doc-footer"><div class="doc-footer-brand"><img src="${MAJALIS_LOGO}" alt="مجالس" class="tool-footer-logo"><strong>${esc(TOOL_NAME)}</strong></div><div class="doc-footer-meta"><span class="doc-footer-version">${TOOL_VERSION}</span><a href="${TOOL_LINK}" target="_blank" rel="noopener">${TOOL_LINK}</a></div></div>`}
+index.html:1776: .doc-footer-version{white-space:nowrap;direction:ltr;font-size:7pt}
+index.html:1849: function saveWork(){if(!autoSaveReady)return false;const payload={version:TOOL_VERSION,currentStep,calendar,attendees,agendaItems,meetingAttachments,voteTallyCommittee,ownershipSnapshot:buildOwnershipSnapshot(),assistantConversation:window.MajalisAssistantBridge?.captureConversation?.()||null,entityLogoSrc,fields:collectFormValues()};try{localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));return true}catch(err){console.error(err);return false}}
+index.html:1868: function captureMajalisSnapshot(){return {version:TOOL_VERSION,currentStep,calendar,attendees:clonePlain(attendees)||[],agendaItems:clonePlain(agendaItems)||[],meetingAttachments:clonePlain(meetingAttachments)||[],voteTallyCommittee:clonePlain(voteTallyCommittee)||[],ownershipSnapshot:clonePlain(buildOwnershipSnapshot()),assistantConversation:window.MajalisAssistantBridge?.captureConversation?.()||null,entityLogoSrc,fields:collectFormValues()}}
+index.html:1896:   return {version:TOOL_VERSION,calendar,entityLogoSrc,fields,attendees:attendees.map(p=>({...clonePlain(normalizeParticipant(p)),attendance:'pending'}))};
+index.html:2387: <script src="./majalis-decision-card.js?v=1.15.3"></script>
+index.html:2388: <script type="module" src="./majalis-upgrade.js?v=1.15.3"></script>
+index.html:2389: <script src="./majalis-assistant.js?v=1.15.0" defer></script>
+index.html:2390: <script type="module" src="./majalis-voice-appcheck.js?v=1.15.0"></script>
+index.html:2391: <script type="module" src="./majalis-text-ai.js?v=1.15.0"></script>
+index.html:2392: <script type="module" src="./majalis-voice.js?v=1.15.0"></script>
+majalis-decision-card-base.js:3: const VERSION='1.15.0',$D=id=>document.getElementById(id),escD=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),pct=(v,t)=>t>0?`${Number(((Number(v)||0)*100/t).toFixed(2))}%`:'—';
+majalis-decision-card-v1151.js:3: const VERSION='1.15.1';
+majalis-decision-card-v1151.js:4: const BASE_SRC='./majalis-decision-card-base.js?v=1.15.0';
+majalis-decision-card.js:4: load('./majalis-decision-card-v1151.js?v=1.15.1',()=>load('./majalis-decision-result.js?v=1.15.2',()=>load('./majalis-voting-fix-v1153.js?v=1.15.3')));
+majalis-decision-result.js:3: const VERSION='1.15.2',$=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),pct=(v,t)=>Number(t)>0?`${Number(((Number(v)||0)*100/Number(t)).toFixed(2))}%`:'—';
+majalis-decision-result.js:13: function stamp(){document.querySelectorAll('.site-footer-wrap .version,.doc-footer-version').forEach(x=>x.textContent=`v${VERSION}`);if(window.MajalisDecisionCard)window.MajalisDecisionCard.version=VERSION}
+majalis-upgrade.js:6: const VERSION='1.15.3';
+majalis-voting-fix-v1153.js:2: const V='1.15.3',$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),num=v=>Number(v)||0,pct=(v,t)=>t>0?Number((num(v)*100/num(t)).toFixed(2)):0;
+majalis-voting-fix-v1153.js:22: function stamp(){document.querySelectorAll('.site-footer-wrap .version,.doc-footer-version').forEach(e=>e.textContent=`v${V}`);if(window.MajalisDecisionCard)window.MajalisDecisionCard.version=V}
