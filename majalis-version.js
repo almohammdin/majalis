@@ -56,5 +56,5 @@ const loadRuntime=()=>{
 const prepare=()=>{stamp();ensureExperienceStyle()};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',prepare,{once:true});else prepare();
 window.addEventListener('load',()=>setTimeout(loadRuntime,0),{once:true});
-window.MajalisVersion={version:VERSION,label:window.MAJALIS_VERSION_LABEL,stamp,loadRuntime,modules:modules.map(([src,key])=>({src,key}))};
+window.MajalisVersion={version:VERSION,label:window.MAJALIS_VERSION_LABEL,stamp,loadRuntime,loadFinal:loadRuntime,modules:modules.map(([src,key])=>({src,key}))};
 })();
