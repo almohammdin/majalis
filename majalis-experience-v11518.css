@@ -1,0 +1,90 @@
+:root{
+  --majalis-ease-out:cubic-bezier(.23,1,.32,1);
+  --majalis-ease-in-out:cubic-bezier(.77,0,.175,1);
+  --majalis-motion-fast:140ms;
+  --majalis-motion-ui:200ms;
+  --majalis-motion-panel:240ms;
+}
+
+/* استجابة فورية للعناصر القابلة للضغط بدون تحريك التنقل المتكرر */
+.btn,.icon-btn,.action-btn,.date-choice,.doc-tab,.majalis-assistant-suggestion,
+.majalis-assistant-compose button,.majalis-assistant-entry-close,
+.majalis-assistant-dock-button,.majalis-assistant-dock-mic,.majalis-assistant-dock-close,
+.majalis-assistant-proposal-actions button,.admin-entry-button,.admin-dialog-close,
+.professional-whatsapp,.site-social-link{
+  transition-property:transform,background-color,border-color,box-shadow,opacity;
+  transition-duration:var(--majalis-motion-fast),var(--majalis-motion-ui),var(--majalis-motion-ui),var(--majalis-motion-ui),var(--majalis-motion-ui);
+  transition-timing-function:var(--majalis-ease-out),ease,ease,ease,ease;
+}
+.btn:active,.action-btn:active,.date-choice:active,.doc-tab:active,
+.majalis-assistant-suggestion:active,.majalis-assistant-compose button:active,
+.majalis-assistant-entry-close:active,.majalis-assistant-dock-button:active,
+.majalis-assistant-dock-mic:active,.majalis-assistant-proposal-actions button:active,
+.admin-entry-button:active,.professional-whatsapp:active,.site-social-link:active{transform:scale(.97)}
+.icon-btn:active,.admin-dialog-close:active,.majalis-assistant-dock-close:active{transform:scale(.95)}
+.top-tab{transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease}
+.control{transition:border-color 180ms ease,box-shadow 180ms ease,background-color 180ms ease,color 180ms ease!important}
+
+/* لوحة حالة الاجتماع داخل المساعد */
+.majalis-assistant-guide{margin-top:11px;padding:11px;border:1px solid rgba(234,213,141,.32);border-radius:13px;background:rgba(255,255,255,.075);color:#fff}
+.majalis-assistant-guide[hidden]{display:none!important}
+.majalis-guide-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+.majalis-guide-kicker{display:block;color:#ead58d;font-size:9px;font-weight:800}
+.majalis-guide-title{display:block;margin-top:2px;font-size:12px;line-height:1.45;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.majalis-guide-subtitle{display:block;margin-top:1px;color:rgba(255,255,255,.65);font-size:9px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.majalis-guide-score{min-width:54px;height:54px;border-radius:15px;display:grid;place-items:center;border:1px solid rgba(234,213,141,.38);background:rgba(201,168,76,.12);color:#ead58d;font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;direction:ltr}
+.majalis-guide-track{height:5px;margin-top:9px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.12)}
+.majalis-guide-track>i{display:block;width:var(--majalis-progress,0%);height:100%;border-radius:inherit;background:#ead58d;transition:width 240ms var(--majalis-ease-out)}
+.majalis-guide-next{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,.10)}
+.majalis-guide-next span{display:block;color:rgba(255,255,255,.58);font-size:8.5px}
+.majalis-guide-next strong{display:block;margin-top:1px;color:#fff;font-size:10.5px}
+.majalis-guide-next button{min-height:34px;border:1px solid #ead58d;border-radius:9px;padding:6px 10px;background:#c9a84c;color:#0b1a2b;font:inherit;font-size:9.5px;font-weight:800;transition:transform 140ms var(--majalis-ease-out),background-color 180ms ease}
+.majalis-guide-next button:active{transform:scale(.97)}
+.majalis-guide-missing{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.majalis-guide-chip{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:3px 7px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);font-size:8px;line-height:1.4}
+.majalis-guide-chip.good{border-color:rgba(126,211,168,.3);background:rgba(66,153,112,.12);color:#c9f0dc}
+.majalis-assistant-more{grid-column:1/-1;background:transparent!important;border-style:dashed!important;color:#ead58d!important;text-align:center!important}
+
+/* حركة مقصودة فقط عند الظهور أو تغيير الحالة */
+.majalis-assistant-focus{animation:majalisAssistantFocusV11518 620ms var(--majalis-ease-out)!important}
+.majalis-assistant-focus.control{border-color:#c9a84c!important;box-shadow:0 0 0 3px rgba(201,168,76,.17)!important}
+@keyframes majalisAssistantFocusV11518{0%{filter:none}35%{filter:drop-shadow(0 0 5px rgba(201,168,76,.42))}100%{filter:none}}
+.majalis-assistant-mic.is-listening,.majalis-assistant-dock-mic.is-listening{animation:majalisMicPulseV11518 1.35s ease-in-out infinite!important}
+@keyframes majalisMicPulseV11518{50%{box-shadow:0 0 0 5px rgba(182,67,67,.13)}}
+
+/* النوافذ العرضية تستحق انتقالا قصيرا؛ التبويبات اليومية تبقى مباشرة */
+.admin-modal:not([hidden]) .admin-modal-backdrop{animation:majalisBackdropIn 180ms ease-out both}
+.admin-modal:not([hidden]) .admin-dialog{animation:majalisDialogIn 220ms var(--majalis-ease-out) both;transform-origin:center}
+@keyframes majalisBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes majalisDialogIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+
+/* وضوح المساعد الصوتي على الجوال: لا نعود إلى أيقونة مبهمة وحدها */
+@media(max-width:410px){
+  .majalis-assistant-dock-mic{min-width:128px!important;width:auto!important;grid-template-columns:28px minmax(0,1fr)!important;padding:6px 8px!important}
+  .majalis-assistant-dock-mic .majalis-assistant-voice-copy{display:flex!important;min-width:0}
+  .majalis-assistant-dock-mic .majalis-assistant-voice-copy strong{display:block;font-size:8.5px!important;overflow:hidden;text-overflow:ellipsis}
+  .majalis-assistant-dock-mic .majalis-assistant-voice-copy small{display:none!important}
+  .majalis-assistant-dock-mic .majalis-assistant-mic-icon{display:none!important}
+  .majalis-assistant-dock-mic .majalis-assistant-ai-mark{margin:0!important}
+  .majalis-guide-next{grid-template-columns:1fr}
+  .majalis-guide-next button{width:100%}
+}
+@media(max-width:350px){
+  .majalis-assistant-dock-mic{min-width:108px!important}
+  .majalis-assistant-dock-mic .majalis-assistant-voice-copy strong{font-size:8px!important}
+}
+
+/* احترام تفضيل تقليل الحركة */
+@media(prefers-reduced-motion:reduce){
+  .btn,.icon-btn,.action-btn,.date-choice,.doc-tab,.top-tab,.control,
+  .majalis-assistant-suggestion,.majalis-assistant-compose button,
+  .majalis-assistant-entry-close,.majalis-assistant-dock-button,
+  .majalis-assistant-dock-mic,.majalis-assistant-dock-close,
+  .admin-entry-button,.admin-dialog-close,.professional-whatsapp,.site-social-link,
+  .majalis-guide-track>i{transition-duration:80ms!important}
+  .majalis-assistant-focus{animation-duration:120ms!important}
+  .majalis-assistant-mic.is-listening,.majalis-assistant-dock-mic.is-listening{animation:none!important;box-shadow:0 0 0 3px rgba(182,67,67,.12)!important}
+  .admin-modal:not([hidden]) .admin-modal-backdrop,.admin-modal:not([hidden]) .admin-dialog{animation-duration:80ms!important}
+}
+
+@media print{.majalis-assistant-guide{display:none!important}}
