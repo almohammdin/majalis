@@ -1,10 +1,10 @@
 (()=>{
 'use strict';
-const VERSION='1.15.18';
+const VERSION='1.15.19';
 window.MAJALIS_VERSION=VERSION;
 window.MAJALIS_VERSION_LABEL=`v${VERSION}`;
 
-const versionPattern=/([?&]v=)1\.15\.(?:7|8|9|10|11|12|13|14|15|16|17)(?=&|$)/;
+const versionPattern=/([?&]v=)1\.15\.(?:7|8|9|10|11|12|13|14|15|16|17|18)(?=&|$)/;
 const scriptSrc=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
 if(scriptSrc?.set&&!window.__majalisVersionCacheRewrite11518){
   Object.defineProperty(HTMLScriptElement.prototype,'src',{...scriptSrc,set(value){
