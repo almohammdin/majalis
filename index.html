@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0B1A2B">
+<meta name="theme-color" content="#061f56">
 <title>مجالس | منظومة أعمال المجالس</title>
 <meta name="description" content="مجالس لإعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع">
 <meta property="og:type" content="website">
@@ -12,14 +12,14 @@
 <meta property="og:image" content="https://almohammdin.github.io/majalis/og-image.png">
 <link rel="canonical" href="https://almohammdin.github.io/majalis/">
 <style>
-html,body{margin:0;min-height:100%;background:#F3F5F7;font-family:Tahoma,Arial,sans-serif;color:#0B1A2B}.boot{min-height:100vh;display:grid;place-items:center;text-align:center}.boot strong{display:block;font-size:22px}.boot span{display:block;margin-top:7px;color:#677386;font-size:13px}
+html,body{margin:0;min-height:100%;background:#fbfaf7;font-family:Tahoma,Arial,sans-serif;color:#061f56}.boot{min-height:100vh;display:grid;place-items:center;text-align:center}.boot strong{display:block;font-size:22px}.boot span{display:block;margin-top:7px;color:#677386;font-size:13px}
 </style>
 </head>
 <body>
 <div class="boot" id="boot"><div><strong>مجالس</strong><span>جاري تحميل المنصة...</span></div></div>
 <script>
 (async()=>{
-  const VERSION='1.15.18';
+  const VERSION='1.15.20';
   const DRAFT_KEY='majalis_tool_draft_v1_9_6';
   const TEST_MARKER='majalis_riada_test_draft_v11512_seeded';
   try{
@@ -41,7 +41,7 @@ html,body{margin:0;min-height:100%;background:#F3F5F7;font-family:Tahoma,Arial,s
     const response=await fetch(`./majalis-app-v1159.html?v=${VERSION}`,{cache:'no-store'});
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     let html=await response.text();
-    html=html.replace(/([?&]v=)1\.15\.(?:7|8|9|10|11|12|13|14|15|16|17)(?=["'&<])/g,`$1${VERSION}`);
+    html=html.replace(/([?&]v=)1\.15\.(?:7|8|9|10|11|12|13|14|15|16|17|18|19)(?=["'&<])/g,`$1${VERSION}`);
     document.open();document.write(html);document.close();
   }catch(error){
     console.error('Majalis bootstrap failed:',error);
