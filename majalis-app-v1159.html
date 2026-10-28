@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#061f56">
-<title>مجالس | حتى لحلول الأعمال</title>
+<title>مجالس | منظومة أعمال المجالس</title>
 <meta name="twitter:image:alt" content="شعار مجالس ومنظومة أعمال المجالس">
 <meta name="twitter:image" content="https://almohammdin.github.io/majalis/og-image.png">
 <meta property="og:locale" content="ar_SA">
@@ -17,10 +17,10 @@
 <meta property="og:url" content="https://almohammdin.github.io/majalis/">
 <meta name="description" content="مجالس لإعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع">
 <meta property="og:type" content="website">
-<meta property="og:title" content="مجالس | حتى لحلول الأعمال">
+<meta property="og:title" content="مجالس | منظومة أعمال المجالس">
 <meta property="og:description" content="إعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="مجالس | حتى لحلول الأعمال">
+<meta name="twitter:title" content="مجالس | منظومة أعمال المجالس">
 <meta name="twitter:description" content="إعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع">
 <link rel="canonical" href="https://almohammdin.github.io/majalis/">
 <link rel="icon" href="./majalis-favicon.ico?v=20260719-3" sizes="any">
@@ -563,14 +563,14 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 @media(max-width:760px){.site-footer-wrap .footer{padding-inline:92px 10px;min-height:38px;gap:6px 9px}.site-footer-wrap .footer-admin-entry{top:0;inset-inline-start:8px;transform:none;min-height:28px;padding:3px 7px;font-size:9px}.site-footer-wrap .footer-admin-entry .admin-entry-icon{font-size:11px}.minutes-closing-grid{grid-template-columns:1fr}}
 @media print{.site-footer-wrap{display:none!important}}
 </style>
-<link rel="stylesheet" href="./majalis-hatta.css?v=1.15.19">
+<link rel="stylesheet" href="./majalis-hatta.css?v=1.15.20">
 </head>
 <body>
 <header class="hero">
   <div class="hero-inner"><div class="identity">
     <div class="brand">
-      <a href="https://almohammdin.github.io/services/" aria-label="حتى لحلول الأعمال"><img src="https://almohammdin.github.io/services/assets/hatta/logo.webp" alt="حتى لحلول الأعمال" width="148" height="62"></a>
-      <div class="brand-text"><strong>مجالس · منظومة أعمال المجالس</strong><span>إحدى أدوات حتى لإعداد الدعوات وجداول الأعمال والمحاضر والقرارات</span></div>
+      <a href="https://almohammdin.github.io/services/" aria-label="حتى لحلول الأعمال"><svg class="hatta-wordmark" viewBox="134 149 746 269" width="150" height="54" role="img" aria-label="حتى لحلول الأعمال"><image href="https://almohammdin.github.io/hatta-brand-guide/assets/hatta-logo.webp" width="1000" height="526"/></svg></a>
+      <div class="brand-text"><strong>مجالس | منظومة أعمال المجالس</strong><span>منصة لإعداد الدعوات وجداول الأعمال والمحاضر والقرارات وفق نوع الجهة وطبيعة الاجتماع</span></div>
     </div>
     <a class="hatta-tools-link" href="https://almohammdin.github.io/services/#tools">أدوات حتى <span aria-hidden="true">&nbsp;↗</span></a>
   </div></div>
@@ -957,7 +957,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
     </section>
 
     <aside class="review-card">
-      <div class="review-head"><h3>المراجعة النظامية</h3></div>
+      <details class="review-disclosure"><summary class="review-head"><h3>المراجعة النظامية</h3></summary>
       <div class="review-body">
         <div class="rule-grid">
           <div class="rule" id="noticeRule"><span>مدة الدعوة</span><strong id="noticeText">حدد نوع الجهة والاجتماع</strong></div>
@@ -974,6 +974,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
         <div class="reference"><strong>المرجع:</strong> <span id="referenceText">حدد نوع الجهة والاجتماع</span></div>
         <div class="legal-review-date">آخر موائمة مع الأنظمة : يوليو 2026</div>
       </div>
+    </details>
     </aside>
   </div>
 </main>
@@ -1136,20 +1137,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
 
 <div class="admin-toast" id="adminToast" hidden role="status"></div>
 
-<div class="site-footer-wrap">
-  <div class="hatta-footer-brand">
-    <a href="https://almohammdin.github.io/services/" aria-label="حتى لحلول الأعمال"><img src="https://almohammdin.github.io/services/assets/hatta/logo.webp" alt="حتى لحلول الأعمال" width="132" height="58" loading="lazy"></a>
-    <a class="hatta-footer-tools" href="https://almohammdin.github.io/services/#tools">استكشف أدوات حتى</a>
-  </div>
-  <footer class="footer">
-    <button class="admin-entry-button footer-admin-entry" id="adminAccessButton" type="button" aria-haspopup="dialog">
-      <span class="admin-entry-icon" aria-hidden="true">⌾</span>
-      <span id="adminAccessLabel">دخول الإدارة</span>
-    </button>
-    <span class="hatta-credit">تطوير وإشراف نايف المحمدي · حتى لحلول الأعمال</span><span class="tool-label">منظومة أعمال المجالس | أداة مجالس</span><span class="version" data-majalis-version></span><span class="privacy-note">يحفظ الزائر بياناته على جهازه، ويحفظ الوضع الإداري بياناته في Firestore. عند استخدام المساعد يعالج Gemini سياق الاجتماع لتنفيذ الطلب.</span>
-  </footer>
-  <span class="social-username">almohammdin</span>
-  <nav class="site-socials" aria-label="حسابات نايف المحمدي">
+<div class="site-footer-wrap"><footer class="footer"><a class="hatta-footer-home" href="https://almohammdin.github.io/services/" aria-label="حتى لحلول الأعمال"><svg class="hatta-wordmark" viewBox="134 149 746 269" width="150" height="54" role="img" aria-label="حتى لحلول الأعمال"><image href="https://almohammdin.github.io/hatta-brand-guide/assets/hatta-logo.webp" width="1000" height="526"/></svg></a><div class="hatta-author"><span>أعدت بواسطة</span><span class="naif-wordmark"><img src="https://almohammdin.github.io/hatta-brand-guide/assets/naif-signature.webp" alt="نايف المحمدي" width="62" height="29"></span></div><nav class="site-socials" aria-label="حسابات نايف المحمدي">
     <a class="site-social-link" href="https://x.com/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="حساب نايف المحمدي في إكس" title="إكس">
       <img src="https://cdn.simpleicons.org/x/0B1A2B" alt="">
     </a>
@@ -1162,8 +1150,7 @@ window.addEventListener('load',()=>requestAnimationFrame(()=>window.scrollTo({to
     <a class="site-social-link" href="https://linktr.ee/almohammdin" target="_blank" rel="noopener noreferrer" aria-label="روابط نايف المحمدي في لينك تري" title="لينك تري">
       <img src="https://cdn.simpleicons.org/linktree/0B1A2B" alt="">
     </a>
-  </nav>
-</div>
+  </nav><span class="version" data-majalis-version></span><button class="admin-entry-button footer-admin-entry" id="adminAccessButton" type="button" aria-haspopup="dialog"><span class="admin-entry-icon" aria-hidden="true">⌾</span><span id="adminAccessLabel">دخول الإدارة</span></button><span class="privacy-note">يحفظ الزائر بياناته على جهازه، ويحفظ الوضع الإداري بياناته في Firestore. عند استخدام المساعد يعالج Gemini سياق الاجتماع لتنفيذ الطلب.</span></footer></div>
 <script>
 const logoSrc = './majalis-logo.svg?v=20260720-3';
 const entityOptions = [
@@ -1244,7 +1231,7 @@ let currentStep=1, calendar='gregorian', attendees=[], agendaItems=[], meetingAt
 const STORAGE_KEY='majalis_tool_draft_v1_9_6';
 const LEGACY_STORAGE_KEYS=['majalis_tool_draft_v1_9_4','majalis_tool_draft_v1_9_3','majalis_tool_draft_v1_9_2','majalis_tool_draft_v1_9_1','majalis_tool_draft_v1_9','majalis_tool_draft_v1_7','majalis_tool_draft_v1_5','majalis_tool_draft_v1_4','majalis_tool_draft_v1_3','majalis_tool_draft_v1_2'];
 const TOOL_LINK='https://almohammdin.github.io/majalis/';
-const TOOL_NAME='مجالس · حتى لحلول الأعمال';
+const TOOL_NAME='منظومة أعمال المجالس | أداة مجالس';
 const TOOL_VERSION=window.MAJALIS_VERSION_LABEL;
 const MAJALIS_LOGO='./majalis-logo.svg?v=20260720-3';
 const $=id=>document.getElementById(id);
@@ -1665,7 +1652,7 @@ function paginateIntoPages(doc,targetDoc){
 }
 function printStylesheet(){
  return `@page{size:A4 portrait;margin:0}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}body,body *{font-family:'Thmanyah Sans',Tahoma,Arial,sans-serif!important}body{color:#18202A;direction:rtl}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff}body,body *{font-family:'Thmanyah Sans',Tahoma,Arial,sans-serif!important}body{color:#17233c;direction:rtl;font-feature-settings:"salt" 0}h1,h2{font-feature-settings:"salt" 1}h3{font-feature-settings:"salt" 1}.doc-footer-meta{font-family:"El Messiri",sans-serif!important}
 #printArea{width:100%}
 .print-page{width:210mm;height:297mm;padding:12mm 12mm 15mm;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#fff;break-after:page;page-break-after:always;position:relative}
 .print-page:last-of-type{break-after:auto;page-break-after:auto}
@@ -1790,11 +1777,16 @@ function printDocuments(mode){
  const printWin=window.open('','_blank','width=900,height=1000');
  if(!printWin){alert('يبدو أن المتصفح منع فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع ثم المحاولة مجددًا.');return;}
  printWin.document.open();
- printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>/* Hatta identity: shared palette and typefaces from the services website. */
-@font-face{font-family:"Thmanyah Sans";src:url("https://almohammdin.github.io/services/assets/hatta/fonts/sans-regular.woff2") format("woff2");font-weight:400;font-display:swap}
-@font-face{font-family:"Thmanyah Sans";src:url("https://almohammdin.github.io/services/assets/hatta/fonts/sans-medium.woff2") format("woff2");font-weight:500 600;font-display:swap}
-@font-face{font-family:"Thmanyah Sans";src:url("https://almohammdin.github.io/services/assets/hatta/fonts/sans-bold.woff2") format("woff2");font-weight:700 900;font-display:swap}
-@font-face{font-family:"Thmanyah Serif Display";src:url("https://almohammdin.github.io/services/assets/hatta/fonts/serif-bold.woff2") format("woff2");font-weight:700 900;font-display:swap}
+ printWin.document.write(`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><base href="${location.href}"><title>${printTitle}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>/* Hatta 2.0 · 25-10-2026. Font URLs point to the canonical guide. */
+@font-face{font-family:"El Messiri";font-style:normal;font-weight:400;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/el-messiri-400.woff2") format("woff2")}
+@font-face{font-family:"El Messiri";font-style:normal;font-weight:600;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/el-messiri-600.woff2") format("woff2")}
+@font-face{font-family:"El Messiri";font-style:normal;font-weight:700;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/el-messiri-700.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Serif Display";font-style:normal;font-weight:400;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-serif-display-400.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Serif Display";font-style:normal;font-weight:700;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-serif-display-700.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Serif Display";font-style:normal;font-weight:900;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-serif-display-900.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Sans";font-style:normal;font-weight:400;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-sans-400.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Sans";font-style:normal;font-weight:500 600;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-sans-500-600.woff2") format("woff2")}
+@font-face{font-family:"Thmanyah Sans";font-style:normal;font-weight:700 900;font-display:swap;src:url("https://almohammdin.github.io/hatta-brand-guide/assets/fonts/thmanyah-sans-700-900.woff2") format("woff2")}
 ${printStylesheet()}</style></head><body><div id="printArea"></div></body></html>`);
  printWin.document.close();
 
